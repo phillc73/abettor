@@ -13,7 +13,7 @@ vignette: >
 
 ## Purpose
 
-The purpose of this document is to demonstrate how to place a bet on the Betfair betting exchange, using their API-NG product, the `abettor` R package and a simple R script.
+The purpose of this document is to demonstrate how to place a bet on the Betfair betting exchange using their API-NG product, the `abettor` R package and a simple R script.
 
 Many of the steps outlined in this tutorial will be purposefully simplistic, in order to demonstrate a wide range of `abettor` functions. It is assumed that readers have no prior experience using any Betfiar API products.
 
@@ -43,7 +43,9 @@ Using just these few simple pieces of information it is possible to use the `abe
 Only three packages or libraries are required. All packages obviously must be installed first.
 
 ```{r, eval = FALSE}
+# Requires a minimum of version 1.95-4.3
 require("RCurl")
+# Requires a minimum of version 0.9.12
 require("jsonlite")
 require("abettor")
 ```
@@ -69,7 +71,7 @@ After logging in, if all is well, you should not have received an error. There i
 
 ### Find Relevant Event Type
 
-Which sport? We need to know the relevant event type identifaction number for our chosen sport, in this case Horse Racing.
+Which sport? We need to know the relevant event type identification number for our chosen sport, in this case Horse Racing.
 
 ```{r, eval = FALSE}
 listEventTypes()
@@ -87,7 +89,7 @@ listCountries(eventTypeIds = "7")
 
 As you can see, we've passed an argument to the function, effectively limiting results to just countries with current horse racing markets.
 
-More information regarding any function within the abettor package, and indeed any R package, may be found like this:
+More information regarding any function within the `abettor` package, and indeed any R package, may be found like this:
 
 ```{r, eval = FALSE}
 ?listCountries
@@ -115,7 +117,7 @@ marketCat <- listMarketCatalogue(eventTypeIds = "7", marketCountries = "GB", mar
 
 We've used the `listMarketCatalogue` function, limiting results to Horse Racing in Great Britain and Win only markets. By default `listMarketCatalogue` returns results for markets starting immediately and 24 hours into the future. These default times may be changed. `?listMarketCatalogue` for more details. We've also stored the returned data in a variable called `marketCat`.
 
-Upon examining `marketCat` variable you can immediately see it containts a lot of data. This data does include the Market ID and Selection ID we require. These can be viewed in isolation with the following:
+Upon examining the `marketCat` variable you can immediately see it contains a lot of data. This data does include the Market ID and Selection ID we require. These can be viewed in isolation with the following:
 
 ```{r, eval = FALSE}
 marketCat$marketId
@@ -129,9 +131,11 @@ head(marketCat)
 str(marketCat)
 ```
 
-As we already know a couple of things about the bet we wish to place, including the course name, start time and the horse name, we can now subset `marketCat` to return a much narrower and relevant set of data. There's about eight million ways of subsetting data in R, this is just one of them.
+As we already know a couple of things about the bet we wish to place, including the course name, start time and the horse name, we can now subset `marketCat` to return a much narrower and relevant set of data. 
 
 Subset using the known course name and race start time. In this case we have a sure thing in the last race on the Wolverhampton card at 17:40. Previously you will have taken note of the Betfair specific time format, such as that found in `marketCat$marketStartTime`
+
+There's about eight million ways of subsetting data in R, this is just one of them.
 
 ```{r, eval = FALSE}
 ourSpecificRace <- marketCat[grep("^Wolverhampton", marketCat$event$venue), ]
@@ -174,7 +178,7 @@ allRunnersPrices <- ourMarketIdPrices$runners
 ourSelectionIdPrices <- allRunnersPrices[[1]][which(allRunnersPrices[[1]]$selectionId == ourSelectionId),]
 ```
 
-We're interested in backing to Win, so creating a final data frame with prices available and market depth can be obtained.
+We're interested in backing to Win, so creating a final data frame with prices available and market depth can be achieved like this.
 
 ```{r, eval = FALSE}
 ourSelectionIdPricesDF <- data.frame(ourSelectionIdPrices$ex[[1]])
@@ -186,7 +190,7 @@ Create a variable to store the best price. This is not really needed, but may be
 ourSelectionBestPrice <- ourSelectionIdPricesDF[1,c("price")]
 ```
 
-At the time of writing, the best price available on Memoria was 6.4 with £8.33 available to be matched.
+At the time of writing, the best price available to back Memoria to Win was 6.4, with £8.33 available to be matched.
 
 ### Place A Bet
 

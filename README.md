@@ -25,7 +25,9 @@ The `abettor` package is an aid to developing Betfair applications in R. Develop
 Only two additional R packages are required.
 
 ```r
+# Requires a minimum of version 1.95-4.3
 require("RCurl")
+# Requires a minimum of version 0.9.12
 require("jsonlite")
 ```
 ### Place a Bet Tutorial
