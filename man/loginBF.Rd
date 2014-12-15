@@ -55,7 +55,10 @@ login more than is necessary.
 }
 \examples{
 \dontrun{
-loginBF(username = "YourBetfairUsername", password = "YourBetfairPassword", applicationKey = "YourBetfairAppKey")
+loginBF(username = "YourBetfairUsername",
+        password = "YourBetfairPassword",
+        applicationKey = "YourBetfairAppKey"
+        )
 }
 }
 

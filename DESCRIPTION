@@ -1,7 +1,7 @@
 Package: abettor
-Title: R bindings to the Betfair API-NG
-Version: 0.1
-Date: 2014-12-10
+Title: R bindings to Betfair API-NG
+Version: 0.1.1
+Date: 2014-12-15
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]"))
 Description: An R package for connecting to the online betting exchange,
     Betfair, via their API-NG product using JSON-RPC. The package user can
@@ -11,6 +11,7 @@ Depends:
 License: MIT + file LICENSE
 URL: https://github.com/phillc73/abettor
 BugReports: http://www.github.com/phillc73/abettor/issues
+Maintainer: Phill Clarke <phill@starkingdom.co.uk>
 LazyData: true
 Imports:
     RCurl (>= 1.95-4.3),

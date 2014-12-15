@@ -52,7 +52,7 @@ Each function contains documented descriptions for their use and all supported a
 
 This package is under active development.
 
-Current Version: 0.1
+Current Version: 0.1.1
 
 ### Issues
 

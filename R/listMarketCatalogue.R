@@ -66,7 +66,10 @@
 #'
 #' # Return market catalogues for both Horse Racing and Football event types, in
 #' Great Britain only and for both Win and Match Odds market types.
-#' listMarketCatalogue(eventTypeIds = c("7","1"), marketCountries = "GB", marketTypeCodes = c("WIN", "MATCH_ODDS"))
+#' listMarketCatalogue(eventTypeIds = c("7","1"),
+#'                     marketCountries = "GB",
+#'                     marketTypeCodes = c("WIN", "MATCH_ODDS")
+#'                     )
 #' }
 #'
 
@@ -86,9 +89,9 @@ listMarketCatalogue <- function(eventTypeIds, marketCountries, marketTypeCodes, 
 
   listMarketCatalogueOps <- listMarketCatalogueOps[c("jsonrpc", "method", "params", "id")]
 
-  listMarketCatalogueOps <- toJSON(listMarketCatalogueOps, pretty = TRUE)
+  listMarketCatalogueOps <- jsonlite::toJSON(listMarketCatalogueOps, pretty = TRUE)
 
-  listMarketCatalogue <- as.list(fromJSON(postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketCatalogueOps, httpheader=headersPostLogin))))
+  listMarketCatalogue <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketCatalogueOps, httpheader=headersPostLogin))))
 
   as.data.frame(listMarketCatalogue$result[1])
 

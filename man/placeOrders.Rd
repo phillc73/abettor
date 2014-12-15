@@ -27,6 +27,9 @@ specified. Valid order types are LIMIT, LIMIT_ON_CLOSE and MARKET_ON_CLOSE.
 Must be upper case. See note below explaining each of these options.
 Required. no default.}
 
+\item{betSize}{String. The size of the bet in the currency of your account.
+Generally the minimum size for GB accounts is 2 Pounds.}
+
 \item{reqPrice}{String. The lowest price at which you wish to place your bet.
 If unmatched higher prices are available on the opposite side of the bet,
 your order will be matched at those higher prices. Required. No default.}
@@ -114,6 +117,13 @@ correct argument options are used.
 }
 \examples{
 \dontrun{
+placeOrders(marketId = "yourMarketId",
+            selectionId = "yourSelectionId",
+            betSide = "BACKORLAY",
+            betType = "LIMITORONCLOSE",
+            betSize = "2",
+            reqPrice = "yourRequestedPrice",
+            persistenceType = "LAPSEORPERSIST")
 }
 }
 \seealso{

@@ -35,7 +35,10 @@
 #' @examples
 #' \dontrun{
 #' # Return all Horse Racing events, between the current date & time and 11pm on December 10th, 2014
-#' listEvents(eventTypeIds = 7, fromDate = format(Sys.time(), "%Y-%m-%dT%TZ"), toDate = "2014-12-15T23:00:00Z")
+#' listEvents(eventTypeIds = 7,
+#'            fromDate = format(Sys.time(), "%Y-%m-%dT%TZ"),
+#'            toDate = "2014-12-15T23:00:00Z"
+#'           )
 #'
 #' # Return all Horse Racing events, using the default from and to datestamps.
 #' listEvents(eventTypeIds = 7)
@@ -57,9 +60,9 @@ listEvents <- function(eventTypeIds, fromDate = (format(Sys.time(), "%Y-%m-%dT%T
 
   listEventsOps <- listEventsOps[c("jsonrpc", "method", "params", "id")]
 
-  listEventsOps <- toJSON(listEventsOps, pretty = TRUE)
+  listEventsOps <- jsonlite::toJSON(listEventsOps, pretty = TRUE)
 
-  listEvents <- as.list(fromJSON(postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventsOps, httpheader=headersPostLogin))))
+  listEvents <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventsOps, httpheader=headersPostLogin))))
 
   as.data.frame(listEvents$result[1])
 

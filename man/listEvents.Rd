@@ -47,7 +47,10 @@ opening date and market count.
 \examples{
 \dontrun{
 # Return all Horse Racing events, between the current date & time and 11pm on December 10th, 2014
-listEvents(eventTypeIds = 7, fromDate = format(Sys.time(), "\%Y-\%m-\%dT\%TZ"), toDate = "2014-12-15T23:00:00Z")
+listEvents(eventTypeIds = 7,
+           fromDate = format(Sys.time(), "\%Y-\%m-\%dT\%TZ"),
+           toDate = "2014-12-15T23:00:00Z"
+          )
 
 # Return all Horse Racing events, using the default from and to datestamps.
 listEvents(eventTypeIds = 7)

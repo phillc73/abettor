@@ -82,7 +82,10 @@ listMarketCatalogue(eventTypeIds = "7", marketCountries = "GB", marketTypeCodes 
 
 # Return market catalogues for both Horse Racing and Football event types, in
 Great Britain only and for both Win and Match Odds market types.
-listMarketCatalogue(eventTypeIds = c("7","1"), marketCountries = "GB", marketTypeCodes = c("WIN", "MATCH_ODDS"))
+listMarketCatalogue(eventTypeIds = c("7","1"),
+                    marketCountries = "GB",
+                    marketTypeCodes = c("WIN", "MATCH_ODDS")
+                    )
 }
 }
 \seealso{

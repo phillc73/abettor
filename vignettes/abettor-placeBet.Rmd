@@ -1,13 +1,11 @@
-<!--
 ---
 title: "How to Place a Bet with abettor"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to Place a Bet with abettor}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  \usepackage[utf8]{inputenc}
 ---
--->
 
 # How to Place a Bet with abettor
 

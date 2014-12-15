@@ -40,7 +40,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' loginBF(username = "YourBetfairUsername", password = "YourBetfairPassword", applicationKey = "YourBetfairAppKey")
+#' loginBF(username = "YourBetfairUsername",
+#'         password = "YourBetfairPassword",
+#'         applicationKey = "YourBetfairAppKey"
+#'         )
 #' }
 #'
 
@@ -50,11 +53,13 @@ loginBF <- function(username, password, applicationKey){
 
     headersLogin <- list('Accept' = 'application/json', 'X-Application' = applicationKey)
 
-    loginReturn <- postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin))
+    loginReturn <- RCurl::postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin))
 
-    authenticationKey <- fromJSON(loginReturn)
+    authenticationKey <- jsonlite::fromJSON(loginReturn)
 
     # Assigning a global variable with <<-, I'm giddy with mischievious excitement
+
+    headersPostLogin <- NULL
 
     headersPostLogin <<- list('Accept' = 'application/json', 'X-Application' = authenticationKey$product, 'X-Authentication' = authenticationKey$token, 'Content-Type' = 'application/json')
 

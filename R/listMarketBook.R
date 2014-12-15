@@ -59,9 +59,9 @@ listMarketBook <- function(marketIds, priceData){
 
   listMarketBookOps <- listMarketBookOps[c("jsonrpc", "method", "params", "id")]
 
-  listMarketBookOps <- toJSON(listMarketBookOps, pretty = TRUE)
+  listMarketBookOps <- jsonlite::toJSON(listMarketBookOps, pretty = TRUE)
 
-  listMarketBook <- as.list(fromJSON(postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketBookOps, httpheader=headersPostLogin))))
+  listMarketBook <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketBookOps, httpheader=headersPostLogin))))
 
   as.data.frame(listMarketBook$result[1])
 

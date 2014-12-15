@@ -51,9 +51,9 @@ listCountries <- function(eventTypeIds){
 
   listCountriesOps <- listCountriesOps[c("jsonrpc", "method", "params", "id")]
 
-  listCountriesOps <- toJSON(listCountriesOps, pretty = TRUE)
+  listCountriesOps <- jsonlite::toJSON(listCountriesOps, pretty = TRUE)
 
-  listCountries <- as.list(fromJSON(postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listCountriesOps, httpheader=headersPostLogin))))
+  listCountries <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listCountriesOps, httpheader=headersPostLogin))))
 
   as.data.frame(listCountries$result[1])
 
