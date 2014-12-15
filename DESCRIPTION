@@ -13,8 +13,8 @@ URL: https://github.com/phillc73/abettor
 BugReports: http://www.github.com/phillc73/abettor/issues
 LazyData: true
 Imports:
-    RCurl (>= 1.95-4.5),
-    jsonlite (>= 0.9.14)
+    RCurl (>= 1.95-4.3),
+    jsonlite (>= 0.9.12)
 Suggests:
     knitr
 VignetteBuilder: knitr
