@@ -197,7 +197,14 @@ At the time of writing, the best price available to back Memoria to Win was 6.4,
 Finally, we'll place a £2 bet using the `placeOrders` function.
 
 ```{r, eval = FALSE}
-PlaceBetReturn <- placeOrders(marketId = ourMarketId, selectionId = ourSelectionId, betSide = "BACK", betType = "LIMIT", betSize = "2", reqPrice = ourSelectionBestPrice, persistenceType = "LAPSE")
+PlaceBetReturn <- placeOrders(marketId = ourMarketId, 
+                              selectionId = ourSelectionId, 
+                              betSide = "BACK", 
+                              betType = "LIMIT", 
+                              betSize = "2", 
+                              reqPrice = ourSelectionBestPrice, 
+                              persistenceType = "LAPSE"
+                              )
 ```
 
 If everything has been successful, the `PlaceBetReturn` variable will contain a unique customer reference, which defaults to the exact date and time the bet was placed. See `?placeOrders` to alter this.
