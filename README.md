@@ -30,7 +30,7 @@ require("jsonlite")
 ```
 ### Place a Bet Tutorial
 
-An initial tutorial describing how to place a bet with `abettor` is [available here](https://github.com/phillc73/abettor/vignettes/abettor-placeBet.Rmd).
+An initial tutorial describing how to place a bet with `abettor` is [available here](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd).
 
 ## Supported Functions
 

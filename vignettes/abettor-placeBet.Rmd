@@ -1,3 +1,4 @@
+<!--
 ---
 title: "How to Place a Bet with abettor"
 output: rmarkdown::html_vignette
@@ -6,6 +7,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
+-->
+
+# How to Place a Bet with abettor
 
 ## Purpose
 
