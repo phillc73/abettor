@@ -22,6 +22,13 @@
 #'   defined. See Examples.
 #' @param applicationKey Character string containing Betfair application key and
 #'   must be defined. See Examples.
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
+#'   See Examples.
 #' @return Response from Betfair will be stored in {loginReturn}. Examples of
 #'   login responses for the JSON API interactive endpoint can be found here:
 #'
@@ -44,16 +51,24 @@
 #'         password = "YourBetfairPassword",
 #'         applicationKey = "YourBetfairAppKey"
 #'         )
+#'
+#' # Login with self signed SSL Certificate
+#' loginBF(username = "YourBetfairUsername",
+#'         password = "YourBetfairPassword",
+#'         applicationKey = "YourBetfairAppKey",
+#'         sslVerify = FALSE
+#'         )
+#'
 #' }
 #'
 
-loginBF <- function(username, password, applicationKey){
+loginBF <- function(username, password, applicationKey, sslVerify = TRUE){
 
     credentials <- paste("username=",username,"&password=",password,sep="")
 
     headersLogin <- list('Accept' = 'application/json', 'X-Application' = applicationKey)
 
-    loginReturn <- RCurl::postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin))
+    loginReturn <- RCurl::postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin, ssl.verifypeer = sslVerify))
 
     authenticationKey <- jsonlite::fromJSON(loginReturn)
 

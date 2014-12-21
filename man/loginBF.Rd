@@ -4,7 +4,7 @@
 \alias{loginBF}
 \title{Login to Betfair, interactive end point.}
 \usage{
-loginBF(username, password, applicationKey)
+loginBF(username, password, applicationKey, sslVerify = TRUE)
 }
 \arguments{
 \item{username}{Character string containing Betfair username and must be
@@ -15,6 +15,14 @@ defined. See Examples.}
 
 \item{applicationKey}{Character string containing Betfair application key and
 must be defined. See Examples.}
+
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+some cases, where users have a self signed SSL Certificate, for example
+they may be behind a proxy server, Betfair will fail login with "SSL
+certificate problem: self signed certificate in certificate chain". If this
+error occurs you may set sslVerify to FALSE. This does open a small
+security risk of a man-in-the-middle intercepting your login credentials.
+See Examples.}
 }
 \value{
 Response from Betfair will be stored in {loginReturn}. Examples of
@@ -59,6 +67,14 @@ loginBF(username = "YourBetfairUsername",
         password = "YourBetfairPassword",
         applicationKey = "YourBetfairAppKey"
         )
+
+# Login with self signed SSL Certificate
+loginBF(username = "YourBetfairUsername",
+        password = "YourBetfairPassword",
+        applicationKey = "YourBetfairAppKey",
+        sslVerify = FALSE
+        )
+
 }
 }
 
