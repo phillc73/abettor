@@ -17,6 +17,12 @@
 #'   specified. Valid price data types are SP_AVAILABLE, SP_TRADED,
 #'   EX_BEST_OFFERS, EX_ALL_OFFERS and EX_TRADED. Must be upper case. See note
 #'   below explaining each of these options. Required. no default.
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
 #' @return Response from Betfair is stored in listMarketBook variable, which is
 #'   then parsed from JSON as a list. Only the first item of this list contains
@@ -46,7 +52,7 @@
 #' }
 #'
 
-listMarketBook <- function(marketIds, priceData){
+listMarketBook <- function(marketIds, priceData, sslVerify = TRUE){
 
   options(stringsAsFactors=FALSE)
   listMarketBookOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketBook", id = "1")
@@ -61,7 +67,7 @@ listMarketBook <- function(marketIds, priceData){
 
   listMarketBookOps <- jsonlite::toJSON(listMarketBookOps, pretty = TRUE)
 
-  listMarketBook <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketBookOps, httpheader=headersPostLogin))))
+  listMarketBook <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketBookOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
 
   as.data.frame(listMarketBook$result[1])
 

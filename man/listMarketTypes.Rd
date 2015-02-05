@@ -4,13 +4,20 @@
 \alias{listMarketTypes}
 \title{Return listMarketTypes data}
 \usage{
-listMarketTypes(eventTypeIds)
+listMarketTypes(eventTypeIds, sslVerify = TRUE)
 }
 \arguments{
 \item{eventTypeIds}{eventTypeIds String. Restrict markets by event type
-  associated with the market. (i.e., Football, Horse Racing, etc). Accepts
-  multiple IDs (See examples). IDs can be obtained via
-  \code{\link{listEventTypes}}, Required. No default.}
+associated with the market. (i.e., Football, Horse Racing, etc). Accepts
+multiple IDs (See examples). IDs can be obtained via
+\code{\link{listEventTypes}}, Required. No default.}
+
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+  some cases, where users have a self signed SSL Certificate, for example
+  they may be behind a proxy server, Betfair will fail login with "SSL
+  certificate problem: self signed certificate in certificate chain". If this
+  error occurs you may set sslVerify to FALSE. This does open a small
+  security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
 Response from Betfair is stored in listMarketTypes variable, which is

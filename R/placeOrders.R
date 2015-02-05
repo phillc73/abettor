@@ -50,7 +50,12 @@
 #'   unique string (up to 32 chars) that is used to de-dupe mistaken
 #'   re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
 #'   - . _ + * : ; ~ only. Optional. Defaults to current system date and time.
-#'
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
 #' @return Response from Betfair is stored in listMarketCatalogue variable,
 #'   which is then parsed from JSON as a list. Only the first item of this list
@@ -105,7 +110,7 @@
 #' }
 #'
 
-placeOrders <- function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType, handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ"))){
+placeOrders <- function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType, handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")), sslVerify = TRUE){
 
   options(stringsAsFactors=FALSE)
   placeOrdersOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
@@ -119,7 +124,7 @@ placeOrders <- function(marketId, selectionId, betSide, betType, betSize, reqPri
 
   placeOrdersOps <- jsonlite::toJSON(placeOrdersOps, pretty = TRUE)
 
-  placeOrders <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=placeOrdersOps, httpheader=headersPostLogin))))
+  placeOrders <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=placeOrdersOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
 
   as.data.frame(placeOrders$result[1])
 

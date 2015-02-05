@@ -17,6 +17,12 @@
 #'   the market. (i.e., Football, Horse Racing, etc). Accepts multiple IDs (See
 #'   examples). IDs can be obtained via \code{\link{listEventTypes}}, Required. No
 #'   default.
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
 #' @return Response from Betfair is stored in listCountries variable, which is
 #'   then parsed from JSON as a list. Only the first item of this list contains
@@ -39,7 +45,7 @@
 #' }
 #'
 
-listCountries <- function(eventTypeIds){
+listCountries <- function(eventTypeIds, sslVerify = TRUE){
 
   listCountriesOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listCountries", id = "1")
 
@@ -53,7 +59,7 @@ listCountries <- function(eventTypeIds){
 
   listCountriesOps <- jsonlite::toJSON(listCountriesOps, pretty = TRUE)
 
-  listCountries <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listCountriesOps, httpheader=headersPostLogin))))
+  listCountries <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listCountriesOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
 
   as.data.frame(listCountries$result[1])
 

@@ -5,7 +5,8 @@
 \title{Return listEvents data}
 \usage{
 listEvents(eventTypeIds, fromDate = (format(Sys.time(), "\%Y-\%m-\%dT\%TZ")),
-  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")))
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
+  sslVerify = TRUE)
 }
 \arguments{
 \item{eventTypeIds}{eventTypeIds String. Restrict markets by event type
@@ -18,8 +19,15 @@ is \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
 date and time.}
 
 \item{toDate}{The end date to stop returning matching events. Format is
-  \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
-  date and time plus 24 hours.}
+\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
+date and time plus 24 hours.}
+
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+  some cases, where users have a self signed SSL Certificate, for example
+  they may be behind a proxy server, Betfair will fail login with "SSL
+  certificate problem: self signed certificate in certificate chain". If this
+  error occurs you may set sslVerify to FALSE. This does open a small
+  security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
 Response from Betfair is stored in listEvents variable, which is then

@@ -4,7 +4,15 @@
 \alias{listEventTypes}
 \title{Return listEventTypes data}
 \usage{
-listEventTypes()
+listEventTypes(sslVerify = TRUE)
+}
+\arguments{
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+  some cases, where users have a self signed SSL Certificate, for example
+  they may be behind a proxy server, Betfair will fail login with "SSL
+  certificate problem: self signed certificate in certificate chain". If this
+  error occurs you may set sslVerify to FALSE. This does open a small
+  security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
 Response from Betfair is stored in listEventTypes variable, which

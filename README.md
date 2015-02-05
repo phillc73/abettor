@@ -52,7 +52,7 @@ Each function contains documented descriptions for their use and all supported a
 
 This package is under active development.
 
-Current Version: 0.1.2
+Current Version: 0.1.3
 
 See [current release notes](https://github.com/phillc73/abettor/releases) for more details.
 

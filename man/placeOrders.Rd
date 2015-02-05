@@ -6,7 +6,7 @@
 \usage{
 placeOrders(marketId, selectionId, betSide, betType, betSize, reqPrice,
   persistenceType, handicap = "0", customerRef = (format(Sys.time(),
-  "\%Y-\%m-\%dT\%TZ")))
+  "\%Y-\%m-\%dT\%TZ")), sslVerify = TRUE)
 }
 \arguments{
 \item{marketId}{String. The market ID these orders are to be placed on. Can
@@ -46,9 +46,16 @@ asian-style market. Optional. Defaults to 0, meaning no handicap.
 asian-style market.}
 
 \item{customerRef}{String. Optional parameter allowing the client to pass a
-  unique string (up to 32 chars) that is used to de-dupe mistaken
-  re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
-  - . _ + * : ; ~ only. Optional. Defaults to current system date and time.}
+unique string (up to 32 chars) that is used to de-dupe mistaken
+re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
+- . _ + * : ; ~ only. Optional. Defaults to current system date and time.}
+
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+  some cases, where users have a self signed SSL Certificate, for example
+  they may be behind a proxy server, Betfair will fail login with "SSL
+  certificate problem: self signed certificate in certificate chain". If this
+  error occurs you may set sslVerify to FALSE. This does open a small
+  security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
 Response from Betfair is stored in listMarketCatalogue variable,

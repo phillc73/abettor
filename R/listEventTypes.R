@@ -8,6 +8,13 @@
 #'
 #' @seealso \code{\link{loginBF}}, which must be executed first.
 #'
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
+#'
 #' @return Response from Betfair is stored in listEventTypes variable, which
 #'   when parsed from JSON as a list. Only the first item of this list contains
 #'   the required event type identification details.
@@ -24,7 +31,7 @@
 #' }
 #'
 
-listEventTypes <- function(){
+listEventTypes <- function(sslVerify = TRUE){
 
   options(stringsAsFactors=FALSE)
   listEventTypesOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listEventTypes", id = "1")
@@ -36,7 +43,7 @@ listEventTypes <- function(){
 
   listEventTypesOps <- jsonlite::toJSON(listEventTypesOps, pretty = TRUE)
 
-  listEventsTypes <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventTypesOps, httpheader=headersPostLogin))))
+  listEventsTypes <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventTypesOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
 
   as.data.frame(listEventsTypes$result[1])
 

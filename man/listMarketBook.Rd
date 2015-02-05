@@ -4,7 +4,7 @@
 \alias{listMarketBook}
 \title{Return listMarketBook data}
 \usage{
-listMarketBook(marketIds, priceData)
+listMarketBook(marketIds, priceData, sslVerify = TRUE)
 }
 \arguments{
 \item{marketIds}{String. The market identification number of the required
@@ -12,9 +12,16 @@ event. IDs can be obtained via \code{\link{listMarketCatalogue}}, Required.
 No default.}
 
 \item{priceData}{String. Supports five price data types, one of which must be
-  specified. Valid price data types are SP_AVAILABLE, SP_TRADED,
-  EX_BEST_OFFERS, EX_ALL_OFFERS and EX_TRADED. Must be upper case. See note
-  below explaining each of these options. Required. no default.}
+specified. Valid price data types are SP_AVAILABLE, SP_TRADED,
+EX_BEST_OFFERS, EX_ALL_OFFERS and EX_TRADED. Must be upper case. See note
+below explaining each of these options. Required. no default.}
+
+\item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
+  some cases, where users have a self signed SSL Certificate, for example
+  they may be behind a proxy server, Betfair will fail login with "SSL
+  certificate problem: self signed certificate in certificate chain". If this
+  error occurs you may set sslVerify to FALSE. This does open a small
+  security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
 Response from Betfair is stored in listMarketBook variable, which is

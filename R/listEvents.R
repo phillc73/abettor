@@ -21,6 +21,12 @@
 #' @param toDate The end date to stop returning matching events. Format is
 #'   \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
 #'   date and time plus 24 hours.
+#' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
+#'   some cases, where users have a self signed SSL Certificate, for example
+#'   they may be behind a proxy server, Betfair will fail login with "SSL
+#'   certificate problem: self signed certificate in certificate chain". If this
+#'   error occurs you may set sslVerify to FALSE. This does open a small
+#'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
 #' @return Response from Betfair is stored in listEvents variable, which is then
 #'   parsed from JSON as a list. Only the first item of this list contains the
@@ -48,7 +54,7 @@
 #' }
 #'
 
-listEvents <- function(eventTypeIds, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ"))){
+listEvents <- function(eventTypeIds, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE){
 
   options(stringsAsFactors=FALSE)
   listEventsOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listEvents", id = "1")
@@ -62,7 +68,7 @@ listEvents <- function(eventTypeIds, fromDate = (format(Sys.time(), "%Y-%m-%dT%T
 
   listEventsOps <- jsonlite::toJSON(listEventsOps, pretty = TRUE)
 
-  listEvents <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventsOps, httpheader=headersPostLogin))))
+  listEvents <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventsOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
 
   as.data.frame(listEvents$result[1])
 
