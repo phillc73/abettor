@@ -116,8 +116,27 @@ placeOrders <- function(marketId, selectionId, betSide, betType, betSize, reqPri
   placeOrdersOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
 
   placeOrdersOps$params <- data.frame(marketId = marketId, instructions = c(""), customerRef = customerRef)
-  placeOrdersOps$params$instructions <- data.frame(selectionId = selectionId, handicap = handicap, side = betSide, orderType = betType, limitOrder=c(""))
-  placeOrdersOps$params$instructions$limitOrder <- data.frame(size = betSize, price = reqPrice, persistenceType = persistenceType)
+
+  if(betType == "MARKET_ON_CLOSE"){
+    placeOrdersOps$params$instructions <- data.frame(selectionId = selectionId,
+                                                     handicap = handicap,
+                                                     side = betSide,
+                                                     orderType = betType,
+                                                     marketOnCloseOrder=c(""))
+
+    placeOrdersOps$params$instructions$marketOnCloseOrder <- data.frame(liability = betSize)
+
+
+  } else {
+    placeOrdersOps$params$instructions <- data.frame(selectionId = selectionId,
+                                                     handicap = handicap,
+                                                     side = betSide,
+                                                     orderType = betType,
+                                                     limitOrder=c(""))
+
+    placeOrdersOps$params$instructions$limitOrder <- data.frame(size = betSize, price = reqPrice, persistenceType = persistenceType)
+  }
+
   placeOrdersOps$params$instructions <- list(placeOrdersOps$params$instructions)
 
   placeOrdersOps <- placeOrdersOps[c("jsonrpc", "method", "params", "id")]
