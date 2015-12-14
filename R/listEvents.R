@@ -15,6 +15,9 @@
 #'   associated with the market. (i.e., Football, Horse Racing, etc). Accepts
 #'   multiple IDs (See examples). IDs can be obtained via
 #'   \code{\link{listEventTypes}}, Required. No default.
+#' @param competitionIds competitionIds String. Restrict markets by competition
+#'   associated with the market (e.g. "81" for Italian football Serie A).
+#'   Accepts multiple IDs.
 #' @param fromDate The start date from which to return matching events. Format
 #'   is \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
 #'   date and time.
@@ -51,16 +54,25 @@
 #'
 #' # Return all Horse Racing and Football events, using the default from and to datestamps.
 #' listEvents(eventTypeIds = c("1","7"))
+#'
+#' # Return all football events associated to the football competittions "Premier League"
+#' # and "Serie A", using the default from and to datestamps
+#'
+#' listEvents(eventTypeIds = "1", competitionIds = c("31","81"))
 #' }
 #'
 
-listEvents <- function(eventTypeIds, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE){
+listEvents <- function(eventTypeIds, competitionIds=NULL, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE){
 
   options(stringsAsFactors=FALSE)
   listEventsOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listEvents", id = "1")
 
   listEventsOps$params <- data.frame(filter = c(""))
   listEventsOps$params$filter <- data.frame(eventTypeIds = c(""))
+  listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
+  if (!is.null(competitionIds)) {
+    listEventsOps$params$filter$competitionIds <- list(c(competitionIds))
+  }
   listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
   listEventsOps$params$filter$marketStartTime <- data.frame(from = fromDate, to = toDate)
 
