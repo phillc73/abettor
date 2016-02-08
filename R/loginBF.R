@@ -1,4 +1,4 @@
-#' Login to Betfair, interactive end point.
+#' Login to Betfair, interactive end point. This section is mostly a copy of the orginal master version.
 #'
 #' \code{loginBF} logs in to Betfair, via the API-NG JSON interactive end point.
 #'
@@ -45,6 +45,11 @@
 #'   It stores the session based authentication token and is required for all
 #'   other functions in this package.
 #'
+#'  @return The call output is parsed from JSON as a list, from which
+#' the status ("SUCCESS" or "FAIL") and error (if it is not null) are returned as a colon seperated concatenated string.
+#'  For error values, see \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+%28bot%29+login}.
+#'
+#'
 #' @examples
 #' \dontrun{
 #' loginBF(username = "YourBetfairUsername",
@@ -60,22 +65,28 @@
 #'         )
 #'
 #' }
-#'
+#
+
 
 loginBF <- function(username, password, applicationKey, sslVerify = TRUE){
-
-    credentials <- paste("username=",username,"&password=",password,sep="")
-
-    headersLogin <- list('Accept' = 'application/json', 'X-Application' = applicationKey)
-
-    loginReturn <- RCurl::postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin, ssl.verifypeer = sslVerify))
-
-    authenticationKey <- jsonlite::fromJSON(loginReturn)
-
-    # Assigning a global variable with <<-, I'm giddy with mischievious excitement
-
-    headersPostLogin <- NULL
-
-    headersPostLogin <<- list('Accept' = 'application/json', 'X-Application' = authenticationKey$product, 'X-Authentication' = authenticationKey$token, 'Content-Type' = 'application/json')
-
-  }
+  credentials <- paste("username=",username,"&password=",password,sep="")
+  
+  headersLogin <- list('Accept' = 'application/json', 'X-Application' = applicationKey)
+  
+  loginReturn=  tryCatch(RCurl::postForm("https://identitysso.betfair.com/api/login", .opts=list(postfields=credentials, httpheader=headersLogin, ssl.verifypeer = sslVerify))
+                         ,error=function(cond) {
+                           print(cond)
+                           stop(cond)
+                         }
+  )
+  authenticationKey <- jsonlite::fromJSON(loginReturn)
+  
+  # Assigning a global variable with <<-, I'm giddy with mischievious excitement
+  
+  headersPostLogin <- NULL
+  
+  
+  headersPostLogin <<- list('Accept' = 'application/json', 'X-Application' = authenticationKey$product, 'X-Authentication' = authenticationKey$token, 'Content-Type' = 'application/json')
+  
+  return(paste0(authenticationKey$status,":",authenticationKey$error))
+}
