@@ -1,9 +1,13 @@
 abettor
 =======
 
+I'm very new to Github, so I'm still coming to terms with forking, pulling and other verbs.
+
 `abettor` is an R package for connecting to the online betting exchange Betfair, via their API-NG product, using JSON-RPC. The package can currently only be used to retrieve market information and place bets.
 
-This package deliberately does not provide comprehensive R functions for the entirety of Betfair's API-NG product. The functions which are supported generally use limited arguments. The idea being to return a broader set of Betfair data, which can be manipulated by the user from within R, using familiar code and providing fine grained control.
+Unlike the original version ([phillc73/abettor](https://github.com/phillc73/abettor)), this fork intends to provide R functions for the entirety of Betfair's API-NG product, which encompasses all explicit supported API-NG requests and derivative calls (e.g. market cashout). Alert me to any bugs and please send me your requests. Like I said, I want this package to be comprehensive, so let me if there's something you want to see.
+
+The package is still in development, so please check back regularly for updates. It draws heavily from the [original](https://github.com/phillc73/abettor), so also consult that page for more details.
 
 ## Quick start
 
@@ -11,7 +15,7 @@ This package deliberately does not provide comprehensive R functions for the ent
 
 ```r
 # install.packages("devtools")
-devtools::install_github("phillc73/abettor")
+devtools::install_github("dashee/abettor")
 require("abettor")
 ```
 ### Obtain a Betfair Developer Application Key
