@@ -9,11 +9,21 @@ This package deliberately does not provide comprehensive R functions for the ent
 
 ### Install
 
+Install from GitLab
+
+```r
+# install.packages("devtools")
+devtools::install_git("https://gitlab.com/phillc73/abettor.git")
+library("abettor")
+```
+Or install from GitHub if you prefer (identical mirror of GitLab)
+
 ```r
 # install.packages("devtools")
 devtools::install_github("phillc73/abettor")
 require("abettor")
 ```
+
 ### Obtain a Betfair Developer Application Key
 
 Betfair provided instructions to obtain an Application Key are [available here](https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys), or follow the steps in the Place a Bet Tutorial linked below.
