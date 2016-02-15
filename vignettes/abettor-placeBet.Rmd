@@ -1,10 +1,12 @@
 ---
 title: "How to Place a Bet with abettor"
+author: "Phill Clarke"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to Place a Bet with abettor}
+  %\VignetteIndexEntry{How to Use backblazer}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # How to Place a Bet with abettor

@@ -19,6 +19,7 @@ Imports:
     RCurl (>= 1.95-4.3),
     jsonlite (>= 0.9.12)
 Suggests:
-    knitr
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
