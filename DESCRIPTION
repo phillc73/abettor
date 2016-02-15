@@ -3,6 +3,7 @@ Title: R bindings to Betfair API-NG
 Version: 0.1.4
 Date: 2015-11-11
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]",
+                       "David Sheehan <davidfsheehan87@gmail.com> [aut]",
                        "Alvise Trevian <a.trevisan@enpicom.com> [ctb]"))
 Description: An R package for connecting to the online betting exchange,
     Betfair, via their API-NG product using JSON-RPC. The package user can
@@ -20,3 +21,4 @@ Imports:
 Suggests:
     knitr
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

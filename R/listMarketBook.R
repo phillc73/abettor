@@ -52,22 +52,42 @@
 #' }
 #'
 
-listMarketBook <- function(marketIds, priceData, sslVerify = TRUE){
 
-  options(stringsAsFactors=FALSE)
-  listMarketBookOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketBook", id = "1")
+listMarketBook <- function(marketIds, priceData, sslVerify = TRUE) {
+  options(stringsAsFactors = FALSE)
+  listMarketBookOps <-
+    data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketBook", id = "1")
 
-  listMarketBookOps$params <- data.frame(marketIds = c(""), priceProjection = c(""), orderProjection = "ALL", matchProjection = "ROLLED_UP_BY_PRICE")
+  listMarketBookOps$params <-
+    data.frame(
+      marketIds = c(""), priceProjection = c(""), orderProjection = "ALL", matchProjection = "ROLLED_UP_BY_PRICE"
+    )
   listMarketBookOps$params$marketIds <- list(c(marketIds))
-  listMarketBookOps$params$priceProjection <- data.frame(priceData = c(""), exBestOfferOverRides = c(""), virtualise = FALSE, rolloverStakes = FALSE )
-  listMarketBookOps$params$priceProjection$exBestOfferOverRides <- data.frame(bestPricesDepth = 2, rollupModel = "STAKE", rollupLimit = 20)
-  listMarketBookOps$params$priceProjection$priceData <- list(c(priceData))
+  listMarketBookOps$params$priceProjection <-
+    data.frame(
+      priceData = c(""), exBestOfferOverRides = c(""), virtualise = FALSE, rolloverStakes = FALSE
+    )
+  listMarketBookOps$params$priceProjection$exBestOfferOverRides <-
+    data.frame(
+      bestPricesDepth = 2, rollupModel = "STAKE", rollupLimit = 20
+    )
+  listMarketBookOps$params$priceProjection$priceData <-
+    list(c(priceData))
 
-  listMarketBookOps <- listMarketBookOps[c("jsonrpc", "method", "params", "id")]
+  listMarketBookOps <-
+    listMarketBookOps[c("jsonrpc", "method", "params", "id")]
 
-  listMarketBookOps <- jsonlite::toJSON(listMarketBookOps, pretty = TRUE)
+  listMarketBookOps <-
+    jsonlite::toJSON(listMarketBookOps, pretty = TRUE)
 
-  listMarketBook <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketBookOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
+  listMarketBook <-
+    as.list(jsonlite::fromJSON(
+      RCurl::postForm(
+        "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
+          postfields = listMarketBookOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+        )
+      )
+    ))
 
   as.data.frame(listMarketBook$result[1])
 

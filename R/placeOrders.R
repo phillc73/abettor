@@ -110,41 +110,63 @@
 #' }
 #'
 
-placeOrders <- function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType, handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")), sslVerify = TRUE){
+placeOrders <-
+  function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType, handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")), sslVerify = TRUE) {
+    options(stringsAsFactors = FALSE)
+    placeOrdersOps <-
+      data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
 
-  options(stringsAsFactors=FALSE)
-  placeOrdersOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
+    placeOrdersOps$params <-
+      data.frame(
+        marketId = marketId, instructions = c(""), customerRef = customerRef
+      )
 
-  placeOrdersOps$params <- data.frame(marketId = marketId, instructions = c(""), customerRef = customerRef)
+    if (betType == "MARKET_ON_CLOSE") {
+      placeOrdersOps$params$instructions <-
+        data.frame(
+          selectionId = selectionId,
+          handicap = handicap,
+          side = betSide,
+          orderType = betType,
+          marketOnCloseOrder =
+            c("")
+        )
 
-  if(betType == "MARKET_ON_CLOSE"){
-    placeOrdersOps$params$instructions <- data.frame(selectionId = selectionId,
-                                                     handicap = handicap,
-                                                     side = betSide,
-                                                     orderType = betType,
-                                                     marketOnCloseOrder=c(""))
-
-    placeOrdersOps$params$instructions$marketOnCloseOrder <- data.frame(liability = betSize)
+      placeOrdersOps$params$instructions$marketOnCloseOrder <-
+        data.frame(liability = betSize)
 
 
-  } else {
-    placeOrdersOps$params$instructions <- data.frame(selectionId = selectionId,
-                                                     handicap = handicap,
-                                                     side = betSide,
-                                                     orderType = betType,
-                                                     limitOrder=c(""))
+    } else {
+      placeOrdersOps$params$instructions <-
+        data.frame(
+          selectionId = selectionId,
+          handicap = handicap,
+          side = betSide,
+          orderType = betType,
+          limitOrder = c("")
+        )
 
-    placeOrdersOps$params$instructions$limitOrder <- data.frame(size = betSize, price = reqPrice, persistenceType = persistenceType)
+      placeOrdersOps$params$instructions$limitOrder <-
+        data.frame(size = betSize, price = reqPrice, persistenceType = persistenceType)
+    }
+
+    placeOrdersOps$params$instructions <-
+      list(placeOrdersOps$params$instructions)
+
+    placeOrdersOps <-
+      placeOrdersOps[c("jsonrpc", "method", "params", "id")]
+
+    placeOrdersOps <- jsonlite::toJSON(placeOrdersOps, pretty = TRUE)
+
+    placeOrders <-
+      as.list(jsonlite::fromJSON(
+        RCurl::postForm(
+          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
+            postfields = placeOrdersOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          )
+        )
+      ))
+
+    as.data.frame(placeOrders$result[1])
+
   }
-
-  placeOrdersOps$params$instructions <- list(placeOrdersOps$params$instructions)
-
-  placeOrdersOps <- placeOrdersOps[c("jsonrpc", "method", "params", "id")]
-
-  placeOrdersOps <- jsonlite::toJSON(placeOrdersOps, pretty = TRUE)
-
-  placeOrders <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=placeOrdersOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
-
-  as.data.frame(placeOrders$result[1])
-
-}

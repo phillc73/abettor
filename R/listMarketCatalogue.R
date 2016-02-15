@@ -79,26 +79,52 @@
 #' }
 #'
 
-listMarketCatalogue <- function(eventTypeIds, marketCountries, marketTypeCodes, maxResults = "200", fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE){
 
-  options(stringsAsFactors=FALSE)
-  listMarketCatalogueOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketCatalogue", id = "1")
+listMarketCatalogue <-
+  function(eventTypeIds, marketCountries, marketTypeCodes, maxResults = "200", fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE) {
+    options(stringsAsFactors = FALSE)
+    listMarketCatalogueOps <-
+      data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketCatalogue", id = "1")
 
-  listMarketCatalogueOps$params <- data.frame(filter = c(""), maxResults = c(maxResults), marketProjection = c(""))
-  listMarketCatalogueOps$params$filter <- data.frame(eventTypeIds = c(""), marketCountries = c(""), marketTypeCodes = c(""), marketStartTime = c(""))
+    listMarketCatalogueOps$params <-
+      data.frame(
+        filter = c(""), maxResults = c(maxResults), marketProjection = c("")
+      )
+    listMarketCatalogueOps$params$filter <-
+      data.frame(
+        eventTypeIds = c(""), marketCountries = c(""), marketTypeCodes = c(""), marketStartTime = c("")
+      )
 
-  listMarketCatalogueOps$params$filter$eventTypeIds <- list(eventTypeIds)
-  listMarketCatalogueOps$params$filter$marketCountries <- list(marketCountries)
-  listMarketCatalogueOps$params$filter$marketTypeCodes <- list(marketTypeCodes)
-  listMarketCatalogueOps$params$filter$marketStartTime <- data.frame(from = fromDate, to = toDate)
-  listMarketCatalogueOps$params$marketProjection <- list(c("COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"))
+    listMarketCatalogueOps$params$filter$eventTypeIds <-
+      list(eventTypeIds)
+    listMarketCatalogueOps$params$filter$marketCountries <-
+      list(marketCountries)
+    listMarketCatalogueOps$params$filter$marketTypeCodes <-
+      list(marketTypeCodes)
+    listMarketCatalogueOps$params$filter$marketStartTime <-
+      data.frame(from = fromDate, to = toDate)
+    listMarketCatalogueOps$params$marketProjection <-
+      list(
+        c(
+          "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
+        )
+      )
 
-  listMarketCatalogueOps <- listMarketCatalogueOps[c("jsonrpc", "method", "params", "id")]
+    listMarketCatalogueOps <-
+      listMarketCatalogueOps[c("jsonrpc", "method", "params", "id")]
 
-  listMarketCatalogueOps <- jsonlite::toJSON(listMarketCatalogueOps, pretty = TRUE)
+    listMarketCatalogueOps <-
+      jsonlite::toJSON(listMarketCatalogueOps, pretty = TRUE)
 
-  listMarketCatalogue <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketCatalogueOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
+    listMarketCatalogue <-
+      as.list(jsonlite::fromJSON(
+        RCurl::postForm(
+          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
+            postfields = listMarketCatalogueOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          )
+        )
+      ))
 
-  as.data.frame(listMarketCatalogue$result[1])
+    as.data.frame(listMarketCatalogue$result[1])
 
-}
+  }

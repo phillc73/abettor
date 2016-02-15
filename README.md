@@ -38,13 +38,23 @@ An initial tutorial describing how to place a bet with `abettor` is [available h
 
 ```r
 ?loginBF
+?logoutBF
+?listClearedOrders
+?listCurrentOrders
 ?listEventTypes
 ?listEvents
 ?listCountries
 ?listMarketBook
 ?listMarketCatalogue
 ?listMarketTypes
+?listMarketPandL
 ?placeOrders
+?replaceOrders
+?updateOrders
+?cancelOrders
+?checkBalance
+?getAccountStatement
+?keepAlive
 ```
 Each function contains documented descriptions for their use and all supported arguments. Read them.
 
@@ -64,10 +74,9 @@ Problems? Something just doesn't work?
 
 ### To Do
 
-* Cancel Bet Functions
-* Account Management Functions
 * More functions!
-* Graceful error handling
+* More error handling
+* Support in-play betting with live prices
 * Develop a Shiny web app for demonstration purposes
 * See if `data.table` makes things quicker
 
@@ -76,8 +85,8 @@ Problems? Something just doesn't work?
 * [Betfair Online Betting Exchange](https://www.betfair.com)
 * [Betfair Developer Program](https://developer.betfair.com/)
 * [Betfair Exchange API Documentation](https://developer.betfair.com/default/api-s-and-services/sports-api/)
-* [Author's Website](http://www.starkingdom.co.uk)
-* [Author on Twitter](https://twitter.com/_starkingdom)
+* [Creator's Website](http://www.starkingdom.co.uk)
+* [Creator on Twitter](https://twitter.com/_starkingdom)
 
 ## Disclaimer
 

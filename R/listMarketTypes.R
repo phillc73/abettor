@@ -40,21 +40,32 @@
 #' }
 #'
 
-listMarketTypes <- function(eventTypeIds, sslVerify = TRUE){
-
-  listMarketTypesOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketTypes", id = "1")
+listMarketTypes <- function(eventTypeIds, sslVerify = TRUE) {
+  listMarketTypesOps <-
+    data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketTypes", id = "1")
 
   listMarketTypesOps$params <- data.frame(filter = c(""))
 
-  listMarketTypesOps$params$filter <- data.frame(eventTypeIds = c(""))
+  listMarketTypesOps$params$filter <-
+    data.frame(eventTypeIds = c(""))
 
-  listMarketTypesOps$params$filter$eventTypeIds <- list(eventTypeIds)
+  listMarketTypesOps$params$filter$eventTypeIds <-
+    list(eventTypeIds)
 
-  listMarketTypesOps <- listMarketTypesOps[c("jsonrpc", "method", "params", "id")]
+  listMarketTypesOps <-
+    listMarketTypesOps[c("jsonrpc", "method", "params", "id")]
 
-  listMarketTypesOps <- jsonlite::toJSON(listMarketTypesOps, pretty = TRUE)
+  listMarketTypesOps <-
+    jsonlite::toJSON(listMarketTypesOps, pretty = TRUE)
 
-  listMarketTypes <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listMarketTypesOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
+  listMarketTypes <-
+    as.list(jsonlite::fromJSON(
+      RCurl::postForm(
+        "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
+          postfields = listMarketTypesOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+        )
+      )
+    ))
 
   as.data.frame(listMarketTypes$result[1])
 

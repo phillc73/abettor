@@ -62,27 +62,37 @@
 #' }
 #'
 
-listEvents <- function(eventTypeIds, competitionIds=NULL, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE){
+listEvents <-
+  function(eventTypeIds, competitionIds = NULL, fromDate = (format(Sys.time(), "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")), sslVerify = TRUE) {
+    options(stringsAsFactors = FALSE)
+    listEventsOps <-
+      data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listEvents", id = "1")
 
-  options(stringsAsFactors=FALSE)
-  listEventsOps <- data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listEvents", id = "1")
+    listEventsOps$params <- data.frame(filter = c(""))
+    listEventsOps$params$filter <- data.frame(eventTypeIds = c(""))
+    listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
+    if (!is.null(competitionIds)) {
+      listEventsOps$params$filter$competitionIds <-
+        list(c(competitionIds))
+    }
+    listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
+    listEventsOps$params$filter$marketStartTime <-
+      data.frame(from = fromDate, to = toDate)
 
-  listEventsOps$params <- data.frame(filter = c(""))
-  listEventsOps$params$filter <- data.frame(eventTypeIds = c(""))
-  listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
-  if (!is.null(competitionIds)) {
-    listEventsOps$params$filter$competitionIds <- list(c(competitionIds))
+    listEventsOps <-
+      listEventsOps[c("jsonrpc", "method", "params", "id")]
+
+    listEventsOps <- jsonlite::toJSON(listEventsOps, pretty = TRUE)
+
+    listEvents <-
+      as.list(jsonlite::fromJSON(
+        RCurl::postForm(
+          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
+            postfields = listEventsOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          )
+        )
+      ))
+
+    as.data.frame(listEvents$result[1])
+
   }
-  listEventsOps$params$filter$eventTypeIds <- list(c(eventTypeIds))
-  listEventsOps$params$filter$marketStartTime <- data.frame(from = fromDate, to = toDate)
-
-  listEventsOps <- listEventsOps[c("jsonrpc", "method", "params", "id")]
-
-  listEventsOps <- jsonlite::toJSON(listEventsOps, pretty = TRUE)
-
-  listEvents <- as.list(jsonlite::fromJSON(RCurl::postForm("https://api.betfair.com/exchange/betting/json-rpc/v1", .opts=list(postfields=listEventsOps, httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))
-
-  as.data.frame(listEvents$result[1])
-
-}
-
