@@ -8,11 +8,11 @@
 #'  DELAY application key. The DELAY application key does not support price
 #'  data.
 #'
-#'@param marketIDs String. A list of market ID strings from which the
+#'@param marketIds String. A list of market ID strings from which the
 #'  corresponding current orders will be returned. Optional. Default is set to
 #'  NULL.
 #'
-#'@param betIDs Vector<string>. Restrict the results to the specified bet IDs
+#'@param betIds Vector<string>. Restrict the results to the specified bet IDs
 #'  (e.g. c("61529884133","61529884472")). Optional. Default is set to NULL.
 #'
 #'@param orderByValue string. Specifies how the results will be ordered. The
@@ -42,7 +42,7 @@
 #'  (inclusive). Default value is NULL, which means that the latest available
 #'  items will be in range. Optional. Default is set to NULL.
 #'
-#'@param OrderProjectionValue string. Restricts the results to the specified
+#'@param orderProjectionValue string. Restricts the results to the specified
 #'  order status. Possible values are: "EXECUTABLE" (An order that has a
 #'  remaining unmatched portion); "EXECUTION_COMPLETE" (An order that does not
 #'  have any remaining unmatched portion); "ALL" (EXECUTABLE and
@@ -89,21 +89,19 @@
 #' }
 #'
 
-
 listCurrentOrders <-
-  function(betIDs = NULL,marketIDs = NULL,orderByValue = NULL,SortDirValue =
-             NULL,
-           fromDate = NULL, toDate = NULL,flag = FALSE,orderProjectionValue = NULL,
-           fromRecordValue = NULL,recordCountValue = NULL,sslVerify = TRUE) {
+  function(betIds = NULL, marketIds = NULL,orderByValue = NULL, SortDirValue = NULL,
+           fromDate = NULL, toDate = NULL, flag = FALSE, orderProjectionValue = NULL,
+           fromRecordValue = NULL, recordCountValue = NULL, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listCurrentOrders", id = "1")
 
     listOrderOps$params <- data.frame(orderProjection = "")
-    if (!is.null(betIDs))
-      listOrderOps$params$betIds <- list(c(betIDs))
-    if (!is.null(marketIDs))
-      listOrderOps$params$marketIds <- list(c(marketIDs))
+    if (!is.null(betIds))
+      listOrderOps$params$betIds <- list(c(betIds))
+    if (!is.null(marketIds))
+      listOrderOps$params$marketIds <- list(c(marketIds))
 
     listOrderOps$params$orderProjection <- orderProjectionValue
     listOrderOps$params$orderBy <- orderByValue

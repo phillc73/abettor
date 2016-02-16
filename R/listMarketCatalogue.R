@@ -77,7 +77,7 @@
 #' @param marketBettingTypes vector <String>. Restrict to markets that match the
 #'   betting type of the market (i.e. Odds, Asian Handicap Singles, or Asian
 #'   Handicap Doubles). Optional. Default is NULL. See
-#'   \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketBettingType}
+#'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketBettingType}
 #'    for a full list (and description) of viable parameter values.
 #'
 #' @param withOrders String. Restrict to markets in which the user has bets of a
@@ -94,13 +94,13 @@
 #'   ranked by the most popular sports types and marketTypes are ranked in the
 #'   following order: ODDS ASIAN LINE RANGE If all other dimensions of the
 #'   result are equal, then the results are ranked in MarketId order. See
-#'   \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketSort}
+#'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketSort}
 #'    for a full list (and description) of viable parameter values.
 #'
 #' @param marketProjection vector <String>. Determines the type and amount of
 #'   data returned about the market. By default all data, except "MARKET
 #'   DESCRIPTION", is included. See
-#'   \linkP{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketProjection}
+#'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketProjection}
 #'    for a full list (and description) of all parameter values.
 #'
 #' @param textQuery String. Restrict markets by any text associated with the

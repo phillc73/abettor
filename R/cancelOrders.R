@@ -1,6 +1,6 @@
 #' Cancel unmatched/partially matched bets
 #'
-#' \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/cancelOrders}
+#' \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/cancelOrders}
 #'
 #' \code{cancelOrders} Cancel all bets OR cancel all bets on a market OR fully
 #' or partially cancel particular orders on a market. Only LIMIT orders can be
@@ -16,7 +16,7 @@
 #'   this parameter to NULL will result in the full cancellation of all
 #'   unmatched bets across all markets.
 #'
-#' @param betID vector (strings). The bet IDs of the bets to be cancelled- bet
+#' @param betIds vector (strings). The bet IDs of the bets to be cancelled- bet
 #'   IDs are displayed (called Ref) on the bet information on the right hand
 #'   side of market page on the betfair desktop site.
 #'
@@ -50,37 +50,54 @@
 #'
 #' @examples
 #' \dontrun{
-#' To cancel all unmatched bets (across all countries), simply run cancelOrders with marketID set to NULL
+#' To cancel all unmatched bets (across all countries), simply run cancelOrders
+#' with marketId set to NULL
+#'
 #' cancelOrders()
 #'
-#' TO cancel all unmatched bets on a single market, then just pass the market ID in the marketID parameter:
-#' cancelOrders(marketID=NULL)
+#' To cancel all unmatched bets on a single market, then just pass the market ID
+#' in the marketId parameter:
 #'
-#' To fully cancel an inidividual bet on a specific market, then  include a bet ID in betIDs parameter:
-#' cancelOrders(marketID="1.2131241",betIDs=c("3431515121"))
+#' cancelOrders(marketId = NULL)
 #'
-#' To partially cancel an inidividual bet on a specific market, then  include both betIDs and sizeReduction vectors:
-#' cancelOrders(marketID="1.2131241",betIDs=c("2451351566"),sizeReductions=c("2.0"))
+#' To fully cancel an inidividual bet on a specific market, then  include a
+#' bet ID in betIds parameter:
 #'
-#' If you want a mixture of complete and partial cancellations, then use "NULL" to in the sizeReductions vector to determine full cancellations.
+#' cancelOrders(marketId = "1.2131241",
+#'             betIds = c("3431515121")
+#'             )
+#'
+#' To partially cancel an inidividual bet on a specific market, include both
+#' betIds and sizeReduction vectors:
+#'
+#' cancelOrders(marketId = "1.2131241",
+#'             betIds = c("2451351566"),
+#'             sizeReductions = c("2.0")
+#'             )
+#'
+#' If you want a mixture of complete and partial cancellations, use "NULL"
+#' to in the sizeReductions vector to determine full cancellations.
 #' For example, if we wanted to combine our two previous requests:
-#' cancelOrders(marketID="1.2131241",betIDs=c("3431515121","2451351566"),c=("NULL","2.0"))
 #'
+#' cancelOrders(marketId = "1.2131241",
+#'             betIds = c("3431515121","2451351566"),
+#'             sizeReductions = c("NULL","2.0")
+#'             )
 #' }
 #'
 
 cancelOrders <-
-  function(marketID,betIDs = NULL,sizeReductions = NULL,sslVerify = TRUE) {
+  function(marketId, betIds = NULL, sizeReductions = NULL, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     if (is.null(sizeReductions))
-      sizeReductions = rep("NULL",length(betIDs))
-    if (length(betIDs) != length(sizeReductions))
+      sizeReductions = rep("NULL",length(betIds))
+    if (length(betIds) != length(sizeReductions))
       return("Bet ID and Size Reduction vectors need to have the same length")
     cancelOrderOps <-
       paste0(
-        '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketID,'","instructions": [',
+        '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketId,'","instructions": [',
         paste0(sapply(as.data.frame(t(data.frame(
-          betIDs,sizeReductions
+          betIds,sizeReductions
         ))),function(x)
           paste0('{"betId":"',x[1],'","sizeReduction":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
       )

@@ -7,7 +7,7 @@
 #' need to be called again before any further actions can be performed.
 #'
 #' @seealso
-#'   \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}
+#'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}
 #'    for general information on requesting Logout on the Betfair API.
 #'
 #' @seealso \code{\link{loginBF}}, which must be executed first, as this
@@ -28,19 +28,19 @@
 #'   as a list, from which the statuses SUCCESS or FAIL and error, if it is
 #'   not null are returned as a colon seperated concatenated string. For error
 #'   values, see
-#'   \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}.
+#'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}.
 #'
 #' @examples
 #' \dontrun{
 #' loginBF("username","password","appKey")
 #' logoutBF()
-#' logoutBF()
 #'
-#' # The last logout in this block will return an error. The first logout terminates the session, meaning there is no session to end on the second logout request.
+#' The last logout in this block will return an error. The first logout terminates
+#' the session, meaning there is no session to end on the second logout request.
 #'  }
 #'
 
-logoutBF = function(suppress = TRUE,sslVerify = TRUE) {
+logoutBF = function(suppress = TRUE, sslVerify = TRUE) {
   #return(suppressWarnings(as.list(jsonlite::fromJSON(RCurl::postForm("https://identitysso.betfair.com/api/keepAlive", .opts=list(httpheader=headersPostLogin, ssl.verifypeer = sslVerify))))))
   if (suppress)
     keepAlive <-

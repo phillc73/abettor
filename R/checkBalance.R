@@ -7,12 +7,12 @@
 #' calls, there are no dangers associated with this function, it simply returns
 #' account information such as balance, exposure, etc.
 #'
-#' See \link{http://learning.betfair.com/en/videos/australian-wallet.html} or
-#' \link{https://en-betfair.custhelp.com/app/answers/detail/a_id/103/~/exchange\%3A-what-are-wallets-used-for\%3F}
+#' See \url{http://learning.betfair.com/en/videos/australian-wallet.html} or
+#' \url{https://en-betfair.custhelp.com/app/answers/detail/a_id/103/~/exchange\%3A-what-are-wallets-used-for\%3F}
 #' for more general information on the Betfair wallet system.
 #'
 #' @seealso
-#' \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/getAccountFunds}
+#' \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/getAccountFunds}
 #' for general information on calling account balance via the Betfair API.
 #'
 #' @seealso \code{\link{loginBF}}, which must be executed first, as this

@@ -23,7 +23,7 @@ Similar to \code{\link{loginBF}}, the call output is parsed from JSON
   as a list, from which the status ("SUCCESS" or "FAIL") and error (if it is
   not null) are returned as a colon seperated concatenated string. For error
   values, see
-  \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
+  \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
 }
 \description{
 This function essentially refreshes the session token, which prevents
@@ -33,7 +33,7 @@ timeout period is four hours (and just 20 mins for the Italian exchange)
 }
 \details{
 See
-\link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
 for more information. Thus, make sure to call this function at least every
 four hours to prevent session expiry.
 
@@ -61,7 +61,7 @@ session expiry time.
 
 }
 \seealso{
-\link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
 for general information on requesting keepAlive on the Betfair API.
 
 \code{\link{loginBF}}, which must be executed first, as this

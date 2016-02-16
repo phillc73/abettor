@@ -4,26 +4,36 @@
 \alias{listClearedOrders}
 \title{Return settled Orders data}
 \usage{
-listClearedOrders(betStatusValue = "SETTLED", eventTypeIDs = NULL,
-  eventIDs = NULL, betIDs = NULL, marketIDs = NULL, runnerIDs = NULL,
+listClearedOrders(betStatusValue = "SETTLED", eventTypeIds = NULL,
+  eventIds = NULL, betIds = NULL, marketIds = NULL, runnerIds = NULL,
   sideValue = NULL, fromDate = NULL, toDate = NULL, groupByValue = NULL,
   includeItemDescriptionValue = NULL, fromRecordValue = NULL,
   recordCountValue = NULL, flag = FALSE, sslVerify = TRUE)
 }
 \arguments{
-\item{eventTypeIDs}{Vector<string>. Restrict the results to the specified
+\item{betStatusValue}{string. Restricts the results to the specified status.
+According to the online documentation, this paramter is not mandatory.
+However, it returns an empty data frame unless it's specified. Thus, by
+default, this parameter is set to "SETTLED" (matched bets that were settled
+normally). Alternative values are "VOIDED" (matched bets that were
+subsequently voided by Betfair, before, during or after settlement) ,
+"LAPSED" (Unmatched bets that were cancelled by Betfair (for example at
+turn in play)) and "CANCELLED" (unmatched bets that were cancelled by an
+explicit customer action)}
+
+\item{eventTypeIds}{Vector<string>. Restrict the results to the specified
 event type IDs (e.g football = "1"). Optional.}
 
-\item{eventIDs}{Vector<string>. Restrict the results to the specified event
+\item{eventIds}{Vector<string>. Restrict the results to the specified event
 IDs (e.g. c("27664019","27664123")). Optional.}
 
-\item{betIDs}{Vector<string>. Restrict the results to the specified bet IDs
+\item{betIds}{Vector<string>. Restrict the results to the specified bet IDs
 (e.g. c("61529884133","61529884472")). Optional.}
 
-\item{marketIDs}{Vector<string>. Restrict the results to the specified market
+\item{marketIds}{Vector<string>. Restrict the results to the specified market
 IDs (e.g. c("1.122841367","1.122814314")). Optional.}
 
-\item{runnerIDs}{Vector<string>. Restrict the results to the specified runner
+\item{runnerIds}{Vector<string>. Restrict the results to the specified runner
 IDs (e.g. c("1039206","8216044")). Optional.}
 
 \item{sideValue}{string.Restrict the results to the specified side (i.e.
@@ -72,19 +82,6 @@ they may be behind a proxy server, Betfair will fail login with "SSL
 certificate problem: self signed certificate in certificate chain". If this
 error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
-
-\item{betStatus}{string. Restricts the results to the specified status.
-According to the online documentation, this paramter is not mandatory.
-However, it returns an empty data frame unless it's specified. Thus, by
-default, this parameter is set to "SETTLED" (matched bets that were settled
-normally). Alternative values are "VOIDED" (matched bets that were
-subsequently voided by Betfair, before, during or after settlement) ,
-"LAPSED" (Unmatched bets that were cancelled by Betfair (for example at
-turn in play)) and "CANCELLED" (unmatched bets that were cancelled by an
-explicit customer action)}
-
-\item{sideValue}{string.Restrict the results to the specified side (i.e.
-"BACK" or "LAY"). Optional.}
 }
 \value{
 Response from Betfair is stored in listMarketBook variable, which is
@@ -95,7 +92,7 @@ Response from Betfair is stored in listMarketBook variable, which is
 \code{listClearedOrders} Returns a list of settled bets based on the bet
 status, ordered by settled date. For more infromation, please consult the
 online documentation
-(\link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
+(\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
 }
 \section{Note on \code{listMarketBookOps} variable}{
  The
@@ -106,10 +103,12 @@ online documentation
 }
 \examples{
 \dontrun{
-# Return 100 settled bets (with market,event,runner information) for the last 2 days or so.
+Return 100 settled bets (with market,event,runner information)
+for the last 2 days or so.
 
-listClearedOrders(toDate=format(Sys.time()-200000, "\%Y-\%m-\%dT"),recordCountValue=100,includeItemDescriptionValue = TRUE)
-
+listClearedOrders(toDate = format(Sys.time()-200000, "\%Y-\%m-\%dT"),
+                 recordCountValue=100,
+                 includeItemDescriptionValue = TRUE)
 }
 
 }

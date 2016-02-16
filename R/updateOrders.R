@@ -1,6 +1,6 @@
 #' Change bet persistence type
 #'
-#' \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/updateOrders}
+#' \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/updateOrders}
 #'
 #' \code{updateOrders} changes the persistence type of a specific unmatched bet.
 #'
@@ -11,11 +11,11 @@
 #' @param marketId String. The market ID of the bets to be updated. While many
 #'   bets can be updated in one call, they must be from the same market.
 #'
-#' @param betID vector (strings). The bet IDs of the bets to be updated- bet IDs
+#' @param betId vector (strings). The bet IDs of the bets to be updated- bet IDs
 #'   are displayed (called Ref) on the bet information on the right hand side of
 #'   market page on the betfair desktop site.
 #'
-#' @param PersistenceType vector (strings). The persistence state of updated
+#' @param persistenceType vector (strings). The persistence state of updated
 #'   bets. PersistanceType can take three values
 #'   ("LAPSE","PERSIST","MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 #'   Take SP on the desktop website)
@@ -46,32 +46,41 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Update two bets on the same market so that they will persist in play. The following
-#' variables are for illustrative purposes and don't represent actual Betfair IDs:
+#' # Update two bets on the same market so that they will persist in play.
+#' The following variables are for illustrative purposes and don't represent
+#' actual Betfair IDs:
 #'
-#' updateOrders("1.10271480",c("61385423029","61385459133"),c("PERSIST","PERSIST") )
+#' updateOrders(marketId = "1.10271480",
+#'             betID = c("61385423029","61385459133"),
+#'             persistenceType = c("PERSIST","PERSIST")
+#'             )
 #'
-#' Note that if you run this function again, it will return an error (BET_ACTION_ERROR (NO_ACTION_REQUIRED)) as the bets are already set to "PERSIST".
+#' Note that if you run this function again, it will return an error
+#' (BET_ACTION_ERROR (NO_ACTION_REQUIRED)) as the bets are already set to "PERSIST".
 #'
-#' Now, if you run the function for a third time, but with one "LAPSE" and one "PERSIST", it will again return a different error (PROCESSED_WITH_ERRORS).
-#' This is because all bets need to be successful to return "SUCCESS". Please note, however, that the viable
-#' bet IDs will have been succesfully updated i.e. it's not an all or nothing process but rather each update is treated individually (unlike \code{replaceOrders}, for example).
+#' Now, if you run the function for a third time, but with one "LAPSE" and one
+#' "PERSIST", it will again return a different error (PROCESSED_WITH_ERRORS).
+#' This is because all bets need to be successful to return "SUCCESS".
+#' Please note, however, that the viable bet IDs will have been succesfully updated
+#' i.e. it's not an all or nothing process but rather each update is treated
+#' individually (unlike \code{replaceOrders}).
 #'
-#' Another possible error occurs if you input incorrect data. In these scenarios, no updates will have been processed and "No Data Returned" will be the function output.
+#' Another possible error occurs if you input incorrect data. In these scenarios,
+#' no updates will have been processed and "No Data Returned" will be the function
+#' output.
 #' }
 #'
 
-
 updateOrders <-
-  function(marketID,betID,PersistenceType,sslVerify = TRUE) {
+  function(marketId, betId, persistenceType, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-    if (length(betID) != length(PersistenceType))
+    if (length(betId) != length(persistenceType))
       return("Bet ID and Persistence Type vector need to have the same length")
     updateOrderOps <-
       paste0(
-        '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketID,'","instructions": [',
+        '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketId,'","instructions": [',
         paste0(sapply(as.data.frame(t(data.frame(
-          betID,PersistenceType
+          betId, PersistenceType
         ))),function(x)
           paste0('{"betId":"',x[1],'","newPersistenceType":"',x[2],'"}')),collapse =
           ","),']},"id": "1"}]'

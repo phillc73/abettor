@@ -4,11 +4,17 @@
 \alias{listMarketPandL}
 \title{Return market profit and loss}
 \usage{
-listMarketPandL(marketIDs = NULL, includeSettledBetsValue = NULL,
+listMarketPandL(marketIds = NULL, includeSettledBetsValue = NULL,
   includeBspBetsValue = NULL, netOfCommissionValue = NULL,
   sslVerify = TRUE, errorWarning = FALSE)
 }
 \arguments{
+\item{marketIds}{Vector<String>. A set of market ID strings from which the
+corresponding market profit and losses will be returned. According to the
+online documentation, this parameter is not required. However, setting it
+to null will return an empty data frame. So I suggest including market IDs
+in this parameter.}
+
 \item{includeSettledBetsValue}{Boolean. Option to include settled bets
 (partially settled markets only). This parameter defaults to NULL, which
 Betfair interprets as false. Optional.}
@@ -32,12 +38,6 @@ security risk of a man-in-the-middle intercepting your login credentials.}
 \item{errorWarning}{Boolean. This argument defaults to FALSE and is optional.
 If set to TRUE, then, in the case of errors, the error details will be
 posted as a warning.}
-
-\item{marketIds}{Vector<String>. A set of market ID strings from which the
-corresponding market profit and losses will be returned. According to the
-online documentation, this parameter is not required. However, setting it
-to null will return an empty data frame. So I suggest including market IDs
-in this parameter.}
 }
 \value{
 Response from Betfair is stored in listPandL variable, which is then
@@ -59,9 +59,11 @@ bets
 }
 \examples{
 \dontrun{
-# Return the P&L (net of comission) for the requested markets. This actual market IDs are
-unlikely to work and are just for demonstration purposes.
-listMarketPandL(marketIDs=c("1.122323121","1.123859413"),netOfCommission = TRUE)
+Return the P&L (net of comission) for the requested markets. This actual
+market IDs are unlikely to work and are just for demonstration purposes.
+
+listMarketPandL(marketIds = c("1.122323121","1.123859413"),
+               netOfCommission = TRUE)
 }
 
 }

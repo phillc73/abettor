@@ -33,6 +33,17 @@ items will be in range. This itemDataRange is currently only applied when
 includeItem is set to ALL or not specified, else items are NOT bound by
 itemDate. Optional.}
 
+\item{includeItemValue}{string. Determines Which items are include. The default
+value is NULL, which Betfair interprets as "ALL" (include all items). THe
+alternative values are "DEPOSITS_WITHDRAWALS" (include payments only),
+"EXCHANGE" (include exchange bets only) and "POKER_ROOM" (include poker
+transactions only). Optional.}
+
+\item{walletValue}{string. Specifies from Which wallet to return statementItems.
+The default value is NULL, which returns UK wallet info. THe alternative
+value is "AUSTRALIAN", which corresponds to the Austrailian wallet.
+Optional.}
+
 \item{flag}{Boolean. \code{RCurl::postForm} returns a warning if there's more
 records than the limit of 100 that can be returned in one call. By default,
 this parameter is set to FALSE, meaning this warning is not flagged.
@@ -44,17 +55,6 @@ they may be behind a proxy server, Betfair will fail login with "SSL
 certificate problem: self signed certificate in certificate chain". If this
 error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
-
-\item{includeItem}{string. Determines Which items are include. The default
-value is NULL, which Betfair interprets as "ALL" (include all items). THe
-alternative values are "DEPOSITS_WITHDRAWALS" (include payments only),
-"EXCHANGE" (include exchange bets only) and "POKER_ROOM" (include poker
-transactions only). Optional.}
-
-\item{wallet}{string. Specifies from Which wallet to return statementItems.
-The default value is NULL, which returns UK wallet info. THe alternative
-value is "AUSTRALIAN", which corresponds to the Austrailian wallet.
-Optional.}
 }
 \value{
 Response from Betfair is stored in Account Statement variable, which

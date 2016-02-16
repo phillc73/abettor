@@ -62,37 +62,39 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Return the P&L (net of comission) for the requested markets. This actual market IDs are
-#' unlikely to work and are just for demonstration purposes.
-#' listMarketPandL(marketIDs=c("1.122323121","1.123859413"),netOfCommission = TRUE)
+#' Return the P&L (net of comission) for the requested markets. This actual
+#' market IDs are unlikely to work and are just for demonstration purposes.
+#'
+#' listMarketPandL(marketIds = c("1.122323121","1.123859413"),
+#'                netOfCommission = TRUE)
 #' }
 #'
 
 
 listMarketPandL <-
-  function(marketIDs = NULL,includeSettledBetsValue = NULL,includeBspBetsValue =
+  function(marketIds = NULL,includeSettledBetsValue = NULL,includeBspBetsValue =
              NULL,netOfCommissionValue = NULL,sslVerify = TRUE,errorWarning = FALSE) {
     options(stringsAsFactors = FALSE)
-    listPanLOps <-
+    listPandLOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketProfitAndLoss", id = "1")
 
-    listPanLOps$params <- data.frame(includeSettledBetsValue = "")
-    if (!is.null(marketIDs))
-      listPanLOps$params$marketIds <- list(c(marketIDs))
+    listPandLOps$params <- data.frame(includeSettledBetsValue = "")
+    if (!is.null(marketIds))
+      listPandLOps$params$marketIds <- list(c(marketIds))
 
-    listPanLOps$params$includeSettledBets <- includeSettledBetsValue
-    listPanLOps$params$includeBspBets <- includeBspBetsValue
-    listPanLOps$params$netOfCommission <- netOfCommissionValue
+    listPandLOps$params$includeSettledBets <- includeSettledBetsValue
+    listPandLOps$params$includeBspBets <- includeBspBetsValue
+    listPandLOps$params$netOfCommission <- netOfCommissionValue
 
-    listPanLOps <- listPanLOps[c("jsonrpc", "method", "params", "id")]
+    listPandLOps <- listPandLOps[c("jsonrpc", "method", "params", "id")]
 
-    listPanLOps <- jsonlite::toJSON(listPanLOps, pretty = TRUE)
+    listPandLOps <- jsonlite::toJSON(listPandLOps, pretty = TRUE)
 
     listPandL <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listPanLOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+            postfields = listPandLOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
           )
         )
       )

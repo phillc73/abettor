@@ -4,16 +4,16 @@
 \alias{listCurrentOrders}
 \title{Return Current Orders data}
 \usage{
-listCurrentOrders(betIDs = NULL, marketIDs = NULL, orderByValue = NULL,
+listCurrentOrders(betIds = NULL, marketIds = NULL, orderByValue = NULL,
   SortDirValue = NULL, fromDate = NULL, toDate = NULL, flag = FALSE,
   orderProjectionValue = NULL, fromRecordValue = NULL,
   recordCountValue = NULL, sslVerify = TRUE)
 }
 \arguments{
-\item{betIDs}{Vector<string>. Restrict the results to the specified bet IDs
+\item{betIds}{Vector<string>. Restrict the results to the specified bet IDs
 (e.g. c("61529884133","61529884472")). Optional. Default is set to NULL.}
 
-\item{marketIDs}{String. A list of market ID strings from which the
+\item{marketIds}{String. A list of market ID strings from which the
 corresponding current orders will be returned. Optional. Default is set to
 NULL.}
 
@@ -49,6 +49,13 @@ that can be returned in one call. By default, this parameter is set to
 FALSE, meaning this warning is not flagged. Changing this parameter to TRUE
 will result in warnings being posted.}
 
+\item{orderProjectionValue}{string. Restricts the results to the specified
+order status. Possible values are: "EXECUTABLE" (An order that has a
+remaining unmatched portion); "EXECUTION_COMPLETE" (An order that does not
+have any remaining unmatched portion); "ALL" (EXECUTABLE and
+EXECUTION_COMPLETE orders). Default value is NULL, which Betfair interprets
+as "ALL". Optional.}
+
 \item{fromRecordValue}{int. Specifies the first record that will be returned.
 Records start at index zero. Default parameter value is NULL, which Betfair
 interprets as 0. Optional. Default is set to NULL.}
@@ -63,13 +70,6 @@ may be behind a proxy server, Betfair will fail login with "SSL certificate
 problem: self signed certificate in certificate chain". If this error occurs
 you may set sslVerify to FALSE. This does open a small security risk of a
 man-in-the-middle intercepting your login credentials.}
-
-\item{OrderProjectionValue}{string. Restricts the results to the specified
-order status. Possible values are: "EXECUTABLE" (An order that has a
-remaining unmatched portion); "EXECUTION_COMPLETE" (An order that does not
-have any remaining unmatched portion); "ALL" (EXECUTABLE and
-EXECUTION_COMPLETE orders). Default value is NULL, which Betfair interprets
-as "ALL". Optional.}
 }
 \value{
 Response from Betfair is stored in currentOrders variable, which is

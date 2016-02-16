@@ -3,13 +3,13 @@
 #' \code{listClearedOrders} Returns a list of settled bets based on the bet
 #' status, ordered by settled date. For more infromation, please consult the
 #' online documentation
-#' (\link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
+#' (\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
 #'
 #' @seealso \code{\link{loginBF}}, which must be executed first. Do NOT use the
 #'   DELAY application key. The DELAY application key does not support price
 #'   data.
 #'
-#' @param betStatus string. Restricts the results to the specified status.
+#' @param betStatusValue string. Restricts the results to the specified status.
 #'   According to the online documentation, this paramter is not mandatory.
 #'   However, it returns an empty data frame unless it's specified. Thus, by
 #'   default, this parameter is set to "SETTLED" (matched bets that were settled
@@ -19,25 +19,22 @@
 #'   turn in play)) and "CANCELLED" (unmatched bets that were cancelled by an
 #'   explicit customer action)
 #'
-#' @param eventTypeIDs Vector<string>. Restrict the results to the specified
+#' @param eventTypeIds Vector<string>. Restrict the results to the specified
 #'   event type IDs (e.g football = "1"). Optional.
 #'
-#' @param eventIDs Vector<string>. Restrict the results to the specified event
+#' @param eventIds Vector<string>. Restrict the results to the specified event
 #'   IDs (e.g. c("27664019","27664123")). Optional.
 #'
-#' @param marketIDs Vector<string>. Restrict the results to the specified market
+#' @param marketIds Vector<string>. Restrict the results to the specified market
 #'   IDs (e.g. c("1.122841367","1.122814314")). Optional.
 #'
-#' @param runnerIDs Vector<string>. Restrict the results to the specified runner
+#' @param runnerIds Vector<string>. Restrict the results to the specified runner
 #'   IDs (e.g. c("1039206","8216044")). Optional.
 #'
 #' @param sideValue string.Restrict the results to the specified side (i.e.
 #'   "BACK" or "LAY"). Optional.
 #'
-#' @param sideValue string.Restrict the results to the specified side (i.e.
-#'   "BACK" or "LAY"). Optional.
-#'
-#' @param betIDs Vector<string>. Restrict the results to the specified bet IDs
+#' @param betIds Vector<string>. Restrict the results to the specified bet IDs
 #'   (e.g. c("61529884133","61529884472")). Optional.
 #'
 #' @param toDate Datetime (ISO 8601 format). Lower bound of date range
@@ -96,34 +93,35 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Return 100 settled bets (with market,event,runner information) for the last 2 days or so.
+#' Return 100 settled bets (with market,event,runner information)
+#' for the last 2 days or so.
 #'
-#' listClearedOrders(toDate=format(Sys.time()-200000, "%Y-%m-%dT"),recordCountValue=100,includeItemDescriptionValue = TRUE)
-#'
+#' listClearedOrders(toDate = format(Sys.time()-200000, "%Y-%m-%dT"),
+#'                  recordCountValue=100,
+#'                  includeItemDescriptionValue = TRUE)
 #' }
 #'
 
-
 listClearedOrders <-
-  function(betStatusValue = "SETTLED",eventTypeIDs = NULL,eventIDs = NULL,betIDs =
-             NULL,marketIDs = NULL,runnerIDs = NULL,
-           sideValue = NULL,fromDate = NULL, toDate = NULL,groupByValue = NULL,includeItemDescriptionValue =
-             NULL,fromRecordValue = NULL,recordCountValue = NULL,flag = FALSE,sslVerify = TRUE) {
+  function(betStatusValue = "SETTLED", eventTypeIds = NULL, eventIds = NULL, betIds = NULL,
+           marketIds = NULL, runnerIds = NULL, sideValue = NULL, fromDate = NULL,
+           toDate = NULL, groupByValue = NULL, includeItemDescriptionValue = NULL,
+           fromRecordValue = NULL, recordCountValue = NULL, flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listClearedOrders", id = "1")
 
     listOrderOps$params <- data.frame(includeItemDescription = "")
-    if (!is.null(betIDs))
-      listOrderOps$params$betIds <- list(c(betIDs))
-    if (!is.null(marketIDs))
-      listOrderOps$params$marketIds <- list(c(marketIDs))
-    if (!is.null(eventTypeIDs))
-      listOrderOps$params$eventTypeIds <- list(c(eventTypeIDs))
-    if (!is.null(eventIDs))
-      listOrderOps$params$eventIds <- list(c(eventIDs))
-    if (!is.null(eventIDs))
-      listOrderOps$params$runnerIds <- list(c(runnerIDs))
+    if (!is.null(betIds))
+      listOrderOps$params$betIds <- list(c(betIds))
+    if (!is.null(marketIds))
+      listOrderOps$params$marketIds <- list(c(marketIds))
+    if (!is.null(eventTypeIds))
+      listOrderOps$params$eventTypeIds <- list(c(eventTypeIds))
+    if (!is.null(eventIds))
+      listOrderOps$params$eventIds <- list(c(eventIds))
+    if (!is.null(eventIds))
+      listOrderOps$params$runnerIds <- list(c(runnerIds))
 
     listOrderOps$params$betStatus <- betStatusValue
     listOrderOps$params$groupBy <- groupByValue

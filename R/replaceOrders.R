@@ -1,6 +1,6 @@
 #' Change the price of a set of unmatched bets
 #'
-#' \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/replaceOrders}
+#' \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/replaceOrders}
 #'
 #' \code{replaceOrders} changes the price of a specific set of unmatched bets
 #' from the same market.
@@ -18,7 +18,7 @@
 #' @param marketId String. The market ID of the bets to be replaced. While many
 #'   bets can be updated in one call, they must be from the same market.
 #'
-#' @param betID vector (strings). The bet IDs of the bets to be replaced- bet
+#' @param betId vector (strings). The bet IDs of the bets to be replaced- bet
 #'   IDs are displayed (called Ref) on the bet information on the right hand
 #'   side of market page on the betfair desktop site.
 #'
@@ -46,23 +46,31 @@
 #' Change the price of two bets. The following
 #' variables are for illustrative purposes and don't represent actual Betfair IDs:
 #'
-#' updateOrder("1.19991480",c("61385423029","61385459133"),c("1.44","2.02") )
+#' updateOrder(marketId = "1.19991480", betId = c("61385423029","61385459133"),
+#'            newPrice = c("1.44","2.02")
+#'            )
 #'
-#' Note that if you run this function again (after changing the bet IDs- remember, replaceOrders places new bets), it will return an error (BET_TAKEN_OR_LAPSED), as the bet price hasn't changed.
+#' Note that if you run this function again (after changing the bet IDs remember,
+#' replaceOrders places new bets), it will return an error (BET_TAKEN_OR_LAPSED),
+#' as the bet price hasn't changed.
 #'
-#' Note that, unlike \code{updateOrders}, \code{replaceOrders} is a an all or nothing process. One error is sufficient to prevent any replacement across the entire set of bet IDs.
+#' Note that, unlike \code{updateOrders}, \code{replaceOrders} is an all or
+#' nothing process. One error is sufficient to prevent any replacement across the
+#' entire set of bet IDs.
 #'
-#' Another possible error occurs if you input incorrect data. In these scenarios, no updates will have been processed and "No Data Returned" will be the function output.
+#' Another possible error occurs if you input incorrect data. In these scenarios,
+#' no updates will have been processed and "No Data Returned" will be the function
+#' output.
 #' }
 #'
 
-replaceOrders <- function(marketID,betID,newPrice,sslVerify = TRUE) {
+replaceOrders <- function(marketId ,betId, newPrice, sslVerify = TRUE) {
   options(stringsAsFactors = FALSE)
-  if (length(betID) != length(newPrice))
+  if (length(betId) != length(newPrice))
     return("Bet ID and Persistence Type vector need to have the same length")
   replaceOrderOps = paste0(
-    '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/replaceOrders","params":{"marketId": "',marketID,'","instructions": [',
-    paste0(sapply(as.data.frame(t(data.frame(betID,newPrice))),function(x)
+    '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/replaceOrders","params":{"marketId": "',marketId,'","instructions": [',
+    paste0(sapply(as.data.frame(t(data.frame(betId,newPrice))),function(x)
       paste0('{"betId":"',x[1],'","newPrice":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
   )
   listOrder <-

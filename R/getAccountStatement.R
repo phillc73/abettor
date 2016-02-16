@@ -29,13 +29,13 @@
 #'   includeItem is set to ALL or not specified, else items are NOT bound by
 #'   itemDate. Optional.
 #'
-#' @param includeItem string. Determines Which items are include. The default
+#' @param includeItemValue string. Determines Which items are include. The default
 #'   value is NULL, which Betfair interprets as "ALL" (include all items). THe
 #'   alternative values are "DEPOSITS_WITHDRAWALS" (include payments only),
 #'   "EXCHANGE" (include exchange bets only) and "POKER_ROOM" (include poker
 #'   transactions only). Optional.
 #'
-#' @param wallet string. Specifies from Which wallet to return statementItems.
+#' @param walletValue string. Specifies from Which wallet to return statementItems.
 #'   The default value is NULL, which returns UK wallet info. THe alternative
 #'   value is "AUSTRALIAN", which corresponds to the Austrailian wallet.
 #'   Optional.
@@ -71,8 +71,8 @@
 getAccountStatement <-
   function(localeString = NULL,fromRecordValue = NULL,recordCountValue =
              NULL,fromDate = NULL, toDate = NULL,
-           includeItemValue = NULL,walletValue = NULL,flag =
-             FALSE,sslVerify = TRUE) {
+           includeItemValue = NULL, walletValue = NULL, flag =
+             FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     getAccStatOps <-
       data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")

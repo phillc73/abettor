@@ -23,7 +23,7 @@ Similar to \code{\link{loginBF}}, the call output is parsed from JSON
   as a list, from which the statuses SUCCESS or FAIL and error, if it is
   not null are returned as a colon seperated concatenated string. For error
   values, see
-  \link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}.
+  \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}.
 }
 \description{
 \code{logoutBF} terminates the current session. \code{\link{loginBF}} will
@@ -37,14 +37,14 @@ need to be called again before any further actions can be performed.
 \dontrun{
 loginBF("username","password","appKey")
 logoutBF()
-logoutBF()
 
-# The last logout in this block will return an error. The first logout terminates the session, meaning there is no session to end on the second logout request.
+The last logout in this block will return an error. The first logout terminates
+the session, meaning there is no session to end on the second logout request.
  }
 
 }
 \seealso{
-\link{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Logout}
    for general information on requesting Logout on the Betfair API.
 
 \code{\link{loginBF}}, which must be executed first, as this
