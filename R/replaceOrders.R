@@ -77,7 +77,7 @@ replaceOrders <- function(marketId ,betId, newPrice, sslVerify = TRUE) {
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = replaceOrderOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+          postfields = replaceOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
         )
       )
     ))

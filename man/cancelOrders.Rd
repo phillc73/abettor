@@ -2,7 +2,7 @@
 % Please edit documentation in R/cancelOrders.R
 \name{cancelOrders}
 \alias{cancelOrders}
-\title{Cancel unmatched/partially matched bets}
+\title{Cancel unmatched/partially matched bets.}
 \usage{
 cancelOrders(marketId, betIds = NULL, sizeReductions = NULL,
   sslVerify = TRUE)
@@ -23,9 +23,9 @@ side of market page on the betfair desktop site.}
   requested.
 
   Note on sizeReductions values: The double within the string represents the
-  value to be cancelled. For example, given an unmatched back of £100,
-  inputting "2" as the parameter value will cancel £2 of the bet and leave
-  £98 unmatched.}
+  value to be cancelled. For example, given an unmatched back of GBP100,
+  inputting "2" as the parameter value will cancel GBP2 of the bet and leave
+  GBP98 unmatched.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example

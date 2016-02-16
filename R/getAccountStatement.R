@@ -95,7 +95,7 @@ getAccountStatement <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/account/json-rpc/v1", .opts = list(
-            postfields = getAccStatOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+            postfields = getAccStatOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
           )
         )
       )

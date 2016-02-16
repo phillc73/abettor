@@ -1,4 +1,4 @@
-#' Cancel unmatched/partially matched bets
+#' Cancel unmatched/partially matched bets.
 #'
 #' \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/cancelOrders}
 #'
@@ -25,9 +25,9 @@
 #'   requested.
 #'
 #'   Note on sizeReductions values: The double within the string represents the
-#'   value to be cancelled. For example, given an unmatched back of £100,
-#'   inputting "2" as the parameter value will cancel £2 of the bet and leave
-#'   £98 unmatched.
+#'   value to be cancelled. For example, given an unmatched back of GBP100,
+#'   inputting "2" as the parameter value will cancel GBP2 of the bet and leave
+#'   GBP98 unmatched.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -90,14 +90,14 @@ cancelOrders <-
   function(marketId, betIds = NULL, sizeReductions = NULL, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     if (is.null(sizeReductions))
-      sizeReductions = rep("NULL",length(betIds))
+      sizeReductions = rep("NULL", length(betIds))
     if (length(betIds) != length(sizeReductions))
       return("Bet ID and Size Reduction vectors need to have the same length")
     cancelOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketId,'","instructions": [',
         paste0(sapply(as.data.frame(t(data.frame(
-          betIds,sizeReductions
+          betIds, sizeReductions
         ))),function(x)
           paste0('{"betId":"',x[1],'","sizeReduction":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
       )
@@ -106,7 +106,7 @@ cancelOrders <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = cancelOrderOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+            postfields = cancelOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
           )
         )
       ))
@@ -116,6 +116,6 @@ cancelOrders <-
     if (output$status == "SUCCESS")
       return(output$status)
     return(paste0(
-      output$status,": ",output$errorCode," (",as.data.frame(output$instructionReports)$errorCode,")"
+      output$status,": ",output$errorCode,"(",as.data.frame(output$instructionReports)$errorCode,")"
     ))
   }

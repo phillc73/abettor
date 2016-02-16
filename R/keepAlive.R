@@ -59,7 +59,7 @@
 #'
 
 
-keepAlive = function(suppress = TRUE,sslVerify = TRUE) {
+keepAlive = function(suppress = TRUE, sslVerify = TRUE) {
   if (suppress)
     keepAlive <-
       suppressWarnings(as.list(jsonlite::fromJSON(

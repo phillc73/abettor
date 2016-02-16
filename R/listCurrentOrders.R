@@ -121,7 +121,7 @@ listCurrentOrders <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listOrderOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+            postfields = listOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
           )
         )
       )

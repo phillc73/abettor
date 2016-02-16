@@ -16,7 +16,7 @@
 #'   market page on the betfair desktop site.
 #'
 #' @param persistenceType vector (strings). The persistence state of updated
-#'   bets. PersistanceType can take three values
+#'   bets. persistanceType can take three values
 #'   ("LAPSE","PERSIST","MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 #'   Take SP on the desktop website)
 #'
@@ -80,7 +80,7 @@ updateOrders <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketId,'","instructions": [',
         paste0(sapply(as.data.frame(t(data.frame(
-          betId, PersistenceType
+          betId, persistenceType
         ))),function(x)
           paste0('{"betId":"',x[1],'","newPersistenceType":"',x[2],'"}')),collapse =
           ","),']},"id": "1"}]'
@@ -89,7 +89,7 @@ updateOrders <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = updateOrderOps, httpheader = headersPostLogin, ssl.verifypeer = TRUE
+            postfields = updateOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
           )
         )
       ))

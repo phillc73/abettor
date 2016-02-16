@@ -15,7 +15,7 @@ are displayed (called Ref) on the bet information on the right hand side of
 market page on the betfair desktop site.}
 
 \item{persistenceType}{vector (strings). The persistence state of updated
-bets. PersistanceType can take three values
+bets. persistanceType can take three values
 ("LAPSE","PERSIST","MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 Take SP on the desktop website)}
 
