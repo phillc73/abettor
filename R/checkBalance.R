@@ -60,16 +60,23 @@ checkBalance <- function(AUS = FALSE, sslVerify = TRUE) {
 
   balanceOps <- jsonlite::toJSON(balanceOps, pretty = TRUE)
 
+  # Read Environment variables for authorisation details
+  product <- Sys.getenv('product')
+  token <- Sys.getenv('token')
 
-  balanceOps <-
+  headers <- list(
+    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+  )
+
+  balance <-
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://api.betfair.com/exchange/account/json-rpc/v1", .opts = list(
-          postfields = balanceOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          postfields = balanceOps, httpheader = headers, ssl.verifypeer = sslVerify
         )
       )
     ))
 
-  as.data.frame(balanceOps$result)
+  as.data.frame(balance$result)
 
 }

@@ -47,10 +47,11 @@
 #'   username and password is not stored anywhere outside this function and
 #'   details must always be passed to the function on execution.
 #'
-#' @section Note on \code{headersPostLogin} variable: This variable is global.
-#'   It stores the session based authentication token and is required for all
-#'   other functions in this package.
-
+#' @section Notes on \code{product} and \code{token} envrionment variables:
+#'   These two envrionment variables store the session based authentication
+#'   token and product string. They are required for all other functions in this
+#'   package.
+#'
 #' @examples
 #' \dontrun{
 #' loginBF(username = "YourBetfairUsername",
@@ -89,14 +90,10 @@ loginBF <-
     )
     authenticationKey <- jsonlite::fromJSON(loginReturn)
 
-    # Assigning a global variable with <<-, I'm giddy with mischievious excitement
+    # Set environment variables with authentication details
+    Sys.setenv(product = authenticationKey$product)
+    Sys.setenv(token = authenticationKey$token)
 
-    headersPostLogin <- NULL
-
-    headersPostLogin <<-
-      list(
-        'Accept' = 'application/json', 'X-Application' = authenticationKey$product, 'X-Authentication' = authenticationKey$token, 'Content-Type' = 'application/json'
-      )
-
+    # Ouput success/failure status and any error message
     return(paste0(authenticationKey$status,":",authenticationKey$error))
   }

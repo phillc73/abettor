@@ -74,8 +74,10 @@
 updateOrders <-
   function(marketId, betId, persistenceType, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
+
     if (length(betId) != length(persistenceType))
       return("Bet ID and Persistence Type vector need to have the same length")
+
     updateOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketId,'","instructions": [',
@@ -85,15 +87,25 @@ updateOrders <-
           paste0('{"betId":"',x[1],'","newPersistenceType":"',x[2],'"}')),collapse =
           ","),']},"id": "1"}]'
       )
-    updateOrderOps <-
+
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
+    updateOrder <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = updateOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = updateOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       ))
-    output <- as.data.frame(updateOrderOps$result)
+
+    output <- as.data.frame(updateOrder$result)
     if (length(output) == 0)
       return("No Data Returned")
     if (output$status == "SUCCESS")

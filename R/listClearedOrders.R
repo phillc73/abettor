@@ -108,6 +108,7 @@ listClearedOrders <-
            toDate = NULL, groupByValue = NULL, includeItemDescriptionValue = NULL,
            fromRecordValue = NULL, recordCountValue = NULL, flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
+
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listClearedOrders", id = "1")
 
@@ -138,14 +139,24 @@ listClearedOrders <-
       listOrderOps[c("jsonrpc", "method", "params", "id")]
 
     listOrderOps <- jsonlite::toJSON(listOrderOps, pretty = TRUE)
+
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
     listOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = listOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       )
+
     if (listOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
     as.data.frame(listOrder$result$clearedOrders)

@@ -66,22 +66,34 @@
 
 replaceOrders <- function(marketId ,betId, newPrice, sslVerify = TRUE) {
   options(stringsAsFactors = FALSE)
+
   if (length(betId) != length(newPrice))
     return("Bet ID and Persistence Type vector need to have the same length")
+
   replaceOrderOps = paste0(
     '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/replaceOrders","params":{"marketId": "',marketId,'","instructions": [',
     paste0(sapply(as.data.frame(t(data.frame(betId,newPrice))),function(x)
       paste0('{"betId":"',x[1],'","newPrice":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
   )
-  listOrder <-
+
+  # Read Environment variables for authorisation details
+  product <- Sys.getenv('product')
+  token <- Sys.getenv('token')
+
+  headers <- list(
+    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+  )
+
+  replaceOrder <-
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = replaceOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          postfields = replaceOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
         )
       )
     ))
-  output <- as.data.frame(replaceOrderOps$result)
+
+  output <- as.data.frame(replaceOrder$result)
   if (length(output) == 0)
     return("No Data Returned")
   if (output$status == "SUCCESS")

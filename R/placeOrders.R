@@ -111,8 +111,10 @@
 #'
 
 placeOrders <-
-  function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType, handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")), sslVerify = TRUE) {
+  function(marketId, selectionId, betSide, betType, betSize, reqPrice, persistenceType,
+           handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")), sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
+
     placeOrdersOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
 
@@ -158,15 +160,22 @@ placeOrders <-
 
     placeOrdersOps <- jsonlite::toJSON(placeOrdersOps, pretty = TRUE)
 
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
     placeOrders <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = placeOrdersOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = placeOrdersOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       ))
 
     as.data.frame(placeOrders$result[1])
-
   }

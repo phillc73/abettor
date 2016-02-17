@@ -45,7 +45,6 @@
 #' }
 #'
 
-
 listCountries <- function(eventTypeIds, sslVerify = TRUE) {
   listCountriesOps <-
     data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listCountries", id = "1")
@@ -62,11 +61,19 @@ listCountries <- function(eventTypeIds, sslVerify = TRUE) {
   listCountriesOps <-
     jsonlite::toJSON(listCountriesOps, pretty = TRUE)
 
+  # Read Environment variables for authorisation details
+  product <- Sys.getenv('product')
+  token <- Sys.getenv('token')
+
+  headers <- list(
+    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+  )
+
   listCountries <-
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = listCountriesOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          postfields = listCountriesOps, httpheader = headers, ssl.verifypeer = sslVerify
         )
       )
     ))

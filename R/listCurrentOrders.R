@@ -94,6 +94,7 @@ listCurrentOrders <-
            fromDate = NULL, toDate = NULL, flag = FALSE, orderProjectionValue = NULL,
            fromRecordValue = NULL, recordCountValue = NULL, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
+
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listCurrentOrders", id = "1")
 
@@ -117,11 +118,19 @@ listCurrentOrders <-
 
     listOrderOps <- jsonlite::toJSON(listOrderOps, pretty = TRUE)
 
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
     listOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = listOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       )

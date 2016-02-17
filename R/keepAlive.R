@@ -38,7 +38,6 @@
 #'   values, see
 #'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Keep+Alive}
 #'
-#'
 #' @examples
 #' \dontrun{
 #'  keepAlive() refreshes the session token and resets the session expiry time
@@ -58,21 +57,29 @@
 #'  }}}
 #'
 
-
 keepAlive = function(suppress = TRUE, sslVerify = TRUE) {
+
+  # Read Environment variables for authorisation details
+  product <- Sys.getenv('product')
+  token <- Sys.getenv('token')
+
+  headers <- list(
+    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+  )
+
   if (suppress)
     keepAlive <-
       suppressWarnings(as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://identitysso.betfair.com/api/keepAlive", .opts = list(httpheader =
-                                                                          headersPostLogin, ssl.verifypeer = sslVerify)
+                                                                          headers, ssl.verifypeer = sslVerify)
         )
       )))
   else
     (   keepAlive   =    as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://identitysso.betfair.com/api/keepAlive", .opts = list(httpheader =
-                                                                        headersPostLogin, ssl.verifypeer = sslVerify)
+                                                                        headers, ssl.verifypeer = sslVerify)
       )
     )))
   return(paste0(keepAlive$status,":",keepAlive$error))

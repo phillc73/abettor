@@ -58,15 +58,22 @@ listMarketTypes <- function(eventTypeIds, sslVerify = TRUE) {
   listMarketTypesOps <-
     jsonlite::toJSON(listMarketTypesOps, pretty = TRUE)
 
+  # Read Environment variables for authorisation details
+  product <- Sys.getenv('product')
+  token <- Sys.getenv('token')
+
+  headers <- list(
+    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+  )
+
   listMarketTypes <-
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
         "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = listMarketTypesOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+          postfields = listMarketTypesOps, httpheader = headers, ssl.verifypeer = sslVerify
         )
       )
     ))
 
   as.data.frame(listMarketTypes$result[1])
-
 }

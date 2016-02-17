@@ -163,6 +163,7 @@ listMarketCatalogue <-
                "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
              ),textQuery = NULL,sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
+
     listMarketCatalogueOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketCatalogue", id = "1")
 
@@ -171,45 +172,57 @@ listMarketCatalogue <-
     listMarketCatalogueOps$params$filter <-
       data.frame(marketStartTime = c(""))
     listMarketCatalogueOps$params$sort = marketSort
+
     if (!is.null(eventIds)) {
       listMarketCatalogueOps$params$filter$eventTypeIds <- list(eventIds)
     }
+
     if (!is.null(eventTypeIds)) {
       listMarketCatalogueOps$params$filter$eventTypeIds <-
         list(eventTypeIds)
     }
+
     if (!is.null(competitionIds)) {
       listMarketCatalogueOps$params$filter$competitionIds <-
         list(competitionIds)
     }
+
     if (!is.null(marketIds)) {
       listMarketCatalogueOps$params$filter$marketIds <- list(marketIds)
     }
+
     if (!is.null(venues)) {
       listMarketCatalogueOps$params$filter$venues <- list(venues)
     }
+
     if (!is.null(marketCountries)) {
       listMarketCatalogueOps$params$filter$marketCountries <-
         list(marketCountries)
     }
+
     if (!is.null(marketTypeCodes)) {
       listMarketCatalogueOps$params$filter$marketTypeCodes <-
         list(marketTypeCodes)
     }
+
     listMarketCatalogueOps$params$filter$bspOnly <- bspOnly
     listMarketCatalogueOps$params$filter$turnInPlayEnabled <-
       turnInPlayEnabled
     listMarketCatalogueOps$params$filter$inPlayOnly <- inPlayOnly
     listMarketCatalogueOps$params$filter$textQuery <- textQuery
+
     if (!is.null(marketBettingTypes)) {
       listMarketCatalogueOps$params$filter$marketBettingTypes <-
         list(marketBettingTypes)
     }
+
     if (!is.null(withOrders)) {
       listMarketCatalogueOps$params$filter$withOrders <- list(withOrders)
     }
+
     listMarketCatalogueOps$params$filter$marketStartTime <-
       data.frame(from = fromDate, to = toDate)
+
     if (!is.null(marketProjection))  {
       listMarketCatalogueOps$params$marketProjection <-
         list(marketProjection)
@@ -221,15 +234,22 @@ listMarketCatalogue <-
     listMarketCatalogueOps <-
       jsonlite::toJSON(listMarketCatalogueOps, pretty = TRUE)
 
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
     listMarketCatalogue <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listMarketCatalogueOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = listMarketCatalogueOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       ))
 
     as.data.frame(listMarketCatalogue$result[1])
-
   }

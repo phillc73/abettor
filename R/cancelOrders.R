@@ -88,11 +88,16 @@
 
 cancelOrders <-
   function(marketId, betIds = NULL, sizeReductions = NULL, sslVerify = TRUE) {
+
     options(stringsAsFactors = FALSE)
+
     if (is.null(sizeReductions))
       sizeReductions = rep("NULL", length(betIds))
+
     if (length(betIds) != length(sizeReductions))
+
       return("Bet ID and Size Reduction vectors need to have the same length")
+
     cancelOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketId,'","instructions": [',
@@ -101,16 +106,27 @@ cancelOrders <-
         ))),function(x)
           paste0('{"betId":"',x[1],'","sizeReduction":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
       )
+
     cancelOrderOps = gsub("NULL","",cancelOrderOps)
-    cancelOrderOps <-
+
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
+    cancelOrders <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = cancelOrderOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = cancelOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       ))
-    output <- as.data.frame(cancelOrderOps$result)
+
+    output <- as.data.frame(cancelOrders$result)
     if (length(output) == 0)
       return("No Data Returned")
     if (output$status == "SUCCESS")

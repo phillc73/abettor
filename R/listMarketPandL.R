@@ -75,6 +75,7 @@ listMarketPandL <-
   function(marketIds = NULL,includeSettledBetsValue = NULL,includeBspBetsValue =
              NULL,netOfCommissionValue = NULL,sslVerify = TRUE,errorWarning = FALSE) {
     options(stringsAsFactors = FALSE)
+
     listPandLOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketProfitAndLoss", id = "1")
 
@@ -90,14 +91,23 @@ listMarketPandL <-
 
     listPandLOps <- jsonlite::toJSON(listPandLOps, pretty = TRUE)
 
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
     listPandL <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listPandLOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = listPandLOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       )
+
     if (errorWarning) {
       if (!is.null(listPandL$error))
         warning(
@@ -107,5 +117,4 @@ listMarketPandL <-
         )
     }
     as.data.frame(listPandL$result)
-
   }

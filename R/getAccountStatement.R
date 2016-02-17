@@ -91,18 +91,28 @@ getAccountStatement <-
       getAccStatOps[c("jsonrpc", "method", "params", "id")]
 
     getAccStatOps <- jsonlite::toJSON(getAccStatOps, pretty = TRUE)
-    AccOrder <-
+
+    # Read Environment variables for authorisation details
+    product <- Sys.getenv('product')
+    token <- Sys.getenv('token')
+
+    headers <- list(
+      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    )
+
+    accOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
           "https://api.betfair.com/exchange/account/json-rpc/v1", .opts = list(
-            postfields = getAccStatOps, httpheader = headersPostLogin, ssl.verifypeer = sslVerify
+            postfields = getAccStatOps, httpheader = headers, ssl.verifypeer = sslVerify
           )
         )
       )
-    if (!is.null(AccOrder$error))
-      return(paste0("FAIL: ",AccOrder$error$message))
-    if (AccOrder$result$moreAvailable & flag == TRUE)
+
+    if (!is.null(accOrder$error))
+      return(paste0("FAIL: ",accOrder$error$message))
+    if (accOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
-    as.data.frame(AccOrder$result$accountStatement)
+    as.data.frame(accOrder$result$accountStatement)
 
   }
