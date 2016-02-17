@@ -1,6 +1,6 @@
 Package: abettor
 Title: R bindings to Betfair API-NG
-Version: 0.1.4
+Version: 0.1.5
 Date: 2015-11-11
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]",
                        "David Sheehan <davidfsheehan87@gmail.com> [aut]",

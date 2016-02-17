@@ -1,5 +1,6 @@
 abettor
 =======
+[![Build Status](https://travis-ci.org/phillc73/abettor.svg?branch=master)](https://travis-ci.org/phillc73/abettor)
 
 `abettor` is an R package for connecting to the online betting exchange Betfair, via their API-NG product, using JSON-RPC. The package can currently only be used to retrieve market information and place bets.
 
@@ -72,7 +73,7 @@ Each function contains documented descriptions for their use and all supported a
 
 This package is under active development.
 
-Current Version: 0.1.3
+Current Version: 0.1.5
 
 See [current release notes](https://github.com/phillc73/abettor/releases) for more details.
 
