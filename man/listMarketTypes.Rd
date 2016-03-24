@@ -2,15 +2,93 @@
 % Please edit documentation in R/listMarketTypes.R
 \name{listMarketTypes}
 \alias{listMarketTypes}
-\title{Return listMarketTypes data}
+\title{Return Market Types data}
 \usage{
-listMarketTypes(eventTypeIds, sslVerify = TRUE)
+listMarketTypes(eventTypeIds, marketTypeCodes = NULL,
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
+  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
+  marketCountries = NULL, venues = NULL, bspOnly = NULL,
+  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
+  withOrders = NULL, textQuery = NULL, suppress = FALSE,
+  sslVerify = TRUE)
 }
 \arguments{
-\item{eventTypeIds}{eventTypeIds String. Restrict markets by event type
-associated with the market. (i.e., Football, Horse Racing, etc). Accepts
-multiple IDs (See examples). IDs can be obtained via
-\code{\link{listEventTypes}}, Required. No default.}
+\item{eventTypeIds}{vector <String>. Restrict market types by the event type
+associated with the market type. (e.g., Football = 1, Horse Racing = 7,
+etc). Accepts multiple IDs (See examples). IDs can be obtained via
+\code{\link{listEventTypes}}. Required. No default.}
+
+\item{marketTypeCodes}{vector <String>. Restrict to market types that match
+the type of the market (i.e. MATCH_ODDS, HALF_TIME_SCORE). You should use
+this instead of relying on the market name as the market type codes are the
+same in all locales. Accepts multiple market type codes (See examples).
+Market type codes can be obtained via \code{\link{listMarketTypes}}.
+Optional. Default is NULL.}
+
+\item{fromDate}{The start date from which to return matching market types.
+Format is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to
+current system date and time minus 2 hours (to allow searching of all
+in-play football matches).}
+
+\item{toDate}{The end date to stop returning matching market types. Format is
+\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+date and time plus 24 hours.}
+
+\item{eventIds}{vector <String>. Restrict to market types that are associated
+with the specified eventIDs (e.g. "27675602"). Optional. Default is NULL.}
+
+\item{competitionIds}{vector <String>. Restrict to market types that are
+associated with the specified competition IDs (e.g. EPL = "31", La Liga =
+"117"). Competition IDs can obtained via \code{\link{listCompetitions}}.
+Optional. Default is NULL.}
+
+\item{marketIds}{vector <String>. Restrict to market types that are
+associated with the specified marketIDs (e.g. "1.122958246"). Optional.
+Default is NULL.}
+
+\item{marketCountries}{vector <String>. Restrict to market types that are in
+the specified country or countries. Accepts multiple country codes (See
+examples). Codes can be obtained via \code{\link{listCountries}}. Optional.
+Default is NULL.}
+
+\item{venues}{vector <String>. Restrict market types by the venue associated
+with the market. This functionality is currently only available for horse
+racing markets (e.g.venues=c("Exeter","Navan")). Codes can be obtained
+via \code{\link{listCountries}}  Optional. Default is NULL.}
+
+\item{bspOnly}{Boolean. Restrict to betfair staring price (bsp) market types
+only if TRUE or non-bsp events if FALSE. Optional. Default is NULL, which
+means that both bsp and non-bsp events are returned.}
+
+\item{turnInPlayEnabled}{Boolean. Restrict to market types that will turn in
+play if TRUE or will not turn in play if FALSE. Optional. Default is NULL,
+which means that both market types are returned.}
+
+\item{inPlayOnly}{Boolean. Restrict to market types that are currently in
+play if TRUE or not inplay if FALSE. Optional. Default is NULL, which means
+that both inplay and non-inplay market types are returned.}
+
+\item{marketBettingTypes}{vector <String>. Restrict to market types that
+match the betting type of the market (i.e. Odds, Asian Handicap Singles, or
+Asian Handicap Doubles). Optional. Default is NULL. See
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketBettingType}
+ for a full list (and description) of viable parameter values.}
+
+\item{withOrders}{String. Restrict to market types in which the user has bets
+of a specified status. The two viable values are "EXECUTION_COMPLETE" (an
+order that does not have any remaining unmatched portion) and "EXECUTABLE"
+(an order that has a remaining unmatched portion). Optional. Default is
+NULL.}
+
+\item{textQuery}{String. Restrict market types by any text associated with
+the event type, such as the Name, Event, Competition, etc. The string can
+include a wildcard (*) character as long as it is not the first character.
+Optional. Default is NULL.}
+
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the listMarketTypes call throws an error.
+Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
@@ -20,17 +98,19 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-Response from Betfair is stored in listMarketTypes variable, which is
-  then parsed from JSON as a list. Only the first item of this list contains
-  the required market types.
+Response from Betfair is stored in the listMarketTypes variable,
+  which is then parsed from JSON as a list. Only the first item of this list
+  contains the required event type identification details. If the
+  listMarketTypes call throws an error, a data frame containing error
+  information is returned.
 }
 \description{
-\code{listMarketTypes} returns a list of valid market types.
-}
-\details{
-\code{listMarketTypes} returns a list of valid market types, based on the
-\code{eventTypeIds} specified. Returned data includes market types and count
-of available markets for the specified \code{eventTypeIds}.
+\code{listMarketTypes} simply lists all available market types on the Betfair
+exchange (e.g. number of Correct Score soccer markets closing in the next 24
+hours). This data is useful for finding specific event identifiers, which are
+then usually passed to further functions. By default, \code{listMarketTypes}
+returns are limited to the forthcoming 24-hour period. However, this can be
+changed by user specified date/time stamps.
 }
 \section{Note on \code{listMarketTypesOps} variable}{
  The
@@ -41,12 +121,15 @@ of available markets for the specified \code{eventTypeIds}.
 }
 \examples{
 \dontrun{
-# Return all market types for Horse Racing.
-listMarketTypes(eventTypeIds = 7)
-
-# Return all market types for Football and Horse
-Racing
+# Return all football and horse racing market types (and number of
+corresponding markets) for the upcoming day.
 listMarketTypes(eventTypeIds = c("1","7"))
+
+# Return football market types that currently have at least one event inplay.
+listMarketTypes(eventTypeIds = c("1"),inPlayOnly=TRUE)
+
+# Return upcoming football market types that allow Betfair starting prices (BSPs).
+listMarketTypes(eventTypeIds = c("1"),bspOnly=TRUE)
 }
 
 }

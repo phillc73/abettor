@@ -2,11 +2,92 @@
 % Please edit documentation in R/listEventTypes.R
 \name{listEventTypes}
 \alias{listEventTypes}
-\title{Return listEventTypes data}
+\title{Return Event Types data}
 \usage{
-listEventTypes(sslVerify = TRUE)
+listEventTypes(eventTypeIds = NULL, marketTypeCodes = NULL,
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
+  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
+  marketCountries = NULL, venues = NULL, bspOnly = NULL,
+  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
+  withOrders = NULL, textQuery = NULL, suppress = FALSE,
+  sslVerify = TRUE)
 }
 \arguments{
+\item{eventTypeIds}{vector <String>. Restrict events by event type associated
+with the market. (i.e., Football = 1, Horse Racing = 7, etc). Optional.
+Default is NULL.}
+
+\item{marketTypeCodes}{vector <String>. Restrict to event types that match
+the type of the market (i.e. MATCH_ODDS, HALF_TIME_SCORE). You should use
+this instead of relying on the market name as the market type codes are the
+same in all locales. Accepts multiple market type codes (See examples).
+Market codes can be obtained via \code{\link{listMarketTypes}}. Optional.
+Default is NULL.}
+
+\item{fromDate}{The start date from which to return matching events. Format
+is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to current
+system date and time minus 2 hours (to allow searching of all in-play
+football matches).}
+
+\item{toDate}{The end date to stop returning matching events. Format is
+\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+date and time plus 24 hours.}
+
+\item{eventIds}{vector <String>. Restrict to event types that are associated
+with the specified eventIDs (e.g. "27675602"). Optional. Default is NULL.}
+
+\item{competitionIds}{vector <String>. Restrict to market types that are
+associated with the specified competition IDs (e.g. EPL = "31", La Liga =
+"117"). Competition IDs can obtained via \code{\link{listCompetitions}}.
+Optional. Default is NULL.}
+
+\item{marketIds}{vector <String>. Restrict to event types that are associated
+with the specified marketIDs (e.g. "1.122958246"). Optional. Default is
+NULL.}
+
+\item{marketCountries}{vector <String>. Restrict to event types that are in
+the specified country or countries. Accepts multiple country codes. Codes
+can be obtained via \code{\link{listCountries}}. Optional. Default is NULL.}
+
+\item{venues}{vector <String>. Restrict event types by the venue associated
+with the market. This functionality is currently only available for horse
+racing markets (e.g.venues=c("Exeter","Navan")).  Codes can be obtained via
+\code{\link{listVenues}}. Optional. Default is NULL.}
+
+\item{bspOnly}{Boolean. Restrict to betfair staring price (bsp) event types
+only if TRUE or non-bsp events if FALSE. Optional. Default is NULL, which
+means that both bsp and non-bsp events are returned.}
+
+\item{turnInPlayEnabled}{Boolean. Restrict to event types that will turn in
+play if TRUE or will not turn in play if FALSE. Optional. Default is NULL,
+which means that both event types are returned.}
+
+\item{inPlayOnly}{Boolean. Restrict to event types that are currently in play
+if TRUE or not inplay if FALSE. Optional. Default is NULL, which means that
+both inplay and non-inplay event types are returned.}
+
+\item{marketBettingTypes}{vector <String>. Restrict to event types that match
+the betting type of the market (i.e. Odds, Asian Handicap Singles, or Asian
+Handicap Doubles). Optional. Default is NULL. See
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketBettingType}
+ for a full list (and description) of viable parameter values.}
+
+\item{withOrders}{String. Restrict to event types in which the user has bets
+of a specified status. The two viable values are "EXECUTION_COMPLETE" (an
+order that does not have any remaining unmatched portion) and "EXECUTABLE"
+(an order that has a remaining unmatched portion). Optional. Default is
+NULL.}
+
+\item{textQuery}{String. Restrict event types by any text associated with the
+event type, such as the Name, Event, Competition, etc. The string can
+include a wildcard (*) character as long as it is not the first character.
+Optional. Default is NULL.}
+
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the listEventTypes call throws an error.
+Changing this parameter to TRUE will suppress this warning.}
+
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
 they may be behind a proxy server, Betfair will fail login with "SSL
@@ -15,28 +96,38 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-Response from Betfair is stored in listEventTypes variable, which
-  when parsed from JSON as a list. Only the first item of this list contains
-  the required event type identification details.
+Response from Betfair is stored in the listEventTypes variable, which
+  is then parsed from JSON as a list. Only the first item of this list
+  contains the required event type identification details. If the
+  listEventTypes call throws an error, a data frame containing error
+  information is returned.
 }
 \description{
 \code{listEventTypes} simply lists all available event types on the Betfair
-exchange.
+exchange (e.g. number of soccer markets available in the next 24 hours). This
+data is  Useful for finding specific event identification numbers (e.g. sport
+IDs), which are then usually passed to further functions. By default,
+\code{listEventTypes} returns are limited to the forthcoming 24-hour period.
+However, this can be changed by user specified date/time stamps.
 }
-\details{
-Useful for finding the relevant event type identification number, which is
-then usually passed to further functions.
-}
-\section{Note on \code{listEventTypeOps} variable}{
+\section{Note on \code{listEventTypesOps} variable}{
  The
-  \code{listEventTypeOps} variable is used to firstly build an R data frame
+  \code{listEventTypesOps} variable is used to firstly build an R data frame
   containing all the data to be passed to Betfair, in order for the function
   to execute successfully. The data frame is then converted to JSON and
   included in the HTTP POST request.
 }
 \examples{
 \dontrun{
+#Return all event types (and number of corresponding markets) for the
+upcoming day.
 listEventTypes()
+
+# Return event types that currently have at least one event inplay.
+listEventTypes(inPlayOnly=TRUE)
+
+# Return event types that allow Betfair starting prices (BSPs).
+listEventTypes(bspOnly=TRUE)
 }
 
 }
