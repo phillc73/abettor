@@ -34,7 +34,7 @@
 #'   "ROLLED_UP_BY_AVG_PRICE" (rollup matched amounts by average matched price
 #'   per side). Optional. Default is NULL.
 #'
-#' @param virtualize boolean. Indicates if the returned prices should include
+#' @param virtualise boolean. Indicates if the returned prices should include
 #'   virtual prices. This is only applicable to EX_BEST_OFFERS and EX_ALL_OFFERS
 #'   priceData selections. Default value is FALSE. Note that prices on website
 #'   include virtual bets, so setting this parameter to FALSE may produce

@@ -33,6 +33,14 @@ matched amounts by distinct matched prices per side) and
 "ROLLED_UP_BY_AVG_PRICE" (rollup matched amounts by average matched price
 per side). Optional. Default is NULL.}
 
+\item{virtualise}{boolean. Indicates if the returned prices should include
+virtual prices. This is only applicable to EX_BEST_OFFERS and EX_ALL_OFFERS
+priceData selections. Default value is FALSE. Note that prices on website
+include virtual bets, so setting this parameter to FALSE may produce
+different results to manually checking the website. More information on
+virtual bets can be found here:
+\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Virtual+Bets}}
+
 \item{rolloverStakes}{boolean. Indicates if the volume returned at each price
 point should be the absolute value or a cumulative sum of volumes available
 at the price and all better prices. It is only applicable to EX_BEST_OFFERS
@@ -69,14 +77,6 @@ they may be behind a proxy server, Betfair will fail login with "SSL
 certificate problem: self signed certificate in certificate chain". If this
 error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
-
-\item{virtualize}{boolean. Indicates if the returned prices should include
-virtual prices. This is only applicable to EX_BEST_OFFERS and EX_ALL_OFFERS
-priceData selections. Default value is FALSE. Note that prices on website
-include virtual bets, so setting this parameter to FALSE may produce
-different results to manually checking the website. More information on
-virtual bets can be found here:
-\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Virtual+Bets}}
 }
 \value{
 Response from Betfair is stored in listMarketBook variable, which is

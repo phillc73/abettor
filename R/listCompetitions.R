@@ -124,7 +124,7 @@ listCompetitions <-
            fromDate = (format(Sys.time() -7200, "%Y-%m-%dT%TZ")),
            toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")),
            eventIds = NULL, competitionIds = NULL, marketIds =NULL,
-           marketcompetitions = NULL, venues = NULL, bspOnly = NULL,
+           marketCountries = NULL, venues = NULL, bspOnly = NULL,
            turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
            withOrders = NULL, textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
@@ -159,9 +159,9 @@ listCompetitions <-
       listCompetitionsOps$params$filter$venues <- list(venues)
     }
 
-    if (!is.null(marketcompetitions)) {
-      listCompetitionsOps$params$filter$marketcompetitions <-
-        list(marketcompetitions)
+    if (!is.null(marketCountries)) {
+      listCompetitionsOps$params$filter$marketCountries <-
+        list(marketCountries)
     }
 
     if (!is.null(marketTypeCodes)) {

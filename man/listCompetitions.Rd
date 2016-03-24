@@ -8,7 +8,7 @@ listCompetitions(eventTypeIds, marketTypeCodes = NULL,
   fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
   toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
   eventIds = NULL, competitionIds = NULL, marketIds = NULL,
-  marketcompetitions = NULL, venues = NULL, bspOnly = NULL,
+  marketCountries = NULL, venues = NULL, bspOnly = NULL,
   turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
   withOrders = NULL, textQuery = NULL, suppress = FALSE,
   sslVerify = TRUE)
@@ -46,6 +46,10 @@ Optional. Default is NULL.}
 \item{marketIds}{vector <String>. Restrict to competitions that are
 associated with the specified marketIDs (e.g. "1.122958246"). Optional.
 Default is NULL.}
+
+\item{marketCountries}{vector <String>. Restrict to competitions that are in
+the specified country or countries. Accepts multiple country codes. Codes
+can be obtained via \code{\link{listCountries}}. Optional. Default is NULL.}
 
 \item{venues}{vector <String>. Restrict competitions by the venue associated
 with the market. This functionality is currently only available for horse
@@ -91,10 +95,6 @@ they may be behind a proxy server, Betfair will fail login with "SSL
 certificate problem: self signed certificate in certificate chain". If this
 error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
-
-\item{marketCountries}{vector <String>. Restrict to competitions that are in
-the specified country or countries. Accepts multiple country codes. Codes
-can be obtained via \code{\link{listCountries}}. Optional. Default is NULL.}
 }
 \value{
 Response from Betfair is stored in the listCompetitions variable,
