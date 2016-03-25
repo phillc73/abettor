@@ -51,6 +51,7 @@ An initial tutorial describing how to place a bet with `abettor` is [available h
 ?loginBF
 ?logoutBF
 ?listClearedOrders
+?listCompetitions
 ?listCurrentOrders
 ?listEventTypes
 ?listEvents
@@ -59,6 +60,7 @@ An initial tutorial describing how to place a bet with `abettor` is [available h
 ?listMarketCatalogue
 ?listMarketTypes
 ?listMarketPandL
+?listVenues
 ?placeOrders
 ?replaceOrders
 ?updateOrders
