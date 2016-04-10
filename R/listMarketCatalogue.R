@@ -108,6 +108,10 @@
 #'   wildcard (*) character as long as it is not the first character. Optional.
 #'   Default is NULL.
 #'
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'   that a warning is posted when the listMarketCatalogue call throws an error. 
+#'   Changing this parameter to TRUE will suppress this warning.   
+#'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
 #'   they may be behind a proxy server, Betfair will fail login with "SSL
@@ -123,7 +127,8 @@
 #'   \code{listMarketCatalogueOps} variable is used to firstly build an R data
 #'   frame containing all the data to be passed to Betfair, in order for the
 #'   function to execute successfully. The data frame is then converted to JSON
-#'   and included in the HTTP POST request.
+#'   and included in the HTTP POST request. If the listMarketCatalogue call throws 
+#'   an error, a data frame containing error information is returned.
 #'
 #' @examples
 #' \dontrun{
@@ -161,87 +166,87 @@ listMarketCatalogue <-
            withOrders = NULL,marketSort = NULL,marketProjection =
              c(
                "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
-             ),textQuery = NULL,sslVerify = TRUE) {
+             ),textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-
+    
     listMarketCatalogueOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketCatalogue", id = "1")
-
+    
     listMarketCatalogueOps$params <-
       data.frame(filter = c(""), maxResults = c(maxResults))
     listMarketCatalogueOps$params$filter <-
       data.frame(marketStartTime = c(""))
     listMarketCatalogueOps$params$sort = marketSort
-
+    
     if (!is.null(eventIds)) {
       listMarketCatalogueOps$params$filter$eventIds <- list(eventIds)
     }
-
+    
     if (!is.null(eventTypeIds)) {
       listMarketCatalogueOps$params$filter$eventTypeIds <-
         list(eventTypeIds)
     }
-
+    
     if (!is.null(competitionIds)) {
       listMarketCatalogueOps$params$filter$competitionIds <-
         list(competitionIds)
     }
-
+    
     if (!is.null(marketIds)) {
       listMarketCatalogueOps$params$filter$marketIds <- list(marketIds)
     }
-
+    
     if (!is.null(venues)) {
       listMarketCatalogueOps$params$filter$venues <- list(venues)
     }
-
+    
     if (!is.null(marketCountries)) {
       listMarketCatalogueOps$params$filter$marketCountries <-
         list(marketCountries)
     }
-
+    
     if (!is.null(marketTypeCodes)) {
       listMarketCatalogueOps$params$filter$marketTypeCodes <-
         list(marketTypeCodes)
     }
-
+    
     listMarketCatalogueOps$params$filter$bspOnly <- bspOnly
     listMarketCatalogueOps$params$filter$turnInPlayEnabled <-
       turnInPlayEnabled
     listMarketCatalogueOps$params$filter$inPlayOnly <- inPlayOnly
     listMarketCatalogueOps$params$filter$textQuery <- textQuery
-
+    
     if (!is.null(marketBettingTypes)) {
       listMarketCatalogueOps$params$filter$marketBettingTypes <-
         list(marketBettingTypes)
     }
-
+    
     if (!is.null(withOrders)) {
       listMarketCatalogueOps$params$filter$withOrders <- list(withOrders)
     }
-
+    
     listMarketCatalogueOps$params$filter$marketStartTime <-
       data.frame(from = fromDate, to = toDate)
-
+    
     if (!is.null(marketProjection))  {
       listMarketCatalogueOps$params$marketProjection <-
         list(marketProjection)
     }
-
+    
     listMarketCatalogueOps <-
       listMarketCatalogueOps[c("jsonrpc", "method", "params", "id")]
-
+    
     listMarketCatalogueOps <-
       jsonlite::toJSON(listMarketCatalogueOps, pretty = TRUE)
-
+    
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-
+    
     headers <- list(
       'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
     )
-
+    
     listMarketCatalogue <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
@@ -250,6 +255,11 @@ listMarketCatalogue <-
           )
         )
       ))
-
-    as.data.frame(listMarketCatalogue$result[1])
+    
+    if(is.null(listMarketCatalogue$error))
+      as.data.frame(listMarketCatalogue$result)
+    else({
+      if(!suppress)
+        warning("Error- See output for details")
+      as.data.frame(listMarketCatalogue$error)})
   }
