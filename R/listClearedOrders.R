@@ -168,6 +168,6 @@ listClearedOrders <-
       return(as.data.frame(listOrder$error))}
     if (listOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
-    as.data.frame(listOrder$result$accountStatement)
+    as.data.frame(listOrder$result$clearedOrders)
     
   }
