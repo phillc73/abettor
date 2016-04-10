@@ -174,7 +174,7 @@ listMarketCatalogue <-
     listMarketCatalogueOps$params$sort = marketSort
 
     if (!is.null(eventIds)) {
-      listMarketCatalogueOps$params$filter$eventTypeIds <- list(eventIds)
+      listMarketCatalogueOps$params$filter$eventIds <- list(eventIds)
     }
 
     if (!is.null(eventTypeIds)) {
