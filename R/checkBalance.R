@@ -24,7 +24,7 @@
 #'   parameter to TRUE returns Australian account information.
 #'   
 #' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
-#'  that a warning is posted when the placeOrders call throws an error. Changing
+#'  that a warning is posted when the checkBalance call throws an error. Changing
 #'  this parameter to TRUE will suppress this warning.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
