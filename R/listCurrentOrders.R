@@ -62,6 +62,10 @@
 #'  that can be returned in one call. By default, this parameter is set to
 #'  FALSE, meaning this warning is not flagged. Changing this parameter to TRUE
 #'  will result in warnings being posted.
+#'  
+#'@param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'  that a warning is posted when the listCurrentOrders call throws an error. 
+#'  Changing this parameter to TRUE will suppress this warning.
 #'
 #'@param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'  some cases, where users have a self signed SSL Certificate, for example they
@@ -79,7 +83,9 @@
 #'  variable is used to firstly build an R data frame containing all the data to
 #'  be passed to Betfair, in order for the function to execute successfully. The
 #'  data frame is then converted to JSON and included in the HTTP POST request.
-#'
+#'  If the listCurrentOrders call throws an error, a data frame containing error 
+#'  information is returned.
+#'  
 #' @examples
 #' \dontrun{
 #'  Return all current orders:
@@ -92,18 +98,18 @@
 listCurrentOrders <-
   function(betIds = NULL, marketIds = NULL,orderByValue = NULL, SortDirValue = NULL,
            fromDate = NULL, toDate = NULL, flag = FALSE, orderProjectionValue = NULL,
-           fromRecordValue = NULL, recordCountValue = NULL, sslVerify = TRUE) {
+           fromRecordValue = NULL, recordCountValue = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-
+    
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listCurrentOrders", id = "1")
-
+    
     listOrderOps$params <- data.frame(orderProjection = "")
     if (!is.null(betIds))
       listOrderOps$params$betIds <- list(c(betIds))
     if (!is.null(marketIds))
       listOrderOps$params$marketIds <- list(c(marketIds))
-
+    
     listOrderOps$params$orderProjection <- orderProjectionValue
     listOrderOps$params$orderBy <- orderByValue
     listOrderOps$params$SortDir <- SortDirValue
@@ -112,20 +118,20 @@ listCurrentOrders <-
     if (!is.null(fromDate) & !is.null(toDate))
       listOrderOps$params$daterange <-
       data.frame(from = fromDate, to = toDate)
-
+    
     listOrderOps <-
       listOrderOps[c("jsonrpc", "method", "params", "id")]
-
+    
     listOrderOps <- jsonlite::toJSON(listOrderOps, pretty = TRUE)
-
+    
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-
+    
     headers <- list(
       'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
     )
-
+    
     listOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
@@ -134,9 +140,13 @@ listCurrentOrders <-
           )
         )
       )
-
+    
+    if (!is.null(listOrder$error)){
+      if(!suppress)
+        warning("Error- See output for details")
+      return(as.data.frame(listOrder$error))}
     if (listOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
     as.data.frame(listOrder$result$currentOrders)
-
+    
   }

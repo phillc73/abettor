@@ -67,6 +67,10 @@
 #'   (an averaged roll up of settled P&L, and number of bets, on the specified
 #'   side of a specified selection within a specified market, that are either
 #'   settled or voided). Optional.
+#'   
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'   that a warning is posted when the listClearedOrders call throws an error. 
+#'   Changing this parameter to TRUE will suppress this warning.   
 #'
 #' @param flag Boolean. \code{RCurl::postForm} returns a warning if there's more
 #'   records than the limit of 1000 (or limit specified by the record
@@ -89,7 +93,8 @@
 #'   \code{listMarketBookOps} variable is used to firstly build an R data frame
 #'   containing all the data to be passed to Betfair, in order for the function
 #'   to execute successfully. The data frame is then converted to JSON and
-#'   included in the HTTP POST request.
+#'   included in the HTTP POST request. If the listClearedOrders call throws an 
+#'   error, a data frame containing error information is returned.
 #'
 #' @examples
 #' \dontrun{
@@ -106,12 +111,12 @@ listClearedOrders <-
   function(betStatusValue = "SETTLED", eventTypeIds = NULL, eventIds = NULL, betIds = NULL,
            marketIds = NULL, runnerIds = NULL, sideValue = NULL, fromDate = NULL,
            toDate = NULL, groupByValue = NULL, includeItemDescriptionValue = NULL,
-           fromRecordValue = NULL, recordCountValue = NULL, flag = FALSE, sslVerify = TRUE) {
+           fromRecordValue = NULL, recordCountValue = NULL, suppress = FALSE, flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-
+    
     listOrderOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listClearedOrders", id = "1")
-
+    
     listOrderOps$params <- data.frame(includeItemDescription = "")
     if (!is.null(betIds))
       listOrderOps$params$betIds <- list(c(betIds))
@@ -123,7 +128,7 @@ listClearedOrders <-
       listOrderOps$params$eventIds <- list(c(eventIds))
     if (!is.null(eventIds))
       listOrderOps$params$runnerIds <- list(c(runnerIds))
-
+    
     listOrderOps$params$betStatus <- betStatusValue
     listOrderOps$params$groupBy <- groupByValue
     listOrderOps$params$side <- sideValue
@@ -134,20 +139,20 @@ listClearedOrders <-
     listOrderOps$params$settledDateRange <- data.frame(from = "")
     listOrderOps$params$settledDateRange$from <- fromDate
     listOrderOps$params$settledDateRange$to <- toDate
-
+    
     listOrderOps <-
       listOrderOps[c("jsonrpc", "method", "params", "id")]
-
+    
     listOrderOps <- jsonlite::toJSON(listOrderOps, pretty = TRUE)
-
+    
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-
+    
     headers <- list(
       'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
     )
-
+    
     listOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
@@ -156,8 +161,13 @@ listClearedOrders <-
           )
         )
       )
-
+   
+     if (!is.null(listOrder$error)){
+      if(!suppress)
+        warning("Error- See output for details")
+      return(as.data.frame(listOrder$error))}
     if (listOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
     as.data.frame(listOrder$result$clearedOrders)
+    
   }

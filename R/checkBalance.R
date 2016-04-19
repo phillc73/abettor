@@ -22,6 +22,10 @@
 #'   wallet. This parameter determines which wallet is queried. By default, it
 #'   is set to FALSE, that is main wallet data only is returned. Changing this
 #'   parameter to TRUE returns Australian account information.
+#'   
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'  that a warning is posted when the checkBalance call throws an error. Changing
+#'  this parameter to TRUE will suppress this warning.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -37,7 +41,8 @@
 #'   is used to firstly build an R data frame containing all the data to be
 #'   passed to Betfair, in order for the function to execute successfully. The
 #'   data frame is then converted to JSON and included in the HTTP POST request.
-#'
+#'   If the checkBalance call throws an error, a data frame containing error 
+#'   information is returned.
 #' @examples
 #' \dontrun{
 #' checkBalance() # without any arguments will return main wallet information as a data frame
@@ -47,27 +52,27 @@
 #' }
 #'
 
-checkBalance <- function(AUS = FALSE, sslVerify = TRUE) {
+checkBalance <- function(AUS = FALSE, suppress = FALSE, sslVerify = TRUE) {
   balanceOps <-
     data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountFunds", id = "1")
-
+  
   balanceOps$params <- data.frame(wallet = c(""))
-
+  
   balanceOps$params$wallet <- ifelse(AUS,c("AUSTRALIAN"),c("UK"))
-
-
+  
+  
   balanceOps <- balanceOps[c("jsonrpc", "method", "params", "id")]
-
+  
   balanceOps <- jsonlite::toJSON(balanceOps, pretty = TRUE)
-
+  
   # Read Environment variables for authorisation details
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
-
+  
   headers <- list(
     'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
   )
-
+  
   balance <-
     as.list(jsonlite::fromJSON(
       RCurl::postForm(
@@ -76,7 +81,12 @@ checkBalance <- function(AUS = FALSE, sslVerify = TRUE) {
         )
       )
     ))
-
-  as.data.frame(balance$result)
-
+  
+  if(is.null(balance$error))
+    as.data.frame(balance$result)
+  else({
+    if(!suppress)
+      warning("Error- See output for details")
+    as.data.frame(balance$error)})
+  
 }

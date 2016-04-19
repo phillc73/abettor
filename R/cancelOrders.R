@@ -28,6 +28,10 @@
 #'   value to be cancelled. For example, given an unmatched back of GBP100,
 #'   inputting "2" as the parameter value will cancel GBP2 of the bet and leave
 #'   GBP98 unmatched.
+#'   
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'   that a warning is posted when the updateOrders call throws an error. Changing
+#'   this parameter to TRUE will suppress this warning.      
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -36,8 +40,14 @@
 #'   error occurs you may set sslVerify to FALSE. This does open a small
 #'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
-#' @return If the call is successful, then the function returns "SUCCESS".
-#'   Otherwise, a string indicating the nature of the error is returned.
+#' @return Response from Betfair is stored in updateOrders variable, which
+#'  is then parsed from JSON as a list. The status column recognises whether
+#'  the call was successful. If the cancelOrders call throws an error, a data 
+#'  frame containing error information is returned. Note that there are two types
+#'  of error associated with this call. An API error is triggered, for example,
+#'  when an invalid market ID is entered. Another type of error is returned if 
+#'  no action is required (e.g. call to cancel a bet that has already been
+#'  cancelled).
 #'
 #' @section Note on sizeReductions: If you want to combine partial and full
 #'   cancellations, use "NULL" to signify the bet IDs that are to be fully
@@ -53,12 +63,12 @@
 #' To cancel all unmatched bets (across all countries), simply run cancelOrders
 #' with marketId set to NULL
 #'
-#' cancelOrders()
+#' cancelOrders(marketId = NULL)
 #'
 #' To cancel all unmatched bets on a single market, then just pass the market ID
 #' in the marketId parameter:
 #'
-#' cancelOrders(marketId = NULL)
+#' cancelOrders(marketId = "1.2131241")
 #'
 #' To fully cancel an inidividual bet on a specific market, then  include a
 #' bet ID in betIds parameter:
@@ -87,17 +97,17 @@
 #'
 
 cancelOrders <-
-  function(marketId, betIds = NULL, sizeReductions = NULL, sslVerify = TRUE) {
-
+  function(marketId, betIds = NULL, sizeReductions = NULL, suppress = FALSE, sslVerify = TRUE) {
+    
     options(stringsAsFactors = FALSE)
-
+    
     if (is.null(sizeReductions))
       sizeReductions = rep("NULL", length(betIds))
-
+    
     if (length(betIds) != length(sizeReductions))
-
+      
       return("Bet ID and Size Reduction vectors need to have the same length")
-
+    
     cancelOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketId,'","instructions": [',
@@ -106,17 +116,17 @@ cancelOrders <-
         ))),function(x)
           paste0('{"betId":"',x[1],'","sizeReduction":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
       )
-
+    
     cancelOrderOps = gsub("NULL","",cancelOrderOps)
-
+    
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-
+    
     headers <- list(
       'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
     )
-
+    
     cancelOrders <-
       as.list(jsonlite::fromJSON(
         RCurl::postForm(
@@ -125,13 +135,13 @@ cancelOrders <-
           )
         )
       ))
-
-    output <- as.data.frame(cancelOrders$result)
-    if (length(output) == 0)
-      return("No Data Returned")
-    if (output$status == "SUCCESS")
-      return(output$status)
-    return(paste0(
-      output$status,": ",output$errorCode,"(",as.data.frame(output$instructionReports)$errorCode,")"
-    ))
+    
+    if(is.null(cancelOrders$error)){
+      if(!is.null(cancelOrders$result$errorCode) & !suppress)
+        warning("Error- See output for details")
+      as.data.frame(cancelOrders$result)}
+    else({
+      if(!suppress)
+        warning("API Error- See output for details")
+      as.data.frame(cancelOrders$error)})    
   }

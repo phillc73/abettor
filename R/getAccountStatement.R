@@ -44,6 +44,10 @@
 #'   records than the limit of 100 that can be returned in one call. By default,
 #'   this parameter is set to FALSE, meaning this warning is not flagged.
 #'   Changing this parameter to TRUE will result in warnings being posted.
+#' 
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'   that a warning is posted when the getAccountStatement call throws an error. 
+#'   Changing this parameter to TRUE will suppress this warning.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -59,7 +63,8 @@
 #'   variable is used to firstly build an R data frame containing all the data
 #'   to be passed to Betfair, in order for the function to execute successfully.
 #'   The data frame is then converted to JSON and included in the HTTP POST
-#'   request.
+#'   request. If the getAccountStatement call throws an error, a data frame 
+#'   containing error information is returned.
 #'
 #' @examples
 #' \dontrun{
@@ -71,12 +76,12 @@
 getAccountStatement <-
   function(localeString = NULL,fromRecordValue = NULL,recordCountValue =
              NULL,fromDate = NULL, toDate = NULL,
-           includeItemValue = NULL, walletValue = NULL, flag =
-             FALSE, sslVerify = TRUE) {
+           includeItemValue = NULL, walletValue = NULL, suppress = FALSE,
+           flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
     getAccStatOps <-
       data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")
-
+    
     getAccStatOps$params <- data.frame(fromRecord = "")
     getAccStatOps$params$locale <- localeString
     getAccStatOps$params$fromRecord <- fromRecordValue
@@ -86,20 +91,20 @@ getAccountStatement <-
     getAccStatOps$params$daterange <- data.frame(from = "")
     getAccStatOps$params$daterange$from <- fromDate
     getAccStatOps$params$daterange$to <- toDate
-
+    
     getAccStatOps <-
       getAccStatOps[c("jsonrpc", "method", "params", "id")]
-
+    
     getAccStatOps <- jsonlite::toJSON(getAccStatOps, pretty = TRUE)
-
+    
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-
+    
     headers <- list(
       'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
     )
-
+    
     accOrder <-
       jsonlite::fromJSON(
         RCurl::postForm(
@@ -108,11 +113,13 @@ getAccountStatement <-
           )
         )
       )
-
-    if (!is.null(accOrder$error))
-      return(paste0("FAIL: ",accOrder$error$message))
+    
+    if (!is.null(accOrder$error)){
+      if(!suppress)
+        warning("Error- See output for details")
+      return(as.data.frame(accOrder$error))}
     if (accOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
     as.data.frame(accOrder$result$accountStatement)
-
+    
   }

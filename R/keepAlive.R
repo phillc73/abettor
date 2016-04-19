@@ -21,9 +21,9 @@
 #' @seealso \code{\link{loginBF}}, which must be executed first, as this
 #'   function requires a valid session token
 #'
-#' @param suppress Boolean. \code{RCurl::postForm} posts a warning due to . By
-#'   default, this parameter is set to TRUE, meaning this warning is suppressed.
-#'   Changing this parameter to FALSE will result in warnings being posted.
+#' @param suppress Boolean. \code{RCurl::postForm} posts a warning due to a lack 
+#'   of inputs. By default, this parameter is set to TRUE, meaning this warning is 
+#'   suppressed. Changing this parameter to FALSE will result in warnings being posted.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
