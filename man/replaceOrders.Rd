@@ -4,20 +4,26 @@
 \alias{replaceOrders}
 \title{Change the price of a set of unmatched bets}
 \usage{
-replaceOrders(marketId, betId, newPrice, sslVerify = TRUE)
+replaceOrders(marketId, betId, newPrice, suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{marketId}{String. The market ID of the bets to be replaced. While many
-bets can be updated in one call, they must be from the same market.}
+bets can be updated in one call, they must be from the same market.
+Required. No default.}
 
 \item{betId}{vector (strings). The bet IDs of the bets to be replaced- bet
 IDs are displayed (called Ref) on the bet information on the right hand
-side of market page on the betfair desktop site.}
+side of market page on the betfair desktop site. Required. No default.}
 
 \item{newPrice}{vector (strings). The new price of the original bets (e.g
-"1.01", "2.22","10.0",etc). This parameter needs to be set of quoted
-doubles (see for more information on accepted price doubles (e.g. 2.02 is
-viable, while 10.02 is not))}
+"1.01", "2.22","10.0",etc). This parameter needs to be a set of quoted
+doubles (see Betfair's online documentation for more information on accepted 
+price doubles (e.g. 2.02 is viable, while 10.02 is not). Requred. No
+default.}
+
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the replaceOrders call throws an error. 
+Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
@@ -27,8 +33,14 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-If the call is successful, then the function returns "SUCCESS".
-  Otherwise, a string indicating the nature of the error is returned.
+Response from Betfair is stored in replaceOrders variable, which
+ is then parsed from JSON as a list. The status column recognises whether
+ the call was successful. If the replaceOrders call throws an error, a data 
+ frame containing error information is returned. Note that there are two types
+ of error associated with this call. An API error is triggered, for example,
+ when an invalid market ID is entered. Another type of error is returned if 
+ no action is required (e.g. call to change the price for a bet to the price 
+ at which it is already set).
 }
 \description{
 \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/replaceOrders}
@@ -65,9 +77,6 @@ Note that, unlike \\code{updateOrders}, \\code{replaceOrders} is an all or
 nothing process. One error is sufficient to prevent any replacement across the
 entire set of bet IDs.
 
-Another possible error occurs if you input incorrect data. In these scenarios,
-no updates will have been processed and "No Data Returned" will be the function
-output.
 }
 
 }

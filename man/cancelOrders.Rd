@@ -5,7 +5,7 @@
 \title{Cancel unmatched/partially matched bets.}
 \usage{
 cancelOrders(marketId, betIds = NULL, sizeReductions = NULL,
-  sslVerify = TRUE)
+  suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{marketId}{String. The market ID of the bets to be fully or partially
@@ -27,6 +27,10 @@ side of market page on the betfair desktop site.}
   inputting "2" as the parameter value will cancel GBP2 of the bet and leave
   GBP98 unmatched.}
 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the updateOrders call throws an error. Changing
+this parameter to TRUE will suppress this warning.}
+
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
 they may be behind a proxy server, Betfair will fail login with "SSL
@@ -35,8 +39,14 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-If the call is successful, then the function returns "SUCCESS".
-  Otherwise, a string indicating the nature of the error is returned.
+Response from Betfair is stored in updateOrders variable, which
+ is then parsed from JSON as a list. The status column recognises whether
+ the call was successful. If the cancelOrders call throws an error, a data 
+ frame containing error information is returned. Note that there are two types
+ of error associated with this call. An API error is triggered, for example,
+ when an invalid market ID is entered. Another type of error is returned if 
+ no action is required (e.g. call to cancel a bet that has already been
+ cancelled).
 }
 \description{
 \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/cancelOrders}
@@ -63,12 +73,12 @@ cancelled or partially cancelled once placed.
 To cancel all unmatched bets (across all countries), simply run cancelOrders
 with marketId set to NULL
 
-cancelOrders()
+cancelOrders(marketId = NULL)
 
 To cancel all unmatched bets on a single market, then just pass the market ID
 in the marketId parameter:
 
-cancelOrders(marketId = NULL)
+cancelOrders(marketId = "1.2131241")
 
 To fully cancel an inidividual bet on a specific market, then  include a
 bet ID in betIds parameter:

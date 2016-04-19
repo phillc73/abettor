@@ -4,13 +4,17 @@
 \alias{checkBalance}
 \title{Checks account balance on Betfair.}
 \usage{
-checkBalance(AUS = FALSE, sslVerify = TRUE)
+checkBalance(AUS = FALSE, suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{AUS}{Boolean. Betfair users have a main wallet and an Australian
 wallet. This parameter determines which wallet is queried. By default, it
 is set to FALSE, that is main wallet data only is returned. Changing this
 parameter to TRUE returns Australian account information.}
+
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the checkBalance call throws an error. Changing
+this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
@@ -41,6 +45,8 @@ for more general information on the Betfair wallet system.
   is used to firstly build an R data frame containing all the data to be
   passed to Betfair, in order for the function to execute successfully. The
   data frame is then converted to JSON and included in the HTTP POST request.
+  If the checkBalance call throws an error, a data frame containing error 
+  information is returned.
 }
 \examples{
 \dontrun{

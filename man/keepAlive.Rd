@@ -7,9 +7,9 @@
 keepAlive(suppress = TRUE, sslVerify = TRUE)
 }
 \arguments{
-\item{suppress}{Boolean. \code{RCurl::postForm} posts a warning due to . By
-default, this parameter is set to TRUE, meaning this warning is suppressed.
-Changing this parameter to FALSE will result in warnings being posted.}
+\item{suppress}{Boolean. \code{RCurl::postForm} posts a warning due to a lack 
+of inputs. By default, this parameter is set to TRUE, meaning this warning is 
+suppressed. Changing this parameter to FALSE will result in warnings being posted.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example

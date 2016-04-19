@@ -4,16 +4,14 @@
 \alias{listMarketPandL}
 \title{Return market profit and loss}
 \usage{
-listMarketPandL(marketIds = NULL, includeSettledBetsValue = NULL,
+listMarketPandL(marketIds, includeSettledBetsValue = NULL,
   includeBspBetsValue = NULL, netOfCommissionValue = NULL,
-  sslVerify = TRUE, errorWarning = FALSE)
+  suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{marketIds}{Vector<String>. A set of market ID strings from which the
-corresponding market profit and losses will be returned. According to the
-online documentation, this parameter is not required. However, setting it
-to null will return an empty data frame. So I suggest including market IDs
-in this parameter.}
+corresponding market profit and losses will be returned. Required.
+No default.}
 
 \item{includeSettledBetsValue}{Boolean. Option to include settled bets
 (partially settled markets only). This parameter defaults to NULL, which
@@ -28,16 +26,16 @@ user's current commission rate for this market, including any special
 tariffs. This parameter defaults to NULL, which Betfair interprets as
 FALSE. Optional.}
 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the listMarketPandL call throws an error. 
+Changing this parameter to TRUE will suppress this warning.}
+
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
 they may be behind a proxy server, Betfair will fail login with "SSL
 certificate problem: self signed certificate in certificate chain". If this
 error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
-
-\item{errorWarning}{Boolean. This argument defaults to FALSE and is optional.
-If set to TRUE, then, in the case of errors, the error details will be
-posted as a warning.}
 }
 \value{
 Response from Betfair is stored in listPandL variable, which is then
@@ -50,16 +48,17 @@ Response from Betfair is stored in listPandL variable, which is then
 markets. The values are calculated using matched bets and optionally settled
 bets
 }
-\section{Note on \code{listMarketBookOps} variable}{
+\section{Note on \code{listPandLOps} variable}{
  The
-  \code{listMarketBookOps} variable is used to firstly build an R data frame
+  \code{listPandLOps} variable is used to firstly build an R data frame
   containing all the data to be passed to Betfair, in order for the function
   to execute successfully. The data frame is then converted to JSON and
-  included in the HTTP POST request.
+  included in the HTTP POST request. If the listMarketPandL call throws an 
+  error, a data frame containing error information is returned.
 }
 \examples{
 \dontrun{
-Return the P&L (net of comission) for the requested markets. This actual
+Return the P&L (net of comission) for the requested markets. The actual
 market IDs are unlikely to work and are just for demonstration purposes.
 
 listMarketPandL(marketIds = c("1.122323121","1.123859413"),

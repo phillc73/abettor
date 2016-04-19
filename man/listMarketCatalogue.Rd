@@ -13,7 +13,7 @@ listMarketCatalogue(eventTypeIds, marketTypeCodes, maxResults = "200",
   withOrders = NULL, marketSort = NULL,
   marketProjection = c("COMPETITION", "EVENT", "EVENT_TYPE",
   "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"),
-  textQuery = NULL, sslVerify = TRUE)
+  textQuery = NULL, suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{eventTypeIds}{vector <String>. Restrict markets by event type
@@ -107,6 +107,10 @@ market such as the Name, Event, Competition, etc. The string can include a
 wildcard (*) character as long as it is not the first character. Optional.
 Default is NULL.}
 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the listMarketCatalogue call throws an error. 
+Changing this parameter to TRUE will suppress this warning.}
+
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
 they may be behind a proxy server, Betfair will fail login with "SSL
@@ -141,7 +145,8 @@ output may be found here:
   \code{listMarketCatalogueOps} variable is used to firstly build an R data
   frame containing all the data to be passed to Betfair, in order for the
   function to execute successfully. The data frame is then converted to JSON
-  and included in the HTTP POST request.
+  and included in the HTTP POST request. If the listMarketCatalogue call throws 
+  an error, a data frame containing error information is returned.
 }
 \examples{
 \dontrun{

@@ -4,20 +4,26 @@
 \alias{updateOrders}
 \title{Change bet persistence type}
 \usage{
-updateOrders(marketId, betId, persistenceType, sslVerify = TRUE)
+updateOrders(marketId, betId, persistenceType, suppress = FALSE,
+  sslVerify = TRUE)
 }
 \arguments{
 \item{marketId}{String. The market ID of the bets to be updated. While many
-bets can be updated in one call, they must be from the same market.}
+bets can be updated in one call, they must be from the same market. Required.
+No default.}
 
 \item{betId}{vector (strings). The bet IDs of the bets to be updated- bet IDs
 are displayed (called Ref) on the bet information on the right hand side of
-market page on the betfair desktop site.}
+market page on the betfair desktop site. Required. No default.}
 
 \item{persistenceType}{vector (strings). The persistence state of updated
-bets. persistanceType can take three values
-("LAPSE","PERSIST","MARKET_ON_CLOSE", which correspond to Cancel, Keep and
-Take SP on the desktop website)}
+bets. persistanceType can take three values ("LAPSE","PERSIST" and
+"MARKET_ON_CLOSE", which correspond to Cancel, Keep and
+Take SP on the desktop website). Required. No default.}
+
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the updateOrders call throws an error. Changing
+this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example
@@ -27,8 +33,14 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-If the call is successful, then the function returns "SUCCESS".
-  Otherwise, a string indicating the nature of the error is returned.
+Response from Betfair is stored in updateOrders variable, which
+ is then parsed from JSON as a list. The status column recognises whether
+ the call was successful. If the updateOrders call throws an error, a data 
+ frame containing error information is returned. Note that there are two types
+ of error associated with this call. An API error is triggered, for example,
+ when an invalid market ID is entered. Another type of error is returned if 
+ no action is required (e.g. call to set to PERSIST for a bet that is 
+ already set to PERSIST).
 }
 \description{
 \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/updateOrders}
@@ -36,18 +48,6 @@ If the call is successful, then the function returns "SUCCESS".
 \details{
 \code{updateOrders} changes the persistence type of a specific unmatched bet.
 }
-\section{Notes on \code{priceData} options}{
- There are three options for this
-  argument and one of them must be specified. All upper case letters must be
-  used. \describe{ \item{SP_AVAILABLE}{Amount available for the Betfair
-  Starting Price (BSP) auction.} \item{SP_TRADED}{Amount traded in the
-  Betfair Starting Price (BSP) auction. Zero returns if the event has not yet
-  started.} \item{EX_BEST_OFFERS}{Only the best prices available for each
-  runner.} \item{EX_ALL_OFFERS}{EX_ALL_OFFERS trumps EX_BEST_OFFERS if both
-  settings are present} \item{EX_TRADED}{Amount traded in this market on the
-  Betfair exchange.}}
-}
-
 \section{Note on \code{updateOrders}}{
  Unlike some other functions that
   utilised data frames, this function converts the input to a JSON-compatible
@@ -74,9 +74,6 @@ Please note, however, that the viable bet IDs will have been succesfully updated
 i.e. it's not an all or nothing process but rather each update is treated
 individually (unlike \\code{replaceOrders}).
 
-Another possible error occurs if you input incorrect data. In these scenarios,
-no updates will have been processed and "No Data Returned" will be the function
-output.
 }
 
 }

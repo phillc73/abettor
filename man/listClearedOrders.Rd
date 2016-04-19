@@ -8,7 +8,8 @@ listClearedOrders(betStatusValue = "SETTLED", eventTypeIds = NULL,
   eventIds = NULL, betIds = NULL, marketIds = NULL, runnerIds = NULL,
   sideValue = NULL, fromDate = NULL, toDate = NULL, groupByValue = NULL,
   includeItemDescriptionValue = NULL, fromRecordValue = NULL,
-  recordCountValue = NULL, flag = FALSE, sslVerify = TRUE)
+  recordCountValue = NULL, suppress = FALSE, flag = FALSE,
+  sslVerify = TRUE)
 }
 \arguments{
 \item{betStatusValue}{string. Restricts the results to the specified status.
@@ -70,6 +71,10 @@ interprets as 0. Optional.}
 returned. To retrieve more than 1000 records (the maxiumum by default), you
 need to utilise this parameter. Optional.}
 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the listClearedOrders call throws an error. 
+Changing this parameter to TRUE will suppress this warning.}
+
 \item{flag}{Boolean. \code{RCurl::postForm} returns a warning if there's more
 records than the limit of 1000 (or limit specified by the record
 parameters) that can be returned in one call. By default, this parameter is
@@ -99,7 +104,8 @@ online documentation
   \code{listMarketBookOps} variable is used to firstly build an R data frame
   containing all the data to be passed to Betfair, in order for the function
   to execute successfully. The data frame is then converted to JSON and
-  included in the HTTP POST request.
+  included in the HTTP POST request. If the listClearedOrders call throws an 
+  error, a data frame containing error information is returned.
 }
 \examples{
 \dontrun{

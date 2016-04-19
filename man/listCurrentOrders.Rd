@@ -7,7 +7,7 @@
 listCurrentOrders(betIds = NULL, marketIds = NULL, orderByValue = NULL,
   SortDirValue = NULL, fromDate = NULL, toDate = NULL, flag = FALSE,
   orderProjectionValue = NULL, fromRecordValue = NULL,
-  recordCountValue = NULL, sslVerify = TRUE)
+  recordCountValue = NULL, suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
 \item{betIds}{Vector<string>. Restrict the results to the specified bet IDs
@@ -64,6 +64,10 @@ interprets as 0. Optional. Default is set to NULL.}
 returned. To retrieve more than 1000 records (the maxiumum by default), you
 need to utilise this parameter. Optional. Default is set to NULL.}
 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+that a warning is posted when the listCurrentOrders call throws an error. 
+Changing this parameter to TRUE will suppress this warning.}
+
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
 some cases, where users have a self signed SSL Certificate, for example they
 may be behind a proxy server, Betfair will fail login with "SSL certificate
@@ -86,6 +90,8 @@ according to bet IDs and date intervals.
  variable is used to firstly build an R data frame containing all the data to
  be passed to Betfair, in order for the function to execute successfully. The
  data frame is then converted to JSON and included in the HTTP POST request.
+ If the listCurrentOrders call throws an error, a data frame containing error 
+ information is returned.
 }
 \examples{
 \dontrun{
