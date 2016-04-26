@@ -22,7 +22,7 @@ Or install from GitHub if you prefer (identical mirror of GitLab)
 ```r
 # install.packages("devtools")
 devtools::install_github("phillc73/abettor")
-require("abettor")
+library("abettor")
 ```
 
 ### Obtain a Betfair Developer Application Key
