@@ -76,7 +76,7 @@ loginBF <-
 
 
     loginReturn =  tryCatch(
-      httr::POST(url = "https://identitysso.betfair.com/api/login", config = httr::config(ssl_verifypeer = T),
+      httr::POST(url = "https://identitysso.betfair.com/api/login", config = httr::config(ssl_verifypeer = sslVerify),
                  query = credentials,
                  httr::add_headers(Accept = "application/json", `X-Application` = applicationKey))
       ,error = function(cond) {
