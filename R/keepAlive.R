@@ -21,8 +21,8 @@
 #' @seealso \code{\link{loginBF}}, which must be executed first, as this
 #'   function requires a valid session token
 #'
-#' @param suppress Boolean. \code{RCurl::postForm} posts a warning due to a lack 
-#'   of inputs. By default, this parameter is set to TRUE, meaning this warning is 
+#' @param suppress Boolean. \code{RCurl::postForm} posts a warning due to a lack
+#'   of inputs. By default, this parameter is set to TRUE, meaning this warning is
 #'   suppressed. Changing this parameter to FALSE will result in warnings being posted.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
@@ -63,24 +63,21 @@ keepAlive = function(suppress = TRUE, sslVerify = TRUE) {
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
 
-  headers <- list(
-    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-  )
-
-  if (suppress)
-    keepAlive <-
-      suppressWarnings(as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://identitysso.betfair.com/api/keepAlive", .opts = list(httpheader =
-                                                                          headers, ssl.verifypeer = sslVerify)
-        )
-      )))
-  else
-    (   keepAlive   =    as.list(jsonlite::fromJSON(
-      RCurl::postForm(
-        "https://identitysso.betfair.com/api/keepAlive", .opts = list(httpheader =
-                                                                        headers, ssl.verifypeer = sslVerify)
+  if (suppress){
+    keepAlive <- suppressWarnings(httr::content(
+      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive", config = httr::config(ssl_verifypeer = sslVerify),
+                 httr::add_headers(Accept = "application/json", `X-Application` = product,
+                                   `X-Authentication` = token, `Content-Type` = "application/json"))
+    )
+    )
+  } else {
+    keepAlive <- httr::content(
+      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive", config = httr::config(ssl_verifypeer = sslVerify),
+                 httr::add_headers(Accept = "application/json", `X-Application` = product,
+                                   `X-Authentication` = token, `Content-Type` = "application/json")
       )
-    )))
+    )
+  }
+
   return(paste0(keepAlive$status,":",keepAlive$error))
 }

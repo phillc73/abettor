@@ -72,23 +72,19 @@
 loginBF <-
   function(username, password, applicationKey, sslVerify = TRUE) {
     credentials <-
-      paste("username=",username,"&password=",password,sep = "")
+      paste0("username=", username, "&password=", password)
 
-    headersLogin <-
-      list('Accept' = 'application/json', 'X-Application' = applicationKey)
 
     loginReturn =  tryCatch(
-      RCurl::postForm(
-        "https://identitysso.betfair.com/api/login", .opts = list(
-          postfields = credentials, httpheader = headersLogin, ssl.verifypeer = sslVerify
-        )
-      )
+      httr::POST(url = "https://identitysso.betfair.com/api/login", config = httr::config(ssl_verifypeer = T),
+                 query = credentials,
+                 httr::add_headers(Accept = "application/json", `X-Application` = applicationKey))
       ,error = function(cond) {
         print(cond)
         stop(cond)
       }
     )
-    authenticationKey <- jsonlite::fromJSON(loginReturn)
+    authenticationKey <- httr::content(loginReturn)
 
     # Set environment variables with authentication details
     Sys.setenv(product = authenticationKey$product)

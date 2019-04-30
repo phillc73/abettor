@@ -16,6 +16,7 @@ BugReports: http://www.github.com/phillc73/abettor/issues
 Maintainer: Phill Clarke <phill@starkingdom.co.uk>
 LazyData: true
 Imports:
+    httr (>= 1.4.0),
     RCurl (>= 1.95-4.3),
     jsonlite (>= 0.9.12)
 Suggests:
