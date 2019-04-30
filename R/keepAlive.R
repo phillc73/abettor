@@ -65,14 +65,16 @@ keepAlive = function(suppress = TRUE, sslVerify = TRUE) {
 
   if (suppress){
     keepAlive <- suppressWarnings(httr::content(
-      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive", config = httr::config(ssl_verifypeer = sslVerify),
+      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive",
+                 config = httr::config(ssl_verifypeer = sslVerify),
                  httr::add_headers(Accept = "application/json", `X-Application` = product,
                                    `X-Authentication` = token, `Content-Type` = "application/json"))
     )
     )
   } else {
     keepAlive <- httr::content(
-      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive", config = httr::config(ssl_verifypeer = sslVerify),
+      httr::POST(url = "https://identitysso.betfair.com/api/keepAlive",
+                 config = httr::config(ssl_verifypeer = sslVerify),
                  httr::add_headers(Accept = "application/json", `X-Application` = product,
                                    `X-Authentication` = token, `Content-Type` = "application/json")
       )
