@@ -43,8 +43,8 @@
 #'   error occurs you may set sslVerify to FALSE. This does open a small
 #'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
-#'@param suppress Boolean. By default, this parameter is set to FALSE, meaning 
-#'   that a warning is posted when the listMarketPandL call throws an error. 
+#'@param suppress Boolean. By default, this parameter is set to FALSE, meaning
+#'   that a warning is posted when the listMarketPandL call throws an error.
 #'   Changing this parameter to TRUE will suppress this warning.
 #'
 #' @return Response from Betfair is stored in listPandL variable, which is then
@@ -56,7 +56,7 @@
 #'   \code{listPandLOps} variable is used to firstly build an R data frame
 #'   containing all the data to be passed to Betfair, in order for the function
 #'   to execute successfully. The data frame is then converted to JSON and
-#'   included in the HTTP POST request. If the listMarketPandL call throws an 
+#'   included in the HTTP POST request. If the listMarketPandL call throws an
 #'   error, a data frame containing error information is returned.
 #'
 #' @examples
@@ -74,37 +74,33 @@ listMarketPandL <-
   function(marketIds, includeSettledBetsValue = NULL,includeBspBetsValue = NULL,
            netOfCommissionValue = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-    
+
     listPandLOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/listMarketProfitAndLoss", id = "1")
-    
+
     listPandLOps$params <- data.frame(marketIds = c(marketIds))
     listPandLOps$params$marketIds <- list(listPandLOps$params$marketIds)
-    
+
     listPandLOps$params$includeSettledBets <- includeSettledBetsValue
     listPandLOps$params$includeBspBets <- includeBspBetsValue
     listPandLOps$params$netOfCommission <- netOfCommissionValue
-    
+
     listPandLOps <- listPandLOps[c("jsonrpc", "method", "params", "id")]
-    
-    listPandLOps <- jsonlite::toJSON(listPandLOps, pretty = TRUE)
-    print(listPandLOps)
+
+    listPandLOps <- jsonlite::toJSON(jsonlite::unbox(listPandLOps), pretty = TRUE)
+
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-    
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
-    
-    listPandL <-
-      jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listPandLOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
+
+    listPandL <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = listPandLOps,
+                 httr::add_headers(Accept = "application/json", `X-Application` = product, `X-Authentication` = token)
       )
+    )
+
     if(is.null(listPandL$error))
       as.data.frame(listPandL$result)
     else({
