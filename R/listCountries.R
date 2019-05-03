@@ -196,25 +196,19 @@ listCountries <-
       listCountriesOps[c("jsonrpc", "method", "params", "id")]
 
     listCountriesOps <-
-      jsonlite::toJSON(listCountriesOps, pretty = TRUE)
+      jsonlite::toJSON(jsonlite::unbox(listCountriesOps), pretty = TRUE)
 
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
 
-
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+    listCountries <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = listCountriesOps,
+                 httr::add_headers(Accept = "application/json", `X-Application` = product, `X-Authentication` = token)
+      )
     )
-
-    listCountries <-
-      as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listCountriesOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
-      ))
 
     if(is.null(listCountries$error))
       as.data.frame(listCountries$result[1])
