@@ -152,24 +152,21 @@ listMarketBook <- function(marketIds, priceData , orderProjection = NULL,
     listMarketBookOps[c("jsonrpc", "method", "params", "id")]
 
   listMarketBookOps <-
-    jsonlite::toJSON(listMarketBookOps, pretty = TRUE)
+    jsonlite::toJSON(jsonlite::unbox(listMarketBookOps))
 
   # Read Environment variables for authorisation details
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
 
-  headers <- list(
-    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-  )
+  listMarketBook <- httr::content(
+    httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+               config = httr::config(ssl_verifypeer = sslVerify),
+               body = listMarketBookOps,
+               httr::add_headers(Accept = "application/json",
+                                 "X-Application" = product,
+                                 "X-Authentication" = token)), as = "text")
 
-  listMarketBook <-
-    as.list(jsonlite::fromJSON(
-      RCurl::postForm(
-        "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = listMarketBookOps, httpheader = headers, ssl.verifypeer = sslVerify
-        )
-      )
-    ))
+  listMarketBook <- jsonlite::fromJSON(listMarketBook)
 
   if(is.null(listMarketBook$error))
     as.data.frame(listMarketBook$result)
