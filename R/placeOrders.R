@@ -267,24 +267,21 @@ placeOrders <-
     placeOrdersOps <-
       placeOrdersOps[c("jsonrpc", "method", "params", "id")]
 
-    placeOrdersOps <- jsonlite::toJSON(placeOrdersOps, pretty = TRUE)
+    placeOrdersOps <- jsonlite::toJSON(jsonlite::unbox(placeOrdersOps))
 
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
 
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
+    placeOrders <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = placeOrdersOps,
+                 httr::add_headers(Accept = "application/json",
+                                   "X-Application" = product,
+                                   "X-Authentication" = token)), as = "text")
 
-    placeOrders <-
-      as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = placeOrdersOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
-      ))
+    placeOrders <- jsonlite::fromJSON(placeOrders)
 
     if(is.null(placeOrders$error))
       as.data.frame(placeOrders$result)
