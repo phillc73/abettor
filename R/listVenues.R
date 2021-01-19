@@ -186,25 +186,21 @@ listVenues <-
       listVenuesOps[c("jsonrpc", "method", "params", "id")]
 
     listVenuesOps <-
-      jsonlite::toJSON(listVenuesOps, pretty = TRUE)
+      jsonlite::toJSON(jsonlite::unbox(listVenuesOps))
 
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
 
+    listVenues <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = listVenuesOps,
+                 httr::add_headers(Accept = "application/json",
+                                   "X-Application" = product,
+                                   "X-Authentication" = token)), as = "text")
 
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
-
-    listVenues <-
-      as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = listVenuesOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
-      ))
+    listVenues <- jsonlite::fromJSON(listVenues)
 
     if(is.null(listVenues$error))
       as.data.frame(listVenues$result[1])

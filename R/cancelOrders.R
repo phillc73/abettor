@@ -28,10 +28,10 @@
 #'   value to be cancelled. For example, given an unmatched back of GBP100,
 #'   inputting "2" as the parameter value will cancel GBP2 of the bet and leave
 #'   GBP98 unmatched.
-#'   
-#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning
 #'   that a warning is posted when the updateOrders call throws an error. Changing
-#'   this parameter to TRUE will suppress this warning.      
+#'   this parameter to TRUE will suppress this warning.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -42,10 +42,10 @@
 #'
 #' @return Response from Betfair is stored in updateOrders variable, which
 #'  is then parsed from JSON as a list. The status column recognises whether
-#'  the call was successful. If the cancelOrders call throws an error, a data 
+#'  the call was successful. If the cancelOrders call throws an error, a data
 #'  frame containing error information is returned. Note that there are two types
 #'  of error associated with this call. An API error is triggered, for example,
-#'  when an invalid market ID is entered. Another type of error is returned if 
+#'  when an invalid market ID is entered. Another type of error is returned if
 #'  no action is required (e.g. call to cancel a bet that has already been
 #'  cancelled).
 #'
@@ -98,16 +98,16 @@
 
 cancelOrders <-
   function(marketId, betIds = NULL, sizeReductions = NULL, suppress = FALSE, sslVerify = TRUE) {
-    
+
     options(stringsAsFactors = FALSE)
-    
+
     if (is.null(sizeReductions))
       sizeReductions = rep("NULL", length(betIds))
-    
+
     if (length(betIds) != length(sizeReductions))
-      
+
       return("Bet ID and Size Reduction vectors need to have the same length")
-    
+
     cancelOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/cancelOrders","params":{"marketId": "',marketId,'","instructions": [',
@@ -116,26 +116,23 @@ cancelOrders <-
         ))),function(x)
           paste0('{"betId":"',x[1],'","sizeReduction":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
       )
-    
+
     cancelOrderOps = gsub("NULL","",cancelOrderOps)
-    
+
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-    
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
-    
-    cancelOrders <-
-      as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = cancelOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
-      ))
-    
+
+    cancelOrders <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = cancelOrderOps,
+                 httr::add_headers(Accept = "application/json",
+                                   "X-Application" = product,
+                                   "X-Authentication" = token)), as = "text")
+
+    cancelOrders <- jsonlite::fromJSON(cancelOrders)
+
     if(is.null(cancelOrders$error)){
       if(!is.null(cancelOrders$result$errorCode) & !suppress)
         warning("Error- See output for details")
@@ -143,5 +140,5 @@ cancelOrders <-
     else({
       if(!suppress)
         warning("API Error- See output for details")
-      as.data.frame(cancelOrders$error)})    
+      as.data.frame(cancelOrders$error)})
   }

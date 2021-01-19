@@ -21,10 +21,10 @@
 #'   "MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 #'   Take SP on the desktop website). Required. No default.
 #'
-#'@param suppress Boolean. By default, this parameter is set to FALSE, meaning 
+#'@param suppress Boolean. By default, this parameter is set to FALSE, meaning
 #'   that a warning is posted when the updateOrders call throws an error. Changing
-#'   this parameter to TRUE will suppress this warning.      
-#'   
+#'   this parameter to TRUE will suppress this warning.
+#'
 #'@param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
 #'   they may be behind a proxy server, Betfair will fail login with "SSL
@@ -34,11 +34,11 @@
 #'
 #' @return Response from Betfair is stored in updateOrders variable, which
 #'  is then parsed from JSON as a list. The status column recognises whether
-#'  the call was successful. If the updateOrders call throws an error, a data 
+#'  the call was successful. If the updateOrders call throws an error, a data
 #'  frame containing error information is returned. Note that there are two types
 #'  of error associated with this call. An API error is triggered, for example,
-#'  when an invalid market ID is entered. Another type of error is returned if 
-#'  no action is required (e.g. call to set to PERSIST for a bet that is 
+#'  when an invalid market ID is entered. Another type of error is returned if
+#'  no action is required (e.g. call to set to PERSIST for a bet that is
 #'  already set to PERSIST).
 #'
 #'
@@ -73,10 +73,10 @@
 updateOrders <-
   function(marketId, betId, persistenceType, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-    
+
     if (length(betId) != length(persistenceType))
       return("Bet ID and Persistence Type vector need to have the same length")
-    
+
     updateOrderOps <-
       paste0(
         '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketId,'","instructions": [',
@@ -86,23 +86,20 @@ updateOrders <-
           paste0('{"betId":"',x[1],'","newPersistenceType":"',x[2],'"}')),collapse =
           ","),']},"id": "1"}]'
       )
-    
+
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
     token <- Sys.getenv('token')
-    
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
-    
-    updateOrder <-
-      as.list(jsonlite::fromJSON(
-        RCurl::postForm(
-          "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-            postfields = updateOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
-          )
-        )
-      ))
+
+    updateOrder <- httr::content(
+      httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+                 config = httr::config(ssl_verifypeer = sslVerify),
+                 body = updateOrderOps,
+                 httr::add_headers(Accept = "application/json",
+                                   "X-Application" = product,
+                                   "X-Authentication" = token)), as = "text")
+
+    updateOrder <- jsonlite::fromJSON(updateOrder)
 
     if(is.null(updateOrder$error)){
       if(!is.null(updateOrder$result$errorCode) & !suppress)
@@ -111,5 +108,5 @@ updateOrders <-
     else({
       if(!suppress)
         warning("API Error- See output for details")
-      as.data.frame(updateOrder$error)})    
+      as.data.frame(updateOrder$error)})
   }

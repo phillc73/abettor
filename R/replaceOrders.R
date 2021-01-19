@@ -25,13 +25,13 @@
 #'
 #' @param newPrice vector (strings). The new price of the original bets (e.g
 #'   "1.01", "2.22","10.0",etc). This parameter needs to be a set of quoted
-#'   doubles (see Betfair's online documentation for more information on accepted 
+#'   doubles (see Betfair's online documentation for more information on accepted
 #'   price doubles (e.g. 2.02 is viable, while 10.02 is not). Requred. No
 #'   default.
-#'   
-#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning 
-#'   that a warning is posted when the replaceOrders call throws an error. 
-#'   Changing this parameter to TRUE will suppress this warning.   
+#'
+#' @param suppress Boolean. By default, this parameter is set to FALSE, meaning
+#'   that a warning is posted when the replaceOrders call throws an error.
+#'   Changing this parameter to TRUE will suppress this warning.
 #'
 #' @param sslVerify Boolean. This argument defaults to TRUE and is optional. In
 #'   some cases, where users have a self signed SSL Certificate, for example
@@ -42,11 +42,11 @@
 #'
 #' @return Response from Betfair is stored in replaceOrders variable, which
 #'  is then parsed from JSON as a list. The status column recognises whether
-#'  the call was successful. If the replaceOrders call throws an error, a data 
+#'  the call was successful. If the replaceOrders call throws an error, a data
 #'  frame containing error information is returned. Note that there are two types
 #'  of error associated with this call. An API error is triggered, for example,
-#'  when an invalid market ID is entered. Another type of error is returned if 
-#'  no action is required (e.g. call to change the price for a bet to the price 
+#'  when an invalid market ID is entered. Another type of error is returned if
+#'  no action is required (e.g. call to change the price for a bet to the price
 #'  at which it is already set).
 #'
 #' @section Note on \code{replaceOrders}: Unlike some other functions that
@@ -75,33 +75,30 @@
 
 replaceOrders <- function(marketId ,betId, newPrice, suppress = FALSE, sslVerify = TRUE) {
   options(stringsAsFactors = FALSE)
-  
+
   if (length(betId) != length(newPrice))
     return("Bet ID and Persistence Type vector need to have the same length")
-  
+
   replaceOrderOps = paste0(
     '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/replaceOrders","params":{"marketId": "',marketId,'","instructions": [',
     paste0(sapply(as.data.frame(t(data.frame(betId,newPrice))),function(x)
       paste0('{"betId":"',x[1],'","newPrice":"',x[2],'"}')),collapse = ","),']},"id": "1"}]'
   )
-  
+
   # Read Environment variables for authorisation details
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
-  
-  headers <- list(
-    'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-  )
-  
-  replaceOrder <-
-    as.list(jsonlite::fromJSON(
-      RCurl::postForm(
-        "https://api.betfair.com/exchange/betting/json-rpc/v1", .opts = list(
-          postfields = replaceOrderOps, httpheader = headers, ssl.verifypeer = sslVerify
-        )
-      )
-    ))
-  
+
+  replaceOrder <- httr::content(
+    httr::POST(url = "https://api.betfair.com/exchange/betting/json-rpc/v1",
+               config = httr::config(ssl_verifypeer = sslVerify),
+               body = replaceOrderOps,
+               httr::add_headers(Accept = "application/json",
+                                 "X-Application" = product,
+                                 "X-Authentication" = token)), as = "text")
+
+  replaceOrder <- jsonlite::fromJSON(replaceOrder)
+
   if(is.null(replaceOrder$error)){
     if(!is.null(replaceOrder$result$errorCode) & !suppress)
       warning("Error- See output for details")
@@ -109,5 +106,5 @@ replaceOrders <- function(marketId ,betId, newPrice, suppress = FALSE, sslVerify
   else({
     if(!suppress)
       warning("API Error- See output for details")
-    as.data.frame(replaceOrder$error)})  
+    as.data.frame(replaceOrder$error)})
 }
