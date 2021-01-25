@@ -48,29 +48,25 @@ logoutBF = function(suppress = TRUE, sslVerify = TRUE) {
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
 
-  if (suppress)
+ if (suppress)
     logout <-
-      suppressWarnings(logout <- httr::content(
-      httr::POST(url = "https://identitysso.betfair.com/api/logout",
-                 httr::add_headers(Accept = "application/json",
-                 "X-Application" = product,
-                 "X-Authentication" = token)), as = "text", encoding = "UTF-8")
-                 )
+      suppressWarnings(logout <- as.list(httr::content(
+        httr::POST(url = "https://identitysso.betfair.com/api/logout",
+                   httr::add_headers(Accept = "application/json",
+                                     "X-Application" = product,
+                                     "X-Authentication" = token)), as = "parsed")
+
+      ))
+
   else
-    (logout <- httr::content(
+    (logout <- as.list(httr::content(
       httr::POST(url = "https://identitysso.betfair.com/api/logout",
                  httr::add_headers(Accept = "application/json",
                  "X-Application" = product,
-                 "X-Authentication" = token)), as = "text", encoding = "UTF-8")
+                 "X-Authentication" = token)), as = "parsed")
                  )
+    )
 
-logout_result <- as.list(strsplit(logout, ":")[[1]])
 
-success_fail <- gsub("[[:punct:][:blank:]]", "", logout_result[4])
-success_fail <- gsub("error", "", success_fail)
-
-error_msg <- gsub('[\\\\}"]', "", logout_result[5])
-
-return(paste0(success_fail,":",error_msg))
-
+  return(paste0(logout$status,":",logout$error))
 }
