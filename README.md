@@ -38,8 +38,6 @@ The `abettor` package is an aid to developing Betfair applications in R. Develop
 Only three additional R packages are required.
 
 ```r
-# Requires a minimum of version 1.98-1.2
-library("RCurl")
 # Requires a minimum of version 1.7.2
 library("jsonlite")
 # Requires a minimum of version 1.4.2
@@ -92,7 +90,6 @@ Problems? Something just doesn't work?
 * Support in-play betting with live prices
 * Develop a Shiny web app for demonstration purposes
 * See if `data.table` makes things quicker
-* Convert getAccountStatement() to `httr`
 
 ## Links
 
