@@ -4,7 +4,7 @@ Version: 0.1.6
 Date: 2020-01-26
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]",
                        "David Sheehan <davidfsheehan87@gmail.com> [aut]",
-                       "Soccerama [aut]"
+                       "Soccerama [aut]",
                        "Alvise Trevian <a.trevisan@enpicom.com> [ctb]"
                        ))
 Description: An R package for connecting to the online betting exchange,
