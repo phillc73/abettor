@@ -1,10 +1,12 @@
 Package: abettor
 Title: R bindings to Betfair API-NG
-Version: 0.1.5
-Date: 2015-11-11
+Version: 0.1.6
+Date: 2020-01-26
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]",
                        "David Sheehan <davidfsheehan87@gmail.com> [aut]",
-                       "Alvise Trevian <a.trevisan@enpicom.com> [ctb]"))
+                       "Soccerama [aut]",
+                       "Alvise Trevisan <a.trevisan@enpicom.com> [ctb]"
+                       ))
 Description: An R package for connecting to the online betting exchange,
     Betfair, via their API-NG product using JSON-RPC. The package user can
     retrieve market information and place bets.
@@ -16,9 +18,8 @@ BugReports: http://www.github.com/phillc73/abettor/issues
 Maintainer: Phill Clarke <phill@starkingdom.co.uk>
 LazyData: true
 Imports:
-    httr (>= 1.4.0),
-    RCurl (>= 1.95-4.3),
-    jsonlite (>= 0.9.12)
+    httr (>= 1.4.2),
+    jsonlite (>= 1.7.2)
 Suggests:
     knitr,
     rmarkdown

@@ -48,22 +48,25 @@ logoutBF = function(suppress = TRUE, sslVerify = TRUE) {
   product <- Sys.getenv('product')
   token <- Sys.getenv('token')
 
-  if (suppress)
+ if (suppress)
     logout <-
       suppressWarnings(logout <- as.list(httr::content(
         httr::POST(url = "https://identitysso.betfair.com/api/logout",
                    httr::add_headers(Accept = "application/json",
                                      "X-Application" = product,
-                                     "X-Authentication" = token)), as = "text")
+                                     "X-Authentication" = token)), as = "parsed")
 
       ))
+
   else
     (logout <- as.list(httr::content(
       httr::POST(url = "https://identitysso.betfair.com/api/logout",
                  httr::add_headers(Accept = "application/json",
                  "X-Application" = product,
-                 "X-Authentication" = token)), as = "text")
+                 "X-Authentication" = token)), as = "parsed")
+                 )
+    )
 
-    ))
+
   return(paste0(logout$status,":",logout$error))
 }

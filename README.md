@@ -13,15 +13,17 @@ The breadth of API calls covered is growing, although not yet complete. If your 
 Install from GitLab
 
 ```r
-# install.packages("devtools")
-devtools::install_git("https://gitlab.com/phillc73/abettor.git")
+# install.packages("remotes")
+library("remotes")
+remotes::install_gitlab("phillc73/abettor")
 library("abettor")
 ```
 Or install from GitHub if you prefer (identical mirror of GitLab)
 
 ```r
-# install.packages("devtools")
-devtools::install_github("phillc73/abettor")
+# install.packages("remotes")
+library("remotes")
+remotes::install_github("phillc73/abettor")
 library("abettor")
 ```
 
@@ -33,14 +35,12 @@ The `abettor` package is an aid to developing Betfair applications in R. Develop
 
 ### Required Packages
 
-Only three additional R packages are required.
+Only two additional R packages are required.
 
 ```r
-# Requires a minimum of version 1.95-4.3
-library("RCurl")
-# Requires a minimum of version 0.9.12
+# Requires a minimum of version 1.7.2
 library("jsonlite")
-# Requires a minimum of version 1.4.0
+# Requires a minimum of version 1.4.2
 library("httr")
 ```
 ### Place a Bet Tutorial
@@ -75,11 +75,7 @@ Each function contains documented descriptions for their use and all supported a
 
 ## Status
 
-This package is under active development.
-
-Current Version: 0.1.5
-
-See [current release notes](https://github.com/phillc73/abettor/releases) for more details.
+This package is under sporadic development.
 
 ### Issues
 
