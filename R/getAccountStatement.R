@@ -79,49 +79,90 @@ getAccountStatement <-
            includeItemValue = NULL, walletValue = NULL, suppress = FALSE,
            flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
-    getAccStatOps <-
-      data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")
 
-    getAccStatOps$params <- data.frame(fromRecord = "")
-    getAccStatOps$params$locale <- localeString
-    getAccStatOps$params$fromRecord <- fromRecordValue
-    getAccStatOps$params$recordCount <- recordCountValue
-    getAccStatOps$params$includeItem <- includeItemValue
-    getAccStatOps$params$Wallet <- walletValue
-    getAccStatOps$params$daterange <- data.frame(from = "")
-    getAccStatOps$params$daterange$from <- fromDate
-    getAccStatOps$params$daterange$to <- toDate
+    PAGE_SIZE <- 100
 
-    getAccStatOps <-
-      getAccStatOps[c("jsonrpc", "method", "params", "id")]
+    if(is.null(fromRecordValue)) fromRecordValue <- 0
 
-    getAccStatOps <- jsonlite::toJSON(getAccStatOps, pretty = TRUE)
+    recordCount <- 0
+    moreRecords <- TRUE
+    startRecordValue <- fromRecordValue
 
-    # Read Environment variables for authorisation details
-    product <- Sys.getenv('product')
-    token <- Sys.getenv('token')
+    accAllOrders <- data.frame()
 
-    headers <- list(
-      'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-    )
+    while(moreRecords){
 
-    accOrder <- httr::content(
-      httr::POST(url = "https://api.betfair.com/exchange/account/json-rpc/v1",
-                 config = httr::config(ssl_verifypeer = sslVerify),
-                 body = getAccStatOps,
-                 httr::add_headers(Accept = "application/json",
-                                   "X-Application" = product,
-                                   "X-Authentication" = token)), as = "text", encoding = "UTF-8")
+      getAccStatOps <-
+        data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")
 
-    accOrder <- jsonlite::fromJSON(accOrder)
+      getAccStatOps$params <- data.frame(fromRecord = "")
+      getAccStatOps$params$locale <- localeString
+      getAccStatOps$params$fromRecord <- startRecordValue
+      if(!is.null(recordCountValue)){
+        getAccStatOps$params$recordCount <- min((recordCountValue - recordCount), PAGE_SIZE)
+      } else {
+        getAccStatOps$params$recordCount <- recordCountValue
+      }
+      getAccStatOps$params$includeItem <- includeItemValue
+      getAccStatOps$params$Wallet <- walletValue
+      getAccStatOps$params$daterange <- data.frame(from = "")
+      getAccStatOps$params$daterange$from <- fromDate
+      getAccStatOps$params$daterange$to <- toDate
+
+      getAccStatOps <-
+        getAccStatOps[c("jsonrpc", "method", "params", "id")]
+
+      getAccStatOps <- jsonlite::toJSON(jsonlite::unbox(getAccStatOps))
+
+      # Read Environment variables for authorisation details
+      product <- Sys.getenv('product')
+      token <- Sys.getenv('token')
+
+      headers <- list(
+        'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
+      )
+
+      accOrder <- httr::content(
+        httr::POST(url = "https://api.betfair.com/exchange/account/json-rpc/v1",
+                   config = httr::config(ssl_verifypeer = sslVerify),
+                   body = getAccStatOps,
+                   httr::add_headers(Accept = "application/json",
+                                     "X-Application" = product,
+                                     "X-Authentication" = token)), as = "text", encoding = "UTF-8")
+
+      accOrder <- jsonlite::fromJSON(accOrder)
 
 
-    if (!is.null(accOrder$error)){
-      if(!suppress)
-        warning("Error- See output for details")
-      return(as.data.frame(accOrder$error))}
+      if (!is.null(accOrder$error)){
+        if(!suppress)
+          warning("Error- See output for details")
+        return(as.data.frame(accOrder$error))}
+
+      accNewOrders <- as.data.frame(accOrder$result$accountStatement)
+      accNewOrders <- cbind(accNewOrders, accNewOrders[,"legacyData"])
+      accNewOrders[,"legacyData"] <- NULL
+
+      if(nrow(accAllOrders)==0){
+        accAllOrders <- accNewOrders
+        fixColNames <- rownames(t(accNewOrders))
+      } else {
+        accNewOrders <- accNewOrders[,fixColNames]
+        accAllOrders <- t(cbind(t(accAllOrders),t(accNewOrders)))
+      }
+
+      recordCount <- nrow(accAllOrders)
+      if(is.null(recordCountValue)){
+        moreRecords <- accOrder$result$moreAvailable
+      } else {
+        moreRecords <- accOrder$result$moreAvailable & (recordCount > recordCountValue)
+      }
+      startRecordValue <- startRecordValue + PAGE_SIZE
+    }
+
+    accAllOrders <- cbind(accAllOrders[,-6],accAllOrders[,6])
+    .rowNamesDF(accAllOrders, make.names = TRUE) <- NULL
+
     if (accOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
-    as.data.frame(accOrder$result$accountStatement)
-
+    return(accAllOrders)
   }
