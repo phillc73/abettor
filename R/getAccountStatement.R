@@ -8,14 +8,16 @@
 #'
 #' @param localeString String. The language to be used where applicable. If not
 #'   specified, the customer account default is returned. Default is NULL.
-#'   Optional.
+#'   This function will convert NULL to 0 as it requires a value to increment in
+#'   the loop where there are more than 100 records. Optional.
 #'
 #' @param fromRecordValue int. Specifies the first record that will be returned.
 #'   Records start at index zero. Default parameter value is NULL, which Betfair
 #'   interprets as 0. Optional.
 #'
 #' @param recordCountValue int. Specifies the maximum number of records to be
-#'   returned. Note that there is a page size limit of 100.
+#'   returned. Note that there is a page size limit of 100. If the number is
+#'   greater than 100 then the function will loop to gather all records. Optional
 #'
 #' @param toDate Datetime (ISO 8601 format). Lower bound of date range
 #'   (inclusive). Default value is NULL, which means that the oldest available
@@ -68,7 +70,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Return the latest 100 records:
+#' # Return all available records:
 #' getAccountStatement()
 #' }
 #'
