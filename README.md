@@ -43,9 +43,12 @@ library("jsonlite")
 # Requires a minimum of version 1.4.2
 library("httr")
 ```
-### Place a Bet Tutorial
+### Tutorials
 
-An initial tutorial describing how to place a bet with `abettor` is [available here](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd).
+ - An initial tutorial describing how to place a bet with `abettor` is [available here](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd).
+
+
+- [Betfair API tutorials in R](https://betfair-datascientists.github.io/api/apiRtutorial/) - an excellent series of tutorials using `abettor` from the [data science team](https://github.com/betfair-datascientists) at Betfair Australia. Their [Awesome Betfair](https://github.com/betfair-down-under/AwesomeBetfair) page is also worth reading.
 
 ## Supported Functions
 
