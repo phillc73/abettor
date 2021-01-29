@@ -205,7 +205,7 @@ listCompetitions <-
                  body = listCompetitionsOps,
                  httr::add_headers(Accept = "application/json",
                                    "X-Application" = product,
-                                   "X-Authentication" = token)), as = "text")
+                                   "X-Authentication" = token)), as = "text", encoding = "UTF-8")
 
     listCompetitions <- jsonlite::fromJSON(listCompetitions)
 

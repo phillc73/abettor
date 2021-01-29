@@ -247,7 +247,7 @@ listMarketCatalogue <-
                  body = listMarketCatalogueOps,
                  httr::add_headers(Accept = "application/json",
                                    "X-Application" = product,
-                                   "X-Authentication" = token)), as = "text")
+                                   "X-Authentication" = token)), as = "text", encoding = "UTF-8")
 
     listMarketCat <- jsonlite::fromJSON(listMarketCat)
 
