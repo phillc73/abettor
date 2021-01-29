@@ -134,7 +134,7 @@ listCurrentOrders <-
                  body = listOrderOps,
                  httr::add_headers(Accept = "application/json",
                                    "X-Application" = product,
-                                   "X-Authentication" = token)), as = "text")
+                                   "X-Authentication" = token)), as = "text", encoding = "UTF-8")
 
     listOrder <- jsonlite::fromJSON(listOrder)
 
