@@ -26,13 +26,13 @@
 #'   is NULL.
 #'
 #' @param fromDate The start date from which to return matching events. Format
-#'   is \%Y-\%m-\%dT\%TZ. Times must be submitted in UTC as this is what is used
+#'   is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
 #'   by Betfair. Optional. If not defined, it defaults to current
 #'   system date and time minus 2 hours (to allow searching of all in-play
 #'   football matches).
 #'
 #' @param toDate The end date to stop returning matching events. Format is
-#'   \%Y-\%m-\%dT\%TZ. Times must be submitted in UTC as this is what is used
+#'   \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
 #'   by Betfair. Optional. If not defined defaults to the current system
 #'   date and time plus 24 hours.
 #'

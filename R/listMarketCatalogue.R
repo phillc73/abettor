@@ -34,12 +34,14 @@
 #'   defined, defaults to 200.
 #'
 #' @param fromDate The start date from which to return matching events. Format
-#'   is \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
+#'   is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined defaults to current system
 #'   date and time minus 2 hours (to allow searching of all in-play football
 #'   matches).
 #'
 #' @param toDate The end date to stop returning matching events. Format is
-#'   \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+#'   \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined defaults to the current system
 #'   date and time plus 24 hours.
 #'
 #' @param eventIds vector <String>. Restrict to markets that are associated with
@@ -158,15 +160,18 @@
 #'
 
 listMarketCatalogue <-
-  function(eventTypeIds, marketTypeCodes, maxResults = "200", fromDate = (format(Sys.time() -
-                                                                                   7200, "%Y-%m-%dT%TZ")), toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")),
-           eventIds = NULL,competitionIds = NULL,marketIds =
-             NULL,marketCountries = NULL,venues = NULL,bspOnly = NULL,turnInPlayEnabled =
-             NULL,inPlayOnly = NULL,marketBettingTypes = NULL,
-           withOrders = NULL,marketSort = NULL,marketProjection =
+  function(eventTypeIds, marketTypeCodes, maxResults = "200",
+          fromDate = (format(Sys.time() - 7200, "%Y-%m-%dT%TZ", tz = "UTC")),
+          toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ", tz = "UTC")),
+          eventIds = NULL,competitionIds = NULL,marketIds = NULL,
+          marketCountries = NULL,venues = NULL,bspOnly = NULL,
+          turnInPlayEnabled = NULL,inPlayOnly = NULL,
+          marketBettingTypes = NULL, withOrders = NULL,
+          marketSort = NULL,marketProjection =
              c(
                "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
-             ),textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {
+             ),
+          textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
     listMarketCatalogueOps <-

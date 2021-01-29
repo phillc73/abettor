@@ -27,12 +27,14 @@
 #'   Optional. Default is NULL.
 #'
 #' @param fromDate The start date from which to return matching countries.
-#'   Format is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to
+#'   Format is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined, it defaults to
 #'   current system date and time minus 2 hours (to allow searching of all
 #'   in-play football matches).
 #'
 #' @param toDate The end date to stop returning matching countries. Format is
-#'   \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+#'   \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined defaults to the current system
 #'   date and time plus 24 hours.
 #'
 #' @param eventIds vector <String>. Restrict to countries that are associated
@@ -125,8 +127,8 @@
 
 listCountries <-
   function(eventTypeIds , marketTypeCodes=NULL,
-           fromDate = (format(Sys.time() -7200, "%Y-%m-%dT%TZ")),
-           toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ")),
+           fromDate = (format(Sys.time() -7200, "%Y-%m-%dT%TZ", tz = "UTC")),
+           toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ", tz = "UTC")),
            eventIds = NULL, competitionIds = NULL, marketIds =NULL,
            marketCountries = NULL, venues = NULL, bspOnly = NULL,
            turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
