@@ -26,12 +26,14 @@
 #'   is NULL.
 #'
 #' @param fromDate The start date from which to return matching events. Format
-#'   is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to current
+#'   is \%Y-\%m-\%dT\%TZ. Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined, it defaults to current
 #'   system date and time minus 2 hours (to allow searching of all in-play
 #'   football matches).
 #'
 #' @param toDate The end date to stop returning matching events. Format is
-#'   \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+#'   \%Y-\%m-\%dT\%TZ. Times must be submitted in UTC as this is what is used
+#'   by Betfair. Optional. If not defined defaults to the current system
 #'   date and time plus 24 hours.
 #'
 #' @param eventIds vector <String>. Restrict to events that are associated with
