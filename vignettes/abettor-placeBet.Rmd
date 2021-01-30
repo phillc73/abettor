@@ -40,13 +40,15 @@ Using just these few simple pieces of information it is possible to use the `abe
 
 ### Load Required Packages
 
-Only three packages or libraries are required. All packages obviously must be installed first.
+Only two packages or libraries are required. All packages obviously must be installed first.
 
 ```{r, eval = FALSE}
-# Requires a minimum of version 1.95-4.3
-require("RCurl")
-# Requires a minimum of version 0.9.12
-require("jsonlite")
+# Requires a minimum of version 1.7.2
+# Older versions will most likely work but are unsupported
+library("jsonlite")
+# Requires a minimum of version 1.4.2
+# Older versions will most likely work but are unsupported
+library("httr")
 require("abettor")
 ```
 
