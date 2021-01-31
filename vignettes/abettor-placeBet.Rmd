@@ -4,7 +4,7 @@ author: "Phill Clarke"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to Use backblazer}
+  %\VignetteIndexEntry{How to Use abettor}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -61,13 +61,13 @@ loginBF(username = "YourBFUsername", password = "YourBFPassword", applicationKey
 Application keys are straight forward to obtain. In short:
 
 * Login to the Betfair website
-* Open a new browser tab and go the Betfair [Accounts API Visualiser](https://developer.betfair.com/visualisers/api-ng-account-operations/).
+* Open a new browser tab and go the Betfair [Betting API Visualiser](https://docs.developer.betfair.com/visualisers/api-ng-sports-operations/) or the [Accounts API Visualiser](https://docs.developer.betfair.com/visualisers/api-ng-account-operations/).
 * The session token field at the top of the page should be pre-filled. Select createDevelopAppKeys in the left column.
 * Enter an Application Name. Don't enter something silly. Each user is only allowed one set of Application Keys, so once an application name is chosen, you're stuck with it. (If you receive a vague error, the chances are you already have an application key. Therefore, select getDeveloperAppKeys in the left hand column and proceed.)
 * Click Execute at the bottom of the page.
 * Your application keys will be shown in the right hand column. Use the DELAY key for testing and non-price related functions. You will need to use the non-DELAY application key to complete this tutorial and place a bet.
 
-Betfair provides further [details here](https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys).
+Betfair provides further [details here](https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys).
 
 After logging in, if all is well, you should not have received an error. There is no success message displayed by default by `abettor`. If you wish to check, you should look at the `headersPostLogin` variable. This will contain not only your application key, but also a relevant session token. Try `headersPostLogin$'X-Authentication'`
 
