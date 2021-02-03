@@ -87,31 +87,32 @@
 #'   the breakdown of matches by strategy for each selection. Defaults to FALSE
 #'   if unspecified.
 #'
-#' @param customerStrategyRefs vector <String>. If you ask for orders, restricts the
-#'   results to orders matching any of the specified set of customer defined
+#' @param customerStrategyRefs vector String. If you ask for orders, restricts
+#'   the results to orders matching any of the specified set of customer defined
 #'   strategies. Also filters which matches by strategy for selections are
-#'   returned, if partitionMatchedByStrategyRef is true. An empty set will
+#'   returned, if partitionMatchedByStrategyRef is TRUE. An empty set will
 #'   be treated as if the parameter has been omitted (or NULL passed).
 #'
 #' @param currencyCode String. A Betfair standard currency code. If not
-#'   specified, the default currency code is used.
+#'   specified, the default currency code is used. Default is NULL.
+#'   Optional.
 #'
 #' @param locale String. The language to be used where applicable. If not
 #'   specified, the customer account default is returned. Default is NULL.
 #'   Optional.
 #'
 #' @param matchedSince Date. If you ask for orders, restricts the results
-#' to orders that have at least one fragment matched since the specified
-#' date (all matched fragments of such an order will be returned even if
-#' some were matched before the specified date). All EXECUTABLE orders will
-#' be returned regardless of matched date. Default is 24 hours prior to
-#' current time. Format is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be
-#' submitted in UTC as this is what is used by Betfair.
+#'   to orders that have at least one fragment matched since the specified
+#'   date (all matched fragments of such an order will be returned even if
+#'   some were matched before the specified date). All EXECUTABLE orders will
+#'   be returned regardless of matched date. Default is 24 hours prior to
+#'   current time. Format is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be
+#'   submitted in UTC as this is what is used by Betfair.
 #'
-#' @param betIds vector <String>. If you ask for orders, restricts the results to orders
-#' with the specified bet IDs. Omitting this parameter means that all bets will
-#' be included in the response. Please note: A maximum of 250 betIds can be
-#' provided at a time.
+#' @param betIds vector String. If you ask for orders, restricts the results
+#'   to orders with the specified bet IDs. Omitting this parameter means that
+#'   all bets will be included in the response. Please note: A maximum of 250
+#'   betIds can be  provided at a time.
 #'
 #' @param suppress Boolean. By default, this parameter is set to FALSE, meaning
 #'   that a warning is posted when the listRunnerBook call throws an error.

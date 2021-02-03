@@ -1,7 +1,7 @@
 #' List Betfair's currency conversion rates.
 #'
 #' \code{listCurrencyRates} allows you to see Betfair's current currency
-#' coversion rates.
+#' conversion rates.
 #'
 #' @seealso
 #' \url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listCurrencyRates}
@@ -31,13 +31,12 @@
 #'   is used to firstly build an R data frame containing all the data to be
 #'   passed to Betfair, in order for the function to execute successfully. The
 #'   data frame is then converted to JSON and included in the HTTP POST request.
-#'   If the getAccountDetails call throws an error, a data frame containing error
+#'   If the listCurrencyRates call throws an error, a data frame containing error
 #'   information is returned.
 #'
 #' @examples
 #' \dontrun{
 #' listCurrencyRates() # returns Betfair's current exchange rates.
-#' # e.g. getAccountDetails()$pointsBalance gives your points balance.
 #'
 #' }
 #'

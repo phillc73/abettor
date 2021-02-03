@@ -45,8 +45,8 @@
 #'   means that both event types are returned.
 #'
 #' @param inPlayOnly Boolean. Restrict to events that are currently in play if
-#'   TRUE or not inplay if FALSE. Optional. Default is NULL, which means that
-#'   both inplay and non-inplay events are returned.
+#'   TRUE or not in play if FALSE. Optional. Default is NULL, which
+#'   means that both event types are returned.
 #'
 #' @param marketBettingTypes vector <String>. Restrict to events that match the
 #'   betting type of the market (i.e. Odds, Asian Handicap Singles, or Asian
@@ -93,8 +93,6 @@
 #'   certificate problem: self signed certificate in certificate chain". If this
 #'   error occurs you may set sslVerify to FALSE. This does open a small
 #'   security risk of a man-in-the-middle intercepting your login credentials.
-#'
-#'
 #'
 #' @return Response from Betfair is stored in the listTimeRanges variable, which
 #'   is then parsed from JSON as a list. If the listTimeRanges call throws an
@@ -184,9 +182,6 @@ listTimeRanges <- function(textQuery = NULL, eventTypeIds = NULL, eventIds = NUL
   listTimeRangesOps <-
     listTimeRangesOps[c("jsonrpc", "method", "params", "id")]
 
-
-  show(listTimeRangesOps)
-
   listTimeRangesOps <-
     jsonlite::toJSON(jsonlite::unbox(listTimeRangesOps))
 
@@ -211,4 +206,3 @@ listTimeRanges <- function(textQuery = NULL, eventTypeIds = NULL, eventIds = NUL
       warning("Error- See output for details")
     as.data.frame(listTimeRanges$error)})
 }
-
