@@ -47,7 +47,6 @@ library("httr")
 
  - An initial tutorial describing how to place a bet with `abettor` is [available here](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd).
 
-
 - [Betfair API tutorials in R](https://betfair-datascientists.github.io/api/apiRtutorial/) - an excellent series of tutorials using `abettor` from the [data science team](https://github.com/betfair-datascientists) at Betfair Australia. Their [Awesome Betfair](https://github.com/betfair-down-under/AwesomeBetfair) page is also worth reading.
 
 ## Supported Functions
@@ -73,6 +72,10 @@ library("httr")
 ?checkBalance
 ?getAccountStatement
 ?keepAlive
+?listRunnerBook
+?listTimeRanges
+?listCurrencyRates
+?getAccountDetails
 ```
 Each function contains documented descriptions for their use and all supported arguments. Read them.
 
@@ -91,15 +94,12 @@ Problems? Something just doesn't work?
 * More functions!
 * More error handling
 * Support in-play betting with live prices
-* Develop a Shiny web app for demonstration purposes
-* See if `data.table` makes things quicker
 
 ## Links
 
 * [Betfair Online Betting Exchange](https://www.betfair.com/exchange)
 * [Betfair Developer Program](https://developer.betfair.com/)
 * [Betfair Exchange API Documentation](https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni)
-* [Creator on Twitter](https://twitter.com/_starkingdom)
 
 ## Disclaimer
 
