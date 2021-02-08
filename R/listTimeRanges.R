@@ -110,6 +110,7 @@
 #' Britain and Ireland and Win markets only.
 #' listTimeRanges(eventTypeIds = "7", marketCountries = c("GB", "IE"),
 #'                    marketTypeCodes = "WIN")
+#' }
 #'
 #'
 

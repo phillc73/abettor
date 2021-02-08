@@ -19,23 +19,24 @@
 #'   No default.
 #'
 #' @param selectionId String. The selection (runner) identification number of
-#'   the required event. IDs can be obtained via \code{\link{listMarketCatalogue}}.
+#'   the required event.
+#'   IDs can be obtained via \code{\link{listMarketCatalogue}}.
 #'   Required. No default.
 #'
-#' @param handicap double. The handicap applied to the selection, if on an
+#' @param handicap Double. The handicap applied to the selection, if on an
 #'  asian-style market. Optional. Defaults to 0, meaning no handicap.
 #'  \code{handicap} must only be manually specified if betting on an Asian-style
-#'  market.
+#'  market. Optional. Default is NULL.
 #'
 #' @param priceData String. Supports five price data types, one of which must be
 #'   specified. Valid price data types are SP_AVAILABLE, SP_TRADED,
 #'   EX_BEST_OFFERS, EX_ALL_OFFERS and EX_TRADED. Must be upper case. See note
-#'   below explaining each of these options. Required. no default.
+#'   below explaining each of these options. Optional. Default is NULL.
 #'
-#' @param bestPricesDepth integer. The maximum number of prices to return on
+#' @param bestPricesDepth Integer. The maximum number of prices to return on
 #'   each side for each runner. The default value is 3.
 #'
-#' @param rollupModel string. Determines the model to use when rolling up
+#' @param rollupModel String. Determines the model to use when rolling up
 #'   available sizes. The viable parameter values are "STAKE" (the volumes will
 #'   be rolled up to the minimum value, which is >= rollupLimit); "PAYOUT" (the
 #'   volumes will be rolled up to the minimum value, where the payout( price *
@@ -47,12 +48,12 @@
 #'   currency specific minimum stake unless overridden specifically for the
 #'   channel). The default value is NULL, which Betfair interprets as "STAKE".
 #'
-#' @param rollupLimit integer. The volume limit to use when rolling up returned
+#' @param rollupLimit Integer. The volume limit to use when rolling up returned
 #'   sizes. The exact definition of the limit depends on the rollupModel.
 #'   Ignored if no rollup model is specified. Optional. Default is NULL, which
 #'   means it will use minimum stake as the default value.
 #'
-#' @param virtualise boolean. Indicates if the returned prices should include
+#' @param virtualise Boolean. Indicates if the returned prices should include
 #'   virtual prices. This is only applicable to EX_BEST_OFFERS and EX_ALL_OFFERS
 #'   priceData selections. Default value is FALSE. Note that prices on website
 #'   include virtual bets, so setting this parameter to FALSE may produce
@@ -60,34 +61,34 @@
 #'   virtual bets can be found here:
 #'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Virtual+Bets}
 #'
-#' @param rolloverStakes boolean. Indicates if the volume returned at each price
+#' @param rolloverStakes Boolean. Indicates if the volume returned at each price
 #'   point should be the absolute value or a cumulative sum of volumes available
 #'   at the price and all better prices. It is only applicable to EX_BEST_OFFERS
 #'   and EX_ALL_OFFERS price projections. Optional. Default is FALSE. According
 #'   to Betfair online documentation, this paramter is not supported as yet.
 #'
-#' @param orderProjection string. Restricts the results to the specified order
+#' @param orderProjection String. Restricts the results to the specified order
 #'   status. Possible values are: "EXECUTABLE" (An order that has a remaining
 #'   unmatched portion); "EXECUTION_COMPLETE" (An order that does not have any
 #'   remaining unmatched portion); "ALL" (EXECUTABLE and EXECUTION_COMPLETE
 #'   orders). Default value is NULL, which Betfair interprets as "ALL".
 #'   Optional.
 #'
-#' @param matchProjection string. If orders are requested (see orderProjection),
+#' @param matchProjection String. If orders are requested (see orderProjection),
 #'   this specifies the representation of the matches. The three options are:
 #'   "NO_ROLLUP" (no rollup, return raw fragments), "ROLLUP_BY_PRICE" (rollup
 #'   matched amounts by distinct matched prices per side) and
 #'   "ROLLED_UP_BY_AVG_PRICE" (rollup matched amounts by average matched price
 #'   per side). Optional. Default is NULL.
 #'
-#' @param includeOverallPosition boolean. If you ask for orders, returns
+#' @param includeOverallPosition Boolean. If you ask for orders, returns
 #'   matches for each selection. Defaults to TRUE if unspecified.
 #'
-#' @param partitionMatchedByStrategyRef boolean. If you ask for orders, returns
+#' @param partitionMatchedByStrategyRef Boolean. If you ask for orders, returns
 #'   the breakdown of matches by strategy for each selection. Defaults to FALSE
 #'   if unspecified.
 #'
-#' @param customerStrategyRefs vector String. If you ask for orders, restricts
+#' @param customerStrategyRefs Boolean. If you ask for orders, restricts
 #'   the results to orders matching any of the specified set of customer defined
 #'   strategies. Also filters which matches by strategy for selections are
 #'   returned, if partitionMatchedByStrategyRef is TRUE. An empty set will
@@ -109,7 +110,7 @@
 #'   current time. Format is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be
 #'   submitted in UTC as this is what is used by Betfair.
 #'
-#' @param betIds vector String. If you ask for orders, restricts the results
+#' @param betIds String. If you ask for orders, restricts the results
 #'   to orders with the specified bet IDs. Omitting this parameter means that
 #'   all bets will be included in the response. Please note: A maximum of 250
 #'   betIds can be  provided at a time.
@@ -133,7 +134,7 @@
 #'   listRunnerBook call throws an error, a data frame containing error
 #'   information is returned.
 #'
-#' @section Notes on \code{priceData} options: There are three options for this
+#' @section Notes on \code{priceData} options: There are five options for this
 #'   argument and one of them must be specified. All upper case letters must be
 #'   used. \describe{ \item{SP_AVAILABLE}{Amount available for the Betfair
 #'   Starting Price (BSP) auction.} \item{SP_TRADED}{Amount traded in the
@@ -158,7 +159,7 @@
 #'
 
 listRunnerBook <- function(marketId, selectionId, handicap = NULL,
-                           priceProjection = NULL, priceData = NULL,
+                           priceData = NULL,
                            bestPricesDepth = 3, rollupModel = NULL,
                            rollupLimit = NULL, virtualise = FALSE,
                            rolloverStakes = FALSE, orderProjection = NULL,
@@ -245,4 +246,3 @@ listRunnerBook <- function(marketId, selectionId, handicap = NULL,
       warning("Error- See output for details")
     as.data.frame(listRunnerBook$error)})
 }
-

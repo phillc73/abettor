@@ -68,6 +68,7 @@ login more than is necessary.
   token and product string. They are required for all other functions in this
   package.
 }
+
 \examples{
 \dontrun{
 loginBF(username = "YourBetfairUsername",
@@ -85,4 +86,3 @@ loginBF(username = "YourBetfairUsername",
 }
 
 }
-

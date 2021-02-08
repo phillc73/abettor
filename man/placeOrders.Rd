@@ -4,10 +4,19 @@
 \alias{placeOrders}
 \title{Places an order on Betfair}
 \usage{
-placeOrders(marketId, selectionId, betSide, betSize, reqPrice,
-  betType = "LIMIT", persistenceType = "LAPSE", handicap = "0",
-  customerRef = (format(Sys.time(), "\%Y-\%m-\%dT\%TZ")), suppress = FALSE,
-  sslVerify = TRUE)
+placeOrders(
+  marketId,
+  selectionId,
+  betSide,
+  betSize,
+  reqPrice,
+  betType = "LIMIT",
+  persistenceType = "LAPSE",
+  handicap = "0",
+  customerRef = (format(Sys.time(), "\%Y-\%m-\%dT\%TZ")),
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{marketId}{String. The market ID these orders are to be placed on. Can
@@ -125,6 +134,7 @@ it will also probably save you money.
  included in the HTTP POST request. If the placeOrders call throws an error,
  a data frame containing error information is returned.
 }
+
 \examples{
 \dontrun{
 placeOrders(marketId = "yourMarketId",
@@ -226,4 +236,3 @@ placeOrders(marketId = "1.123982139",
  DELAY application key. The DELAY application key does not support placing
  bets.
 }
-

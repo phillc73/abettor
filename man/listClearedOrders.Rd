@@ -4,12 +4,24 @@
 \alias{listClearedOrders}
 \title{Return settled Orders data}
 \usage{
-listClearedOrders(betStatusValue = "SETTLED", eventTypeIds = NULL,
-  eventIds = NULL, betIds = NULL, marketIds = NULL, runnerIds = NULL,
-  sideValue = NULL, fromDate = NULL, toDate = NULL, groupByValue = NULL,
-  includeItemDescriptionValue = NULL, fromRecordValue = NULL,
-  recordCountValue = NULL, suppress = FALSE, flag = FALSE,
-  sslVerify = TRUE)
+listClearedOrders(
+  betStatusValue = "SETTLED",
+  eventTypeIds = NULL,
+  eventIds = NULL,
+  betIds = NULL,
+  marketIds = NULL,
+  runnerIds = NULL,
+  sideValue = NULL,
+  fromDate = NULL,
+  toDate = NULL,
+  groupByValue = NULL,
+  includeItemDescriptionValue = NULL,
+  fromRecordValue = NULL,
+  recordCountValue = NULL,
+  suppress = FALSE,
+  flag = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{betStatusValue}{string. Restricts the results to the specified status.
@@ -71,8 +83,8 @@ interprets as 0. Optional.}
 returned. To retrieve more than 1000 records (the maxiumum by default), you
 need to utilise this parameter. Optional.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
-that a warning is posted when the listClearedOrders call throws an error. 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the listClearedOrders call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{flag}{Boolean. \code{RCurl::postForm} returns a warning if there's more
@@ -97,16 +109,17 @@ Response from Betfair is stored in listMarketBook variable, which is
 \code{listClearedOrders} Returns a list of settled bets based on the bet
 status, ordered by settled date. For more infromation, please consult the
 online documentation
-(\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
+(\url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listClearedOrders})
 }
 \section{Note on \code{listMarketBookOps} variable}{
  The
   \code{listMarketBookOps} variable is used to firstly build an R data frame
   containing all the data to be passed to Betfair, in order for the function
   to execute successfully. The data frame is then converted to JSON and
-  included in the HTTP POST request. If the listClearedOrders call throws an 
+  included in the HTTP POST request. If the listClearedOrders call throws an
   error, a data frame containing error information is returned.
 }
+
 \examples{
 \dontrun{
 Return 100 settled bets (with market,event,runner information)
@@ -123,4 +136,3 @@ listClearedOrders(toDate = format(Sys.time()-200000, "\%Y-\%m-\%dT"),
   DELAY application key. The DELAY application key does not support price
   data.
 }
-

@@ -4,14 +4,25 @@
 \alias{listVenues}
 \title{Return Venues data}
 \usage{
-listVenues(eventTypeIds = c("7"), marketTypeCodes = NULL,
-  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
-  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
-  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
-  marketCountries = NULL, venues = NULL, bspOnly = NULL,
-  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
-  withOrders = NULL, textQuery = NULL, suppress = FALSE,
-  sslVerify = TRUE)
+listVenues(
+  eventTypeIds = c("7"),
+  marketTypeCodes = NULL,
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  eventIds = NULL,
+  competitionIds = NULL,
+  marketIds = NULL,
+  marketCountries = NULL,
+  venues = NULL,
+  bspOnly = NULL,
+  turnInPlayEnabled = NULL,
+  inPlayOnly = NULL,
+  marketBettingTypes = NULL,
+  withOrders = NULL,
+  textQuery = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{eventTypeIds}{vector <String>. Restrict venues by event type
@@ -26,12 +37,14 @@ in all locales. Accepts multiple market type codes. Market type codes can be
 obtained via \code{\link{listMarketTypes}}. Optional. Default is NULL.}
 
 \item{fromDate}{The start date from which to return matching venues.
-Format is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to
+Format is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined, it defaults to
 current system date and time minus 2 hours (to allow searching of all
 in-play football matches).}
 
 \item{toDate}{The end date to stop returning matching venues. Format is
-\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+\%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined defaults to the current system
 date and time plus 24 hours.}
 
 \item{eventIds}{vector <String>. Restrict to venues that are associated
@@ -113,6 +126,7 @@ Note: Currently, only horse racing markets are associated with a venue.
   to execute successfully. The data frame is then converted to JSON and
   included in the HTTP POST request.
 }
+
 \examples{
 \dontrun{
 # Return all horse racing venues (and number of
@@ -131,4 +145,3 @@ listVenues(bspOnly=TRUE)
 \seealso{
 \code{\link{loginBF}}, which must be executed first.
 }
-

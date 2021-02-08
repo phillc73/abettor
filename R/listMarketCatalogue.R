@@ -167,7 +167,7 @@ listMarketCatalogue <-
           marketCountries = NULL,venues = NULL,bspOnly = NULL,
           turnInPlayEnabled = NULL,inPlayOnly = NULL,
           marketBettingTypes = NULL, withOrders = NULL,
-          marketSort = NULL,marketProjection =
+          marketSort = NULL, marketProjection =
              c(
                "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
              ),

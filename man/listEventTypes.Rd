@@ -4,14 +4,25 @@
 \alias{listEventTypes}
 \title{Return Event Types data}
 \usage{
-listEventTypes(eventTypeIds = NULL, marketTypeCodes = NULL,
-  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
-  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
-  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
-  marketCountries = NULL, venues = NULL, bspOnly = NULL,
-  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
-  withOrders = NULL, textQuery = NULL, suppress = FALSE,
-  sslVerify = TRUE)
+listEventTypes(
+  eventTypeIds = NULL,
+  marketTypeCodes = NULL,
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  eventIds = NULL,
+  competitionIds = NULL,
+  marketIds = NULL,
+  marketCountries = NULL,
+  venues = NULL,
+  bspOnly = NULL,
+  turnInPlayEnabled = NULL,
+  inPlayOnly = NULL,
+  marketBettingTypes = NULL,
+  withOrders = NULL,
+  textQuery = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{eventTypeIds}{vector <String>. Restrict events by event type associated
@@ -26,12 +37,14 @@ Market codes can be obtained via \code{\link{listMarketTypes}}. Optional.
 Default is NULL.}
 
 \item{fromDate}{The start date from which to return matching events. Format
-is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to current
+is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined, it defaults to current
 system date and time minus 2 hours (to allow searching of all in-play
 football matches).}
 
 \item{toDate}{The end date to stop returning matching events. Format is
-\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+\%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined defaults to the current system
 date and time plus 24 hours.}
 
 \item{eventIds}{vector <String>. Restrict to event types that are associated
@@ -117,6 +130,7 @@ However, this can be changed by user specified date/time stamps.
   to execute successfully. The data frame is then converted to JSON and
   included in the HTTP POST request.
 }
+
 \examples{
 \dontrun{
 #Return all event types (and number of corresponding markets) for the
@@ -134,4 +148,3 @@ listEventTypes(bspOnly=TRUE)
 \seealso{
 \code{\link{loginBF}}, which must be executed first.
 }
-
