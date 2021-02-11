@@ -76,6 +76,7 @@ library("httr")
 ?listTimeRanges
 ?listCurrencyRates
 ?getAccountDetails
+?listRaceDetails
 ```
 Each function contains documented descriptions for their use and all supported arguments. Read them.
 

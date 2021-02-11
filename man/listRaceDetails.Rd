@@ -59,7 +59,7 @@ associated with this function, it simply returns status details.
 \examples{
 \dontrun{
 listRaceDetails() # without any arguments will return results from all available
-meetingIds.
+# meetingIds.
 }
 \dontrun{
 istRaceDetails(meetingIds = "30279213", raceIds = c("30280942.1328", "30280942.1313"))
