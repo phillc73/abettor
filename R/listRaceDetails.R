@@ -42,7 +42,7 @@
 #'
 #' @section Note on \code{raceDetailOps} variable: The \code{raceDetailOps}
 #'   variable is used to firstly build an R data frame containing all the data
-#'   to be  passed to Betfair, in order for the function to execute
+#'   to be passed to Betfair, in order for the function to execute
 #'   successfully. The data frame is then converted to JSON and included in the
 #'   HTTP POST request. If the listRaceDetails call throws an error, a data
 #'   frame containing error information is returned.
@@ -90,7 +90,11 @@ listRaceDetails <- function(meetingIds = NULL,
     httr::POST(url = "https://api.betfair.com/exchange/scores/json-rpc/v1",
                  config = httr::config(ssl_verifypeer = sslVerify),
                  body = raceDetailsOps,
-                 httr::add_headers(Accept = "application/json", `X-Application` = product, `X-Authentication` = token)
+                 httr::add_headers(Accept = "application/json",
+                                  `X-Application` = product,
+                                  `X-Authentication` = token,
+                                  as = "text",
+                                  encoding = "UTF-8")
                )
     )
 

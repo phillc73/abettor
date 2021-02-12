@@ -50,7 +50,7 @@ associated with this function, it simply returns status details.
 \section{Note on \code{raceDetailOps} variable}{
  The \code{raceDetailOps}
   variable is used to firstly build an R data frame containing all the data
-  to be  passed to Betfair, in order for the function to execute
+  to be passed to Betfair, in order for the function to execute
   successfully. The data frame is then converted to JSON and included in the
   HTTP POST request. If the listRaceDetails call throws an error, a data
   frame containing error information is returned.
