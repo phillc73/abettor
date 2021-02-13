@@ -51,39 +51,64 @@ library("httr")
 
 ## Supported Functions
 
+### Authentication Functions
 ```r
 ?loginBF
 ?logoutBF
+?keepAlive
+```
+### Betting API Functions
+
+```r
+?cancelOrders
 ?listClearedOrders
 ?listCompetitions
-?listCurrentOrders
-?listEventTypes
-?listEvents
 ?listCountries
+?listCurrentOrders
+?listEvents
+?listEventTypes
 ?listMarketBook
 ?listMarketCatalogue
-?listMarketTypes
 ?listMarketPandL
-?listVenues
-?placeOrders
-?replaceOrders
-?updateOrders
-?cancelOrders
-?checkBalance
-?getAccountStatement
-?keepAlive
+?listMarketTypes
 ?listRunnerBook
 ?listTimeRanges
-?listCurrencyRates
+?listVenues
+?placeOrders
+?updateOrders
+?replaceOrders
+```
+### Account API Functions
+
+```r
+?checkBalance
+?getDeveloperAppKeys
 ?getAccountDetails
+?getAccountStatement
+?listCurrencyRates
+```
+### Race Status API Functions
+
+```r
 ?listRaceDetails
+```
+
+### Heartbeat API Functions
+
+```r
 ?heartbeat
+```
+
+### Historic API Functions
+
+```r
+?GetMyData
 ```
 Each function contains documented descriptions for their use and all supported arguments. Read them.
 
 ## Status
 
-This package is under sporadic development.
+This package is under active development.
 
 ### Issues
 

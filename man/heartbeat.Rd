@@ -36,7 +36,7 @@ actualTimeoutSeconds to set an appropriate frequency for your subsequent
 heartbeat requests. Default value is 10 seconds.}
 
 \item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
-that a warning is posted when the listVenues call throws an error.
+that a warning is posted when the heartbeat call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
