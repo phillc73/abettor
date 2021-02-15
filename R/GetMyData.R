@@ -1,8 +1,8 @@
-#' GetMyData function from Hsitoric API
+#' GetMyData function from Historic API
 #'
 #' The GetMyData function returns a data frame of all Betfair historic data
 #' available to download for the logged in user. The user must first 'purchase'
-#' such historic data from Betfair. The Basic Plan offers many options at no 
+#' such historic data from Betfair. The Basic Plan offers many options at no
 #' cost.
 #'
 #' @seealso
@@ -21,15 +21,17 @@
 #'   error occurs you may set sslVerify to FALSE. This does open a small
 #'   security risk of a man-in-the-middle intercepting your login credentials.
 #'
-#' @return Response from Betfair will be stored in a four row dataframe.
+#' @return Response from Betfair will be stored in a four column dataframe.
 #'
 #' @examples
 #'   \dontrun{
-#'   # Heartbeat API call using default Global endpoint and 10 second timeout
+#'   # Retrieve a list of all Betfair historic data available to download
+#'   # for the logged in user.
+#'
 #'   GetMyData()
 #'  }
 
-GetMyData <- function(ssLVerify = TRUE) {
+GetMyData <- function(sslVerify = TRUE) {
 
   # Read Environment variables for authorisation details
   token <- Sys.getenv("token")
