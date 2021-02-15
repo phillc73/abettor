@@ -4,16 +4,29 @@
 \alias{listMarketCatalogue}
 \title{Return listMarketCatalogue data}
 \usage{
-listMarketCatalogue(eventTypeIds, marketTypeCodes, maxResults = "200",
-  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
-  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
-  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
-  marketCountries = NULL, venues = NULL, bspOnly = NULL,
-  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
-  withOrders = NULL, marketSort = NULL,
-  marketProjection = c("COMPETITION", "EVENT", "EVENT_TYPE",
-  "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"),
-  textQuery = NULL, suppress = FALSE, sslVerify = TRUE)
+listMarketCatalogue(
+  eventTypeIds,
+  marketTypeCodes,
+  maxResults = "200",
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  eventIds = NULL,
+  competitionIds = NULL,
+  marketIds = NULL,
+  marketCountries = NULL,
+  venues = NULL,
+  bspOnly = NULL,
+  turnInPlayEnabled = NULL,
+  inPlayOnly = NULL,
+  marketBettingTypes = NULL,
+  withOrders = NULL,
+  marketSort = NULL,
+  marketProjection = c("COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION",
+    "RUNNER_METADATA", "MARKET_START_TIME"),
+  textQuery = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{eventTypeIds}{vector <String>. Restrict markets by event type
@@ -33,12 +46,14 @@ must be greater than 0 and less than or equal to 1000. Optional. If not
 defined, defaults to 200.}
 
 \item{fromDate}{The start date from which to return matching events. Format
-is \%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to current system
+is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined defaults to current system
 date and time minus 2 hours (to allow searching of all in-play football
 matches).}
 
 \item{toDate}{The end date to stop returning matching events. Format is
-\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+\%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined defaults to the current system
 date and time plus 24 hours.}
 
 \item{eventIds}{vector <String>. Restrict to markets that are associated with
@@ -107,8 +122,8 @@ market such as the Name, Event, Competition, etc. The string can include a
 wildcard (*) character as long as it is not the first character. Optional.
 Default is NULL.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
-that a warning is posted when the listMarketCatalogue call throws an error. 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the listMarketCatalogue call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
@@ -145,9 +160,10 @@ output may be found here:
   \code{listMarketCatalogueOps} variable is used to firstly build an R data
   frame containing all the data to be passed to Betfair, in order for the
   function to execute successfully. The data frame is then converted to JSON
-  and included in the HTTP POST request. If the listMarketCatalogue call throws 
+  and included in the HTTP POST request. If the listMarketCatalogue call throws
   an error, a data frame containing error information is returned.
 }
+
 \examples{
 \dontrun{
 # Return market catalogues for the Horse Racing event type, in both Great
@@ -178,4 +194,3 @@ listMarketCatalogue(eventTypeIds = c("1"),marketTypeCodes = c("MATCH_ODDS"),
 \seealso{
 \code{\link{loginBF}}, which must be executed first.
 }
-

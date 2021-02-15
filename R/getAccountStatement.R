@@ -82,7 +82,7 @@ getAccountStatement <-
            flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
-    PAGE_SIZE <- 100
+    pageSize <- 100
 
     if(is.null(fromRecordValue)) fromRecordValue <- 0
 
@@ -101,7 +101,7 @@ getAccountStatement <-
       getAccStatOps$params$locale <- localeString
       getAccStatOps$params$fromRecord <- startRecordValue
       if(!is.null(recordCountValue)){
-        getAccStatOps$params$recordCount <- min((recordCountValue - recordCount), PAGE_SIZE)
+        getAccStatOps$params$recordCount <- min((recordCountValue - recordCount), pageSize)
       } else {
         getAccStatOps$params$recordCount <- recordCountValue
       }
@@ -158,7 +158,7 @@ getAccountStatement <-
       } else {
         moreRecords <- accOrder$result$moreAvailable & (recordCount > recordCountValue)
       }
-      startRecordValue <- startRecordValue + PAGE_SIZE
+      startRecordValue <- startRecordValue + pageSize
     }
 
     accAllOrders <- cbind(accAllOrders[,-6],accAllOrders[,6])

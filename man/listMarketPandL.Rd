@@ -4,9 +4,14 @@
 \alias{listMarketPandL}
 \title{Return market profit and loss}
 \usage{
-listMarketPandL(marketIds, includeSettledBetsValue = NULL,
-  includeBspBetsValue = NULL, netOfCommissionValue = NULL,
-  suppress = FALSE, sslVerify = TRUE)
+listMarketPandL(
+  marketIds,
+  includeSettledBetsValue = NULL,
+  includeBspBetsValue = NULL,
+  netOfCommissionValue = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{marketIds}{Vector<String>. A set of market ID strings from which the
@@ -26,8 +31,8 @@ user's current commission rate for this market, including any special
 tariffs. This parameter defaults to NULL, which Betfair interprets as
 FALSE. Optional.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
-that a warning is posted when the listMarketPandL call throws an error. 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the listMarketPandL call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
@@ -53,9 +58,10 @@ bets
   \code{listPandLOps} variable is used to firstly build an R data frame
   containing all the data to be passed to Betfair, in order for the function
   to execute successfully. The data frame is then converted to JSON and
-  included in the HTTP POST request. If the listMarketPandL call throws an 
+  included in the HTTP POST request. If the listMarketPandL call throws an
   error, a data frame containing error information is returned.
 }
+
 \examples{
 \dontrun{
 Return the P&L (net of comission) for the requested markets. The actual
@@ -82,4 +88,3 @@ listMarketPandL(marketIds = c("1.122323121","1.123859413"),
   \code{listCurrentOrders} and \code{listMarketBook} (it's on the to-do
   list).
 }
-

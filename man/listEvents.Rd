@@ -4,14 +4,25 @@
 \alias{listEvents}
 \title{Return listEvents data}
 \usage{
-listEvents(eventTypeIds, marketTypeCodes = NULL,
-  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ")),
-  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ")),
-  eventIds = NULL, competitionIds = NULL, marketIds = NULL,
-  marketCountries = NULL, venues = NULL, bspOnly = NULL,
-  turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
-  withOrders = NULL, textQuery = NULL, suppress = FALSE,
-  sslVerify = TRUE)
+listEvents(
+  eventTypeIds,
+  marketTypeCodes = NULL,
+  fromDate = (format(Sys.time() - 7200, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  toDate = (format(Sys.time() + 86400, "\%Y-\%m-\%dT\%TZ", tz = "UTC")),
+  eventIds = NULL,
+  competitionIds = NULL,
+  marketIds = NULL,
+  marketCountries = NULL,
+  venues = NULL,
+  bspOnly = NULL,
+  turnInPlayEnabled = NULL,
+  inPlayOnly = NULL,
+  marketBettingTypes = NULL,
+  withOrders = NULL,
+  textQuery = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{eventTypeIds}{vector <String>. Restrict events by event type associated
@@ -27,12 +38,14 @@ codes can be obtained via \code{\link{listMarketTypes}}. Optional. Default
 is NULL.}
 
 \item{fromDate}{The start date from which to return matching events. Format
-is \%Y-\%m-\%dT\%TZ. Optional. If not defined, it defaults to current
+is \%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined, it defaults to current
 system date and time minus 2 hours (to allow searching of all in-play
 football matches).}
 
 \item{toDate}{The end date to stop returning matching events. Format is
-\%Y-\%m-\%dT\%TZ. Optional. If not defined defaults to the current system
+\%Y-\%m-\%dT\%TZ, tz = "UTC". Times must be submitted in UTC as this is what is used
+by Betfair. Optional. If not defined defaults to the current system
 date and time plus 24 hours.}
 
 \item{eventIds}{vector <String>. Restrict to events that are associated with
@@ -119,6 +132,7 @@ A full description of the function output may be found here:
   The data frame is then converted to JSON and included in the HTTP POST
   request.
 }
+
 \examples{
 \dontrun{
 # Return event data for the Horse Racing event type, in both Great
@@ -149,4 +163,3 @@ listEvents(eventTypeIds = c("1"),marketTypeCodes = c("MATCH_ODDS"),
 \seealso{
 \code{\link{loginBF}}, which must be executed first.
 }
-

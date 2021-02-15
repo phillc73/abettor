@@ -4,22 +4,32 @@
 \alias{getAccountStatement}
 \title{Get Account Statement}
 \usage{
-getAccountStatement(localeString = NULL, fromRecordValue = NULL,
-  recordCountValue = NULL, fromDate = NULL, toDate = NULL,
-  includeItemValue = NULL, walletValue = NULL, suppress = FALSE,
-  flag = FALSE, sslVerify = TRUE)
+getAccountStatement(
+  localeString = NULL,
+  fromRecordValue = NULL,
+  recordCountValue = NULL,
+  fromDate = NULL,
+  toDate = NULL,
+  includeItemValue = NULL,
+  walletValue = NULL,
+  suppress = FALSE,
+  flag = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{localeString}{String. The language to be used where applicable. If not
 specified, the customer account default is returned. Default is NULL.
-Optional.}
+This function will convert NULL to 0 as it requires a value to increment in
+the loop where there are more than 100 records. Optional.}
 
 \item{fromRecordValue}{int. Specifies the first record that will be returned.
 Records start at index zero. Default parameter value is NULL, which Betfair
 interprets as 0. Optional.}
 
 \item{recordCountValue}{int. Specifies the maximum number of records to be
-returned. Note that there is a page size limit of 100.}
+returned. Note that there is a page size limit of 100. If the number is
+greater than 100 then the function will loop to gather all records. Optional}
 
 \item{fromDate}{Datetime (ISO 8601 format). Upper bound of date range
 (inclusive). Default value is NULL, which means that the latest available
@@ -44,8 +54,8 @@ The default value is NULL, which returns UK wallet info. THe alternative
 value is "AUSTRALIAN", which corresponds to the Austrailian wallet.
 Optional.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
-that a warning is posted when the getAccountStatement call throws an error. 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the getAccountStatement call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{flag}{Boolean. \code{RCurl::postForm} returns a warning if there's more
@@ -72,12 +82,13 @@ Response from Betfair is stored in Account Statement variable, which
   variable is used to firstly build an R data frame containing all the data
   to be passed to Betfair, in order for the function to execute successfully.
   The data frame is then converted to JSON and included in the HTTP POST
-  request. If the getAccountStatement call throws an error, a data frame 
+  request. If the getAccountStatement call throws an error, a data frame
   containing error information is returned.
 }
+
 \examples{
 \dontrun{
-# Return the latest 100 records:
+# Return all available records:
 getAccountStatement()
 }
 
@@ -87,4 +98,3 @@ getAccountStatement()
   DELAY application key. The DELAY application key does not support price
   data.
 }
-

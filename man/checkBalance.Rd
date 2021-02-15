@@ -4,15 +4,10 @@
 \alias{checkBalance}
 \title{Checks account balance on Betfair.}
 \usage{
-checkBalance(AUS = FALSE, suppress = FALSE, sslVerify = TRUE)
+checkBalance(suppress = FALSE, sslVerify = TRUE)
 }
 \arguments{
-\item{AUS}{Boolean. Betfair users have a main wallet and an Australian
-wallet. This parameter determines which wallet is queried. By default, it
-is set to FALSE, that is main wallet data only is returned. Changing this
-parameter to TRUE returns Australian account information.}
-
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
 that a warning is posted when the checkBalance call throws an error. Changing
 this parameter to TRUE will suppress this warning.}
 
@@ -28,40 +23,34 @@ Response from Betfair is stored in AccountFundsResponse variable,
   which is then parsed from JSON as a data frame of 1 row and 7 columns.
 }
 \description{
-\code{checkBalance} allows you to see you Betfair account balance, for either
-the Main wallet or Australian Wallet.
+\code{checkBalance} allows you to see you Betfair account balance.
 }
 \details{
 \code{checkBalance} checks your Betfair balance. Unlike other Betfair API
 calls, there are no dangers associated with this function, it simply returns
 account information such as balance, exposure, etc.
-
-See \url{http://learning.betfair.com/en/videos/australian-wallet.html} or
-\url{https://en-betfair.custhelp.com/app/answers/detail/a_id/103/~/exchange\%3A-what-are-wallets-used-for\%3F}
-for more general information on the Betfair wallet system.
 }
 \section{Note on \code{balanceOps} variable}{
  The \code{balanceOps} variable
   is used to firstly build an R data frame containing all the data to be
   passed to Betfair, in order for the function to execute successfully. The
   data frame is then converted to JSON and included in the HTTP POST request.
-  If the checkBalance call throws an error, a data frame containing error 
+  If the checkBalance call throws an error, a data frame containing error
   information is returned.
 }
+
 \examples{
 \dontrun{
-checkBalance() # without any arguments will return main wallet information as a data frame
+checkBalance() # without any arguments will return global wallet information as a data frame
 # e.g. checkBalance()$availableToBetBalance tells how much left in your wallet to bet
 
-checkBalance(AUS=TRUE) # returns the corresponding information for the Australian wallet
 }
 
 }
 \seealso{
-\url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/getAccountFunds}
+\url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/getAccountFunds}
 for general information on calling account balance via the Betfair API.
 
 \code{\link{loginBF}}, which must be executed first, as this
   function requires a valid session token
 }
-

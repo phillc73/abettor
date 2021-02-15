@@ -4,8 +4,13 @@
 \alias{updateOrders}
 \title{Change bet persistence type}
 \usage{
-updateOrders(marketId, betId, persistenceType, suppress = FALSE,
-  sslVerify = TRUE)
+updateOrders(
+  marketId,
+  betId,
+  persistenceType,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{marketId}{String. The market ID of the bets to be updated. While many
@@ -21,7 +26,7 @@ bets. persistanceType can take three values ("LAPSE","PERSIST" and
 "MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 Take SP on the desktop website). Required. No default.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
 that a warning is posted when the updateOrders call throws an error. Changing
 this parameter to TRUE will suppress this warning.}
 
@@ -35,11 +40,11 @@ security risk of a man-in-the-middle intercepting your login credentials.}
 \value{
 Response from Betfair is stored in updateOrders variable, which
  is then parsed from JSON as a list. The status column recognises whether
- the call was successful. If the updateOrders call throws an error, a data 
+ the call was successful. If the updateOrders call throws an error, a data
  frame containing error information is returned. Note that there are two types
  of error associated with this call. An API error is triggered, for example,
- when an invalid market ID is entered. Another type of error is returned if 
- no action is required (e.g. call to set to PERSIST for a bet that is 
+ when an invalid market ID is entered. Another type of error is returned if
+ no action is required (e.g. call to set to PERSIST for a bet that is
  already set to PERSIST).
 }
 \description{
@@ -53,6 +58,7 @@ Response from Betfair is stored in updateOrders variable, which
   utilised data frames, this function converts the input to a JSON-compatible
   format. The JSON output is then converted back to a data frame.
 }
+
 \examples{
 \dontrun{
 # Update two bets on the same market so that they will persist in play.
@@ -72,7 +78,7 @@ Now, if you run the function for a third time, but with one "LAPSE" and one
 This is because all bets need to be successful to return "SUCCESS".
 Please note, however, that the viable bet IDs will have been succesfully updated
 i.e. it's not an all or nothing process but rather each update is treated
-individually (unlike \\code{replaceOrders}).
+individually (unlike \code{replaceOrders}).
 
 }
 
@@ -82,4 +88,3 @@ individually (unlike \\code{replaceOrders}).
   DELAY application key. The DELAY application key does not support price
   data.
 }
-

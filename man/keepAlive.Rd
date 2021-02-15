@@ -7,8 +7,8 @@
 keepAlive(suppress = TRUE, sslVerify = TRUE)
 }
 \arguments{
-\item{suppress}{Boolean. \code{RCurl::postForm} posts a warning due to a lack 
-of inputs. By default, this parameter is set to TRUE, meaning this warning is 
+\item{suppress}{Boolean. \code{RCurl::postForm} posts a warning due to a lack
+of inputs. By default, this parameter is set to TRUE, meaning this warning is
 suppressed. Changing this parameter to FALSE will result in warnings being posted.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
@@ -49,7 +49,7 @@ session expiry time.
  The following block shows how we might set up a loop to ensure keepAlive() is called
  within every 4 hours:
 
- \\code{
+ \code{
  start=Sys.time()
  while(TRUE){
  if(Sys.time()-start>14400){ # 14,400 seconds = 4 hours
@@ -67,4 +67,3 @@ for general information on requesting keepAlive on the Betfair API.
 \code{\link{loginBF}}, which must be executed first, as this
   function requires a valid session token
 }
-

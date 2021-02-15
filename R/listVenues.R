@@ -119,7 +119,7 @@ listVenues <-
   function(eventTypeIds = c("7") , marketTypeCodes=NULL,
            fromDate = (format(Sys.time() -7200, "%Y-%m-%dT%TZ", tz = "UTC")),
            toDate = (format(Sys.time() + 86400, "%Y-%m-%dT%TZ", tz = "UTC")),
-           eventIds = NULL, competitionIds = NULL, marketIds =NULL,
+           eventIds = NULL, competitionIds = NULL, marketIds = NULL,
            marketCountries = NULL, venues = NULL, bspOnly = NULL,
            turnInPlayEnabled = NULL, inPlayOnly = NULL, marketBettingTypes = NULL,
            withOrders = NULL, textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {

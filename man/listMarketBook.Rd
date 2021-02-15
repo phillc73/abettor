@@ -4,10 +4,19 @@
 \alias{listMarketBook}
 \title{Return listMarketBook data}
 \usage{
-listMarketBook(marketIds, priceData, orderProjection = NULL,
-  matchProjection = NULL, virtualise = FALSE, rolloverStakes = FALSE,
-  bestPricesDepth = 3, rollupModel = NULL, rollupLimit = NULL,
-  suppress = FALSE, sslVerify = TRUE)
+listMarketBook(
+  marketIds,
+  priceData,
+  orderProjection = NULL,
+  matchProjection = NULL,
+  virtualise = FALSE,
+  rolloverStakes = FALSE,
+  bestPricesDepth = 3,
+  rollupModel = NULL,
+  rollupLimit = NULL,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{marketIds}{String. The market identification number of the required
@@ -115,6 +124,7 @@ market.
   to execute successfully. The data frame is then converted to JSON and
   included in the HTTP POST request.
 }
+
 \examples{
 \dontrun{
 # Return all prices for the requested market. This actual market ID is
@@ -128,4 +138,3 @@ listMarketBook(marketIds = "1.116700328", priceData = "EX_ALL_OFFERS")
   DELAY application key. The DELAY application key does not support price
   data.
 }
-

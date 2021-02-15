@@ -17,12 +17,12 @@ side of market page on the betfair desktop site. Required. No default.}
 
 \item{newPrice}{vector (strings). The new price of the original bets (e.g
 "1.01", "2.22","10.0",etc). This parameter needs to be a set of quoted
-doubles (see Betfair's online documentation for more information on accepted 
+doubles (see Betfair's online documentation for more information on accepted
 price doubles (e.g. 2.02 is viable, while 10.02 is not). Requred. No
 default.}
 
-\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning 
-that a warning is posted when the replaceOrders call throws an error. 
+\item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
+that a warning is posted when the replaceOrders call throws an error.
 Changing this parameter to TRUE will suppress this warning.}
 
 \item{sslVerify}{Boolean. This argument defaults to TRUE and is optional. In
@@ -35,11 +35,11 @@ security risk of a man-in-the-middle intercepting your login credentials.}
 \value{
 Response from Betfair is stored in replaceOrders variable, which
  is then parsed from JSON as a list. The status column recognises whether
- the call was successful. If the replaceOrders call throws an error, a data 
+ the call was successful. If the replaceOrders call throws an error, a data
  frame containing error information is returned. Note that there are two types
  of error associated with this call. An API error is triggered, for example,
- when an invalid market ID is entered. Another type of error is returned if 
- no action is required (e.g. call to change the price for a bet to the price 
+ when an invalid market ID is entered. Another type of error is returned if
+ no action is required (e.g. call to change the price for a bet to the price
  at which it is already set).
 }
 \description{
@@ -60,6 +60,7 @@ cancellations will not be rolled back.
   utilised data frames, this function converts the input to a JSON-compatible
   format. The JSON output is then converted back to a data frame.
 }
+
 \examples{
 \dontrun{
 Change the price of two bets. The following
@@ -73,7 +74,7 @@ Note that if you run this function again (after changing the bet IDs remember,
 replaceOrders places new bets), it will return an error (BET_TAKEN_OR_LAPSED),
 as the bet price hasn't changed.
 
-Note that, unlike \\code{updateOrders}, \\code{replaceOrders} is an all or
+Note that, unlike \code{updateOrders}, \code{replaceOrders} is an all or
 nothing process. One error is sufficient to prevent any replacement across the
 entire set of bet IDs.
 
@@ -85,4 +86,3 @@ entire set of bet IDs.
   DELAY application key. The DELAY application key does not support price
   data.
 }
-

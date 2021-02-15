@@ -1,8 +1,8 @@
 #' Checks account details on Betfair.
 #'
 #' \code{getAccountDetails} allows you to see your Betfair account details.
-#' Unlike other Betfair API #' calls, there are no dangers associated with
-#' this function, it simply returns #' account information such as balance,
+#' Unlike other Betfair API calls, there are no betting dangers associated
+#' with this function, it simply returns account information such as balance,
 #' exposure, etc.
 #'
 #' @seealso

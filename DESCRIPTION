@@ -1,10 +1,10 @@
 Package: abettor
 Title: R bindings to Betfair API-NG
-Version: 0.1.6
-Date: 2020-01-26
+Version: 0.1.7
+Date: 2020-01-27
 Authors@R: as.person(c("Phill Clarke <phill@starkingdom.co.uk> [aut, cre]",
-                       "David Sheehan <davidfsheehan87@gmail.com> [aut]",
-                       "Soccerama [aut]",
+                       "David Sheehan <davidfsheehan87@gmail.com> [ctb]",
+                       "Soccerama [ctb]",
                        "Alvise Trevisan <a.trevisan@enpicom.com> [ctb]"
                        ))
 Description: An R package for connecting to the online betting exchange,
@@ -12,7 +12,7 @@ Description: An R package for connecting to the online betting exchange,
     retrieve market information and place bets.
 Depends:
     R (>= 3.1.1)
-License: MIT + file LICENSE
+License: GPL (>= 3)
 URL: https://github.com/phillc73/abettor
 BugReports: http://www.github.com/phillc73/abettor/issues
 Maintainer: Phill Clarke <phill@starkingdom.co.uk>
@@ -24,4 +24,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+Encoding: UTF-8
+RoxygenNote: 7.1.1
