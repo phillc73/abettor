@@ -1,6 +1,6 @@
 #' Return market profit and loss
 #'
-#' \code{listMarketPandL} Retrieve profit and loss for a given list of OPEN
+#' \code{listMarketProfitAndLoss} Retrieve profit and loss for a given list of OPEN
 #' markets. The values are calculated using matched bets and optionally settled
 #' bets
 #'
@@ -64,13 +64,15 @@
 #' Return the P&L (net of comission) for the requested markets. The actual
 #' market IDs are unlikely to work and are just for demonstration purposes.
 #'
-#' listMarketPandL(marketIds = c("1.122323121","1.123859413"),
+#' listMarketProfitAndLoss(marketIds = c("1.122323121","1.123859413"),
 #'                netOfCommission = TRUE)
 #' }
 #'
+#' @export
+#'
 
 
-listMarketPandL <-
+listMarketProfitAndLoss <-
   function(marketIds, includeSettledBetsValue = NULL,includeBspBetsValue = NULL,
            netOfCommissionValue = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
@@ -108,3 +110,18 @@ listMarketPandL <-
         warning("Error- See output for details")
       as.data.frame(listPandL$error)})
   }
+
+#' @rdname listMarketProfitAndLoss
+#' @examples #' \dontrun{
+#' Return the P&L (net of comission) for the requested markets. The actual
+#' market IDs are unlikely to work and are just for demonstration purposes.
+#'
+#' listMarketPandL(marketIds = c("1.122323121","1.123859413"),
+#'                netOfCommission = TRUE)
+#' }
+#'
+#' @export
+#'
+#'
+
+listMarketPandL <- listMarketProfitAndLoss

@@ -1,8 +1,8 @@
 #' Checks account balance on Betfair.
 #'
-#' \code{checkBalance} allows you to see you Betfair account balance.
+#' \code{getAccountFunds} allows you to see you Betfair account balance.
 #'
-#' \code{checkBalance} checks your Betfair balance. Unlike other Betfair API
+#' \code{getAccountFunds} checks your Betfair balance. Unlike other Betfair API
 #' calls, there are no dangers associated with this function, it simply returns
 #' account information such as balance, exposure, etc.
 #'
@@ -36,13 +36,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' checkBalance() # without any arguments will return global wallet information as a data frame
-#' # e.g. checkBalance()$availableToBetBalance tells how much left in your wallet to bet
+#' getAccountFunds() # without any arguments will return global wallet information as a data frame
+#' # e.g. getAccountFunds()$availableToBetBalance tells how much left in your wallet to bet
 #'
 #' }
 #'
+#' @export
+#' 
 
-checkBalance <- function(suppress = FALSE, sslVerify = TRUE) {
+getAccountFunds <- function(suppress = FALSE, sslVerify = TRUE) {
 
   balanceOps <-
     data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountFunds", id = "1")
@@ -75,3 +77,14 @@ checkBalance <- function(suppress = FALSE, sslVerify = TRUE) {
     as.data.frame(balance$error)})
 
 }
+
+#' @rdname getAccountFunds
+#' @examples #' \dontrun{
+#' checkBalance() # without any arguments will return global wallet information as a data frame
+#' # e.g. checkBalance()$availableToBetBalance tells how much left in your wallet to bet
+#'
+#' }
+#' @export
+
+
+checkBalance <- getAccountFunds
