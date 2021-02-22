@@ -1,4 +1,4 @@
-#'Places an order on Betfair
+#'Places an order on the Betfair exchange.
 #'
 #'\code{placeOrders} places an order (single bet or multiple bets) on the
 #'Betfair betting exchange.
@@ -12,6 +12,10 @@
 #'Running tests, by placing small bets, is not only a good idea to begin with,
 #'it will also probably save you money.
 #'
+#'\code{placeOrders can only place bets on a single market per call. Variable
+#'  relating to the market are single values. All other variables relate to the
+#'  orders and are vectors which must all be the same length.}
+#'
 #'@seealso \code{\link{loginBF}}, which must be executed first. Do NOT use the
 #'  DELAY application key. The DELAY application key does not support placing
 #'  bets.
@@ -19,28 +23,33 @@
 #'@param marketId String. The market ID these orders are to be placed on. Can
 #'  currently only accept a single market ID. IDs can be obtained via
 #'  \code{\link{listMarketCatalogue}}. Required. No default.
-#'@param selectionId String. The selection id of the desired item to bet on. If
-#'  betting on a Horse Race, this will be a single number to identify a horse.
-#'  In a Football match, this will be a single ID for one team. IDs can be
-#'  obtained via \code{\link{listMarketCatalogue}}. Required. No default.
-#'@param betSide Sting. Specififies whether the bet is a back or lay. This
-#'  argument accepts one of two options - BACK or LAY. Must be upper case.See
-#'  note below explaining each of these options. Required. No default.
-#'@param betType String. Supports three order types, one of which must be
-#'  specified. Valid order types are LIMIT, LIMIT_ON_CLOSE and MARKET_ON_CLOSE.
-#'  Must be upper case. See note below explaining each of these options.
-#'  Required. Default is set to LIMIT.
-#'@param betSize String. The size of the bet in the currency of your account.
-#'  Generally, the minimum size for GB accounts is 2 Pounds.
-#'@param reqPrice String. The lowest price at which you wish to place your bet.
-#'  If unmatched higher prices are available on the opposite side of the bet,
-#'  your order will be matched at those higher prices. Required. No default.
-#'@param persistenceType String. What to do with the order, when the market
-#'  turns in-play. Supports three persistence types, one of which must be
-#'  specified. Valid persistence types are LAPSE, PERSIST and MARKET_ON_CLOSE.
-#'  Must be upper case. See note below explaining each of these options.
-#'  Required. Default is set to LAPSE.
-#'@param handicap String. The handicap applied to the selection, if on an
+#'@param selectionId List<Integer>. A list containing the selection ids of the
+#'  desired item to bet on. If betting on a Horse Race, this will be a single
+#'  number to identify a horse. In a Football match, this will be a single ID
+#'  for one team. IDs can be obtained via \code{\link{listMarketCatalogue}}.
+#'  Required. No default.
+#'@param betSide List<String>. Each item in the list must specify whether the
+#'  bet is BACK or LAY. Must be upper case. See note below explaining each of
+#'  these options. Required. No default.
+#'@param betType List<String>. Supports three order types, one of which must be
+#'  specified for each element of the list. Valid order types are LIMIT,
+#'  LIMIT_ON_CLOSE and MARKET_ON_CLOSE. Must be upper case. See note below
+#'  explaining each of these options. Required. Default is set to LIMIT. Required.
+#'  No default.
+#'@param betSize List<String>. The size of the bet in the currency of your account.
+#'  Generally, the minimum size for GB accounts is 2 Pounds. Required. No default.
+#'  Minimum bet and liability sizes can be found at:
+#'  \url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Additional+Information#AdditionalInformation-CurrencyParameters}
+#'@param reqPrice List<String>. The lowest price at which you wish to place your bet
+#'  for each element of the list. If unmatched higher prices are available on the
+#'  opposite side of the bet, your order will be matched at those higher prices.
+#'  Required if any of your bets are LIMIT and LIMIT_ON_CLOSE bets. No default.
+#'@param persistenceType List<String>. What to do with the order, when the market
+#'  turns in-play for each element in the list. Supports three persistence types,
+#'  one of which must be specified. Valid persistence types are LAPSE, PERSIST and
+#'  MARKET_ON_CLOSE. Must be upper case. See note below explaining each of these
+#'  options. Required. Default is set to LAPSE.
+#'@param handicap List<String>. The handicap applied to the selection, if on an
 #'  asian-style market. Optional. Defaults to 0, meaning no handicap.
 #'  \code{handicap} must only be manually specified if betting on an asian-style
 #'  market.
@@ -48,6 +57,48 @@
 #'  unique string (up to 32 chars) that is used to de-dupe mistaken
 #'  re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
 #'  - . _ + * : ; ~ only. Optional. Defaults to current system date and time.
+#'@param marketVersion Integer. Optional parameter allowing the client to specify
+#'  which version of the market the orders should be placed on. If the current
+#'  market version is higher than that sent on an order, the bet will be lapsed.
+#'@param customerStrategyRef String. An optional reference customers can use
+#'  to specify which strategy has sent the order. The reference will be returned
+#'  on order change messages through the stream API. The string is limited to
+#'  15 characters. If an empty string is provided it will be treated as \code{NULL}.
+#'@param async Boolean. An optional flag (not setting equates to \code{FALSE}) which
+#'  specifies if the orders should be placed asynchronously. Where this is set to
+#'  \code{TRUE}, orders can be tracked via the Exchange Stream API or or the API-NG
+#'  by providing a \code{customerOrderRef} for each place order. An order's status
+#'  will be \code{PENDING} and no \code{betId} will be returned. This functionality
+#'  is available for all bet types - including MARKET_ON_CLOSE and LIMIT_ON_CLOSE.
+#'@param customerOrderRef List<String>. An optional reference customers can set to
+#'  identify inndividual orders within the instruction list. No validation will be
+#'  done on uniqueness and the string is limited to 32 characters. If an empty
+#'  string is provided it will be treated as NULL.
+#'@param timeInForce List<String>. Optional field for LIMIT orders. The type of
+#'  \code{TimeInForce} value to use. This value takes precedence over any
+#'  \code{persistenceType} value chosen. If this attribute is populated along
+#'  with the \code{persistenceType} field, then the \code{persistenceType} will be
+#'  ignored. When using \code{FILL_OR_KILL} for a LINE market the Volume Weighted
+#'  Average Price (VWAP) functionality is disabled. Optional.
+#'@param minFillSize List<Sring>. An optional field used for LIMIT orders if the
+#'  \code{timeInForce} attribute is populated. If specified without
+#'  \code{timeInForce} then this field is ignored. If no \code{minFillSize} is
+#'  specified, the order is killed unless the entire size can be matched. If
+#'  \code{minFillSize} is specified, the order is killed unless at least the
+#'  \code{minFillSize} can be matched. The \code{minFillSize} cannot be greater
+#'  than the order's \code{size}. If specified for a BetTargetType and
+#'  FILL_OR_KILL order, then this value will be ignored. Optional.
+#'@param betTargetType List <String>. An optional field for LIMIT orders to allow
+#'  betting to a targeted \code{PAYOUT} or \code{BACKERS_PROFIT} level. It's
+#'  invalid to specify both a \code{size} and \code{betTargetType}. Matching
+#'  provides best execution at the requested price or better up to the payout or
+#'  profit. If the bet is not matched completely and immediately, the remaining
+#'  portion enters the unmatched pool of bets on the exchange. \code{betTargetType}
+#'  bets are invalid for LINE markets. Optional.
+#'@param betTargetSize List <String>. An optional field for LIMIT order which must
+#'  be specified if \code{betTargetType} is specified for this order. The requested
+#'  outcome size of either the payout or profit. This is named from the backer's
+#'  perspective. For Lay bets the profit represents the bet's liability. Optional.
 #'@param suppress Boolean. By default, this parameter is set to FALSE, meaning
 #'  that a warning is posted when the placeOrders call throws an error. Changing
 #'  this parameter to TRUE will suppress this warning.
@@ -96,7 +147,7 @@
 #'  \code{listPlaceOrdersOps} variable is used to firstly build an R data frame
 #'  containing all the data to be passed to Betfair, in order for the function
 #'  to execute successfully. The data frame is then converted to JSON and
-#'  included in the HTTP POST request. If the placeOrders call throws an error,
+#'  included in the httr::POST request. If the placeOrders call throws an error,
 #'  a data frame containing error information is returned.
 #'
 #' @examples
@@ -109,6 +160,19 @@
 #'             reqPrice = "yourRequestedPrice",
 #'             persistenceType = "LAPSEORPERSIST")
 #'
+#' # Note: The following call should be applied carefully, as incorrect indexing of the
+#' # betSide vector (i.e. mixing up the "BACK" and "LAY" positions) will lead to
+#' # mismatching of size, price and type fields.
+
+#' # Placing orders across the three order types with a single instruction:
+#' placeOrders(marketId = "1.179179402",
+#'             selectionId = c(36621856, 22370218, 38465945),
+#'             betSide = c("BACK", "LAY", "LAY"),
+#'             betType = c("LIMIT", "LIMIT_ON_CLOSE", "MARKET_ON_CLOSE"),
+#'             betSize = c(5, 10, 10),
+#'             reqPrice = c(4,5, 5, 0),
+#'             persistenceType = c("LAPSE", "LAPSE", "LAPSE"))
+#'
 #' # Place a LIMIT_ON_CLOSE lay bet on a selection on a horse racing market (note that
 #' # LIMIT_ON_CLOSE orders only work on markets with Betfair Starting Price (BSP)
 #' # enabled):
@@ -116,7 +180,7 @@
 #' placeOrders(marketId = "1.124156004",
 #'             selectionId = "8877720", betType = "LIMIT_ON_CLOSE",
 #'             betSide="LAY",
-#'             betSize ="2",
+#'             betSize ="10",
 #'             reqPrice = "1.1")
 #'
 #' # Place a MARKET_ON_CLOSE lay bet on a selection on a horse racing market (note that
@@ -127,12 +191,12 @@
 #'             selectionId = "8877720",
 #'             betType = "MARKET_ON_CLOSE",
 #'             betSide="LAY",
-#'             betSize ="2")
+#'             betSize ="10")
 #'
 #' # Note that in both MARKET_ON_CLOSE and LIMIT_ON_CLOSE orders, the betSize parameter
 #' # specifies the liability of the order. For example, a LIMIT_ON_CLOSE order of betSize=2
-#' # and reqPrice = 1.1 is equivalent to a lay bet of 20 at 1.1 (i.e. max liability of
-#' # 2 and a minimum profit of 20 if the selection doesn't win).
+#' # and reqPrice = 1.1 is equivalent to a lay bet of 100 at 1.1 (i.e. max liability of
+#' # 10 and a minimum profit of 100 if the selection doesn't win).
 #'
 #' # Place one single lay LIMIT bet on a specific selection on a specific market,
 #' # which is set to LAPSE:
@@ -197,72 +261,103 @@
 
 placeOrders <-
   function(marketId, selectionId, betSide, betSize, reqPrice,
-           betType = "LIMIT", persistenceType = "LAPSE",
-           handicap = "0", customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")),
+           betType = "LIMIT",
+           customerRef = (format(Sys.time(), "%Y-%m-%dT%TZ")),
+           marketVersion = NULL, customerStrategyRef = NULL, async = FALSE,
+           handicap = 0, customerOrderRef = NULL,
+           timeInForce = NULL, minFillSize = 0,
+           betTargetType = NULL, betTargetSize = 0,
+           persistenceType = "LAPSE",
            suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
     placeOrdersOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/placeOrders", id = 1)
 
+    #required fields
     placeOrdersOps$params <-
       data.frame(
-        marketId = marketId, instructions = c(""), customerRef = customerRef
+        marketId = marketId,
+        customerRef = customerRef
       )
-
-    if (betType == "MARKET_ON_CLOSE") {
-      placeOrdersOps$params$instructions <-
-        data.frame(
-          selectionId = selectionId,
-          handicap = handicap,
-          side = betSide,
-          orderType = betType,
-          marketOnCloseOrder = c("")
-        )
-
-      placeOrdersOps$params$instructions$marketOnCloseOrder <-
-        data.frame(liability = betSize)
-
-
+    #optional fields
+    if(!is.null(marketVersion)){
+      cbind(placeOrdersOps$params, marketVersion = marketVersion)
     }
-    else if (betType == "LIMIT_ON_CLOSE") {
-      placeOrdersOps$params$instructions <-
-        data.frame(
-          selectionId = selectionId,
-          handicap = handicap,
-          side = betSide,
-          orderType = betType,
-          limitOnCloseOrder = c("")
-        )
+    if(!is.null(customerStrategyRef)){
+      cbind(placeOrdersOps$params, customerStrategyRef = customerStrategyRef)
+    }
+    if(async){
+      cbind(placeOrdersOps$params, async = async)
+    }
 
-      placeOrdersOps$params$instructions$limitOnCloseOrder <-
+    #required fields
+    insts <-
+      data.frame(
+        orderType = betType,
+        selectionId = selectionId,
+        side = betSide
+      )
+    #optional fields
+    if(!(handicap == 0)){
+      cbind(insts, handicap = handicap)
+    }
+    if(!is.null(customerOrderRef)){
+      cbind(insts, customerOrderRef = customerOrderRef)
+    }
+
+    if("MARKET_ON_CLOSE" %in% betType) {
+      insts$marketOnCloseOrder <-
+        data.frame(liability = betSize)
+    }
+
+    if("LIMIT_ON_CLOSE" %in% betType) {
+      insts$limitOnCloseOrder <-
         data.frame(liability = betSize, price = reqPrice)
+    }
 
-
+    #required fields
+    if("LIMIT" %in% betType){
+      insts$limitOrder <-
+        data.frame(size = betSize,
+                   price = reqPrice,
+                   persistenceType = persistenceType
+        )
+      #optional fields
+      if(!is.null(timeInForce)){
+        cbind(insts$limitOrder,
+              timeInForce = timeInForce,
+              minFillSize = minFillSize)
+      }
+      if(!is.null(betTargetType)){
+        cbind(insts$limitOrder,
+              betTargetType = betTargetType,
+              betTargetSize = betTargetSize)
+      }
     }
 
     else {
-      instructions.data.frame <-
-        data.frame(
-          limitOrder = rep("",max(sapply(list(betSide,betSize,reqPrice,persistenceType),length)))
+      #required fields
+      insts$limitOrder <-
+        data.frame(size = betSize,
+                   price = reqPrice,
+                   persistenceType = persistenceType
         )
-
-      instructions.data.frame$limitOrder <-
-        data.frame(price = reqPrice)
-      instructions.data.frame$limitOrder$persistenceType <-
-        persistenceType
-      instructions.data.frame$limitOrder$size <- betSize
-
-      instructions.data.frame$selectionId <- selectionId
-      instructions.data.frame$handicap <- handicap
-      instructions.data.frame$side <- betSide
-      instructions.data.frame$orderType <- betType
+      #optional fields
+      if(!is.null(timeInForce)){
+        cbind(insts$limitOrder,
+              timeInForce = timeInForce,
+              minFillSize = minFillSize)
+      }
+      if(!is.null(betTargetType)){
+        cbind(insts$limitOrder,
+              betTargetType = betTargetType,
+              betTargetSize = betTargetSize)
+      }
     }
-    if(betType == "LIMIT"){
+
     placeOrdersOps$params$instructions <-
-      list(instructions.data.frame)}
-    else(placeOrdersOps$params$instructions <-
-           list(placeOrdersOps$params$instructions))
+      list(insts)
 
     placeOrdersOps <-
       placeOrdersOps[c("jsonrpc", "method", "params", "id")]
