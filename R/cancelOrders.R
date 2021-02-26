@@ -10,7 +10,7 @@
 #'   DELAY application key. The DELAY application key does not support price
 #'   data.
 #'
-#' @param marketId List<String>. The market ID of the bets to be fully or partially
+#' @param marketId String. The market ID of the bets to be fully or partially
 #'   cancelled. While multiple bets (up to sixty, actually) can be cancelled in
 #'   one call, they must all be from the same market. Required. Warning: Setting
 #'   this parameter to NULL will result in the full cancellation of all
@@ -21,7 +21,7 @@
 #'   side of market page on the betfair desktop site. They can also be sourced
 #'   through \code{\link{listCurrentOrders}}.
 #'
-#' @param sizeReductions List<String>. Optional. If supplied, then this is a
+#' @param sizeReductions List<Double>. Optional. If supplied, then this is a
 #'   partial cancel of the order.  The default value is NULL, which means
 #'   complete cancellations are requested.
 #'
@@ -98,7 +98,7 @@
 #'
 
 cancelOrders <-
-  function(marketId = NULL, betIds = NULL, sizeReductions = NULL, customerRef = NULL, suppress = FALSE, sslVerify = TRUE) {
+  function(marketId, betIds = NULL, sizeReductions = NULL, customerRef = NULL, suppress = FALSE, sslVerify = TRUE) {
 
     options(stringsAsFactors = FALSE)
 
@@ -109,53 +109,51 @@ cancelOrders <-
     cancelOrdersOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/cancelOrders", id = 1)
 
-    #required fields
-    cancelOrdersOps$params <-
-      data.frame(marketId = marketId)
+    #required fields - none
     #optional fields
+    if(!is.null(marketId)){
+      cancelOrdersParams <-
+        data.frame(marketId = marketId)
+    }
     if(!is.null(customerRef)){
       if(!is.null(marketId)){
-        cbind(cancelOrdersOps$params, customerRef = customerRef)
+        cbind(cancelOrdersParams, customerRef = customerRef)
       } else {
-        cancelOrdersOps$params$customerRef <- customerRef
+        cancelOrdersParams <-
+          data.frame(customerRef = customerRef)
       }
     }
 
-    #required fields
+    #required fields - none
+    #optional fields
     if(!(is.null(betIds)&&is.null(sizeReductions))){
       if(!is.null(betIds)){
-        insts <-
-        data.frame(
-          betId = betIds)
-        if(!is.null(sizeReductions)){
-          insts <- cbind(insts, sizeReduction = sizeReductions)
-        }
+          if(!is.null(sizeReductions)){
+            cancelOrdersInsts <- data.frame(betId = betIds, sizeReduction = sizeReductions)
+          } else {
+            cancelOrdersInsts <- data.frame(betId = betIds)
+          }
       } else {
-        insts <-
+        cancelOrdersInsts <-
           data.frame(
             sizeReduction = sizeReductions)
       }
-      #optional fields
-      if(!is.null(betIds)){
-        cbind(insts, betId = betIds)
-      }
-      if(!is.null(sizeReductions)){
-        cbind(insts, sizeReduction = sizeReductions)
-      }
-
-      cancelOrdersOps$params$instructions <-
-        list(insts)
     }
 
+    if(exists("cancelOrdersParams")){
+      cancelOrdersOps$params <- cancelOrdersParams
+      if(exists("cancelOrdersInsts")){
+        cancelOrdersOps$params$instructions <- list(cancelOrdersInsts)
+      }
+    } else {
+      cancelOrdersOps$params <- 'null'
+    }
 
-    show(cancelOrdersOps)
 
     cancelOrdersOps <-
       cancelOrdersOps[c("jsonrpc", "method", "params", "id")]
 
     cancelOrdersOps <- jsonlite::toJSON(jsonlite::unbox(cancelOrdersOps))
-
-    show(cancelOrdersOps)
 
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
@@ -173,7 +171,8 @@ cancelOrders <-
     if(is.null(cancelOrders$error)){
       if(!is.null(cancelOrders$result$errorCode) & !suppress)
         warning("Error- See output for details")
-      as.data.frame(cancelOrders$result)}
+      if(!is.null(unlist(cancelOrders$result$instructionReports)))
+        as.data.frame(cancelOrders$result)}
     else{
       if(!suppress)
         warning("API Error- See output for details")
