@@ -12,14 +12,19 @@
 #'   bets can be updated in one call, they must be from the same market. Required.
 #'   No default.
 #'
-#' @param betId vector (strings). The bet IDs of the bets to be updated- bet IDs
+#' @param betId vector <String>. The bet IDs of the bets to be updated- bet IDs
 #'   are displayed (called Ref) on the bet information on the right hand side of
 #'   market page on the betfair desktop site. Required. No default.
 #'
-#' @param persistenceType vector (strings). The persistence state of updated
+#' @param persistenceType vector <String>. The persistence state of updated
 #'   bets. persistanceType can take three values ("LAPSE","PERSIST" and
 #'   "MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 #'   Take SP on the desktop website). Required. No default.
+#'
+#' @param customerRef String. Optional parameter allowing the client to pass a
+#'   unique string (up to 32 chars) that is used to de-dupe mistaken
+#'   re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
+#'   - . _ + * : ; ~ only. Optional. Defaults to current system date and time.
 #'
 #'@param suppress Boolean. By default, this parameter is set to FALSE, meaning
 #'   that a warning is posted when the updateOrders call throws an error. Changing
@@ -71,21 +76,29 @@
 #'
 
 updateOrders <-
-  function(marketId, betId, persistenceType, suppress = FALSE, sslVerify = TRUE) {
+  function(marketId, betId, persistenceType, customerRef = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
     if (length(betId) != length(persistenceType))
       return("Bet ID and Persistence Type vector need to have the same length")
 
     updateOrderOps <-
-      paste0(
-        '[{"jsonrpc": "2.0","method": "SportsAPING/v1.0/updateOrders","params":{"marketId": "',marketId,'","instructions": [',
-        paste0(sapply(as.data.frame(t(data.frame(
-          betId, persistenceType
-        ))),function(x)
-          paste0('{"betId":"',x[1],'","newPersistenceType":"',x[2],'"}')),collapse =
-          ","),']},"id": "1"}]'
-      )
+      data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/updateOrders", id = 1)
+
+    updateOrderOps$params <-
+      data.frame(marketId = marketId)
+
+    if(!is.null(customerRef)){
+      updateOrderOps$params <- cbind(updateOrderOps$params, customerRef = customerRef)
+    }
+
+    updateOrderOps$params$instructions <-
+      list(data.frame(betId = betId, newPersistenceType = persistenceType))
+
+    updateOrderOps <-
+      updateOrderOps[c("jsonrpc", "method", "params", "id")]
+
+    updateOrderOps <- jsonlite::toJSON(jsonlite::unbox(updateOrderOps))
 
     # Read Environment variables for authorisation details
     product <- Sys.getenv('product')
