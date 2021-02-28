@@ -8,6 +8,7 @@ updateOrders(
   marketId,
   betId,
   persistenceType,
+  customerRef = NULL,
   suppress = FALSE,
   sslVerify = TRUE
 )
@@ -17,14 +18,19 @@ updateOrders(
 bets can be updated in one call, they must be from the same market. Required.
 No default.}
 
-\item{betId}{vector (strings). The bet IDs of the bets to be updated- bet IDs
+\item{betId}{vector <String>. The bet IDs of the bets to be updated- bet IDs
 are displayed (called Ref) on the bet information on the right hand side of
 market page on the betfair desktop site. Required. No default.}
 
-\item{persistenceType}{vector (strings). The persistence state of updated
+\item{persistenceType}{vector <String>. The persistence state of updated
 bets. persistanceType can take three values ("LAPSE","PERSIST" and
 "MARKET_ON_CLOSE", which correspond to Cancel, Keep and
 Take SP on the desktop website). Required. No default.}
+
+\item{customerRef}{String. Optional parameter allowing the client to pass a
+unique string (up to 32 chars) that is used to de-dupe mistaken
+re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
+- . _ + * : ; ~ only. Optional. Defaults to current system date and time.}
 
 \item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
 that a warning is posted when the updateOrders call throws an error. Changing

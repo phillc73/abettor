@@ -8,6 +8,7 @@ cancelOrders(
   marketId,
   betIds = NULL,
   sizeReductions = NULL,
+  customerRef = NULL,
   suppress = FALSE,
   sslVerify = TRUE
 )
@@ -19,18 +20,24 @@ one call, they must all be from the same market. Required. Warning: Setting
 this parameter to NULL will result in the full cancellation of all
 unmatched bets across all markets.}
 
-\item{betIds}{vector (strings). The bet IDs of the bets to be cancelled- bet
+\item{betIds}{List<String>. The bet IDs of the bets to be cancelled - bet
 IDs are displayed (called Ref) on the bet information on the right hand
-side of market page on the betfair desktop site.}
+side of market page on the betfair desktop site. They can also be sourced
+through \code{\link{listCurrentOrders}}.}
 
-\item{sizeReductions}{vector (strings). If supplied, then this is a partial
-  cancel.  The default value is NULL, which means complete cancellations are
-  requested.
+\item{sizeReductions}{List<Double>. Optional. If supplied, then this is a
+  partial cancel of the order.  The default value is NULL, which means
+  complete cancellations are requested.
 
   Note on sizeReductions values: The double within the string represents the
   value to be cancelled. For example, given an unmatched back of GBP100,
   inputting "2" as the parameter value will cancel GBP2 of the bet and leave
   GBP98 unmatched.}
+
+\item{customerRef}{String. Optional parameter allowing the client to pass a
+unique string (up to 32 chars) that is used to de-dupe mistaken
+re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
+- . _ + * : ; ~ only. Optional. Defaults to current system date and time.}
 
 \item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
 that a warning is posted when the updateOrders call throws an error. Changing
@@ -44,14 +51,14 @@ error occurs you may set sslVerify to FALSE. This does open a small
 security risk of a man-in-the-middle intercepting your login credentials.}
 }
 \value{
-Response from Betfair is stored in updateOrders variable, which
+Response from Betfair is stored in cancelOrders variable, which
  is then parsed from JSON as a list. The status column recognises whether
  the call was successful. If the cancelOrders call throws an error, a data
  frame containing error information is returned. Note that there are two types
  of error associated with this call. An API error is triggered, for example,
  when an invalid market ID is entered. Another type of error is returned if
  no action is required (e.g. call to cancel a bet that has already been
- cancelled).
+ cancelled). For a full list of error codes see \url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-ExecutionReportErrorCode}
 }
 \description{
 \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/cancelOrders}
@@ -65,13 +72,6 @@ cancelled or partially cancelled once placed.
  If you want to combine partial and full
   cancellations, use "NULL" to signify the bet IDs that are to be fully
   cancelled (see examples below).
-}
-
-\section{Note on \code{cancelOrders}}{
- Unlike some other functions that
-  utilised data frame structures, this function directly converts the input
-  to a JSON-compatible format. The JSON output is then converted back to a
-  data frame.
 }
 
 \examples{

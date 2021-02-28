@@ -4,22 +4,47 @@
 \alias{replaceOrders}
 \title{Change the price of a set of unmatched bets}
 \usage{
-replaceOrders(marketId, betId, newPrice, suppress = FALSE, sslVerify = TRUE)
+replaceOrders(
+  marketId,
+  betId,
+  newPrice,
+  customerRef = NULL,
+  marketVersion = NULL,
+  async = FALSE,
+  suppress = FALSE,
+  sslVerify = TRUE
+)
 }
 \arguments{
 \item{marketId}{String. The market ID of the bets to be replaced. While many
 bets can be updated in one call, they must be from the same market.
 Required. No default.}
 
-\item{betId}{vector (strings). The bet IDs of the bets to be replaced- bet
+\item{betId}{vector <String>. The bet IDs of the bets to be replaced- bet
 IDs are displayed (called Ref) on the bet information on the right hand
 side of market page on the betfair desktop site. Required. No default.}
 
-\item{newPrice}{vector (strings). The new price of the original bets (e.g
+\item{newPrice}{vector <String>. The new price of the original bets (e.g
 "1.01", "2.22","10.0",etc). This parameter needs to be a set of quoted
 doubles (see Betfair's online documentation for more information on accepted
 price doubles (e.g. 2.02 is viable, while 10.02 is not). Requred. No
 default.}
+
+\item{customerRef}{String. Optional parameter allowing the client to pass a
+unique string (up to 32 chars) that is used to de-dupe mistaken
+re-submissions. CustomerRef can contain: upper/lower chars, digits, chars :
+- . _ + * : ; ~ only. Optional. Defaults to current system date and time.}
+
+\item{marketVersion}{Integer. Optional parameter allowing the client to specify
+which version of the market the orders should be placed on. If the current
+market version is higher than that sent on an order, the bet will be lapsed.}
+
+\item{async}{Boolean. An optional flag (not setting equates to \code{FALSE}) which
+specifies if the orders should be placed asynchronously. Where this is set to
+\code{TRUE}, orders can be tracked via the Exchange Stream API or or the API-NG
+by providing a \code{customerOrderRef} for each place order. An order's status
+will be \code{PENDING} and no \code{betId} will be returned. This functionality
+is available for all bet types - including MARKET_ON_CLOSE and LIMIT_ON_CLOSE.}
 
 \item{suppress}{Boolean. By default, this parameter is set to FALSE, meaning
 that a warning is posted when the replaceOrders call throws an error.
