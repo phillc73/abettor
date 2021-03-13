@@ -285,12 +285,13 @@ placeOrders <-
       cbind(placeOrdersOps$params, marketVersion = marketVersion)
     }
     if(!is.null(customerStrategyRef)){
-      cbind(placeOrdersOps$params, customerStrategyRef = customerStrategyRef)
+      placeOrdersOps$params$customerStrategyRef <- customerStrategyRef
     }
     if(async){
       cbind(placeOrdersOps$params, async = async)
     }
 
+    #Instructions
     #required fields
     insts <-
       data.frame(
@@ -300,10 +301,10 @@ placeOrders <-
       )
     #optional fields
     if(!(handicap == 0)){
-      cbind(insts, handicap = handicap)
+      insts$handicap <- handicap
     }
     if(!is.null(customerOrderRef)){
-      cbind(insts, customerOrderRef = customerOrderRef)
+      insts$customerOrderRef <- customerOrderRef
     }
 
     if("MARKET_ON_CLOSE" %in% betType) {
