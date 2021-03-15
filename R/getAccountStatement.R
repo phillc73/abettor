@@ -76,15 +76,13 @@
 #'
 
 getAccountStatement <-
-  function(localeString = NULL,fromRecordValue = NULL,recordCountValue =
-             NULL,fromDate = NULL, toDate = NULL,
+  function(localeString = NULL, fromRecordValue = 0,
+           recordCountValue = NULL, fromDate = NULL, toDate = NULL,
            includeItemValue = NULL, walletValue = NULL, suppress = FALSE,
            flag = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
     pageSize <- 100
-
-    if(is.null(fromRecordValue)) fromRecordValue <- 0
 
     recordCount <- 0
     moreRecords <- TRUE
@@ -97,9 +95,8 @@ getAccountStatement <-
       getAccStatOps <-
         data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")
 
-      getAccStatOps$params <- data.frame(fromRecord = "")
+      getAccStatOps$params <- data.frame(fromRecord = startRecordValue)
       getAccStatOps$params$locale <- localeString
-      getAccStatOps$params$fromRecord <- startRecordValue
       if(!is.null(recordCountValue)){
         getAccStatOps$params$recordCount <- min((recordCountValue - recordCount), pageSize)
       } else {
@@ -120,10 +117,6 @@ getAccountStatement <-
       product <- Sys.getenv('product')
       token <- Sys.getenv('token')
 
-      headers <- list(
-        'Accept' = 'application/json', 'X-Application' = product, 'X-Authentication' = token, 'Content-Type' = 'application/json'
-      )
-
       accOrder <- httr::content(
         httr::POST(url = "https://api.betfair.com/exchange/account/json-rpc/v1",
                    config = httr::config(ssl_verifypeer = sslVerify),
@@ -140,29 +133,25 @@ getAccountStatement <-
           warning("Error- See output for details")
         return(as.data.frame(accOrder$error))}
 
-      accNewOrders <- as.data.frame(accOrder$result$accountStatement)
-      accNewOrders <- cbind(accNewOrders, accNewOrders[,"legacyData"])
-      accNewOrders[,"legacyData"] <- NULL
+
+      accNewOrders <- accOrder$result$accountStatement$itemClassData[,1] %>%
+        map(jsonlite::fromJSON)
+      accNewOrders <- do.call(rbind, accNewOrders)
 
       if(nrow(accAllOrders)==0){
         accAllOrders <- accNewOrders
-        fixColNames <- rownames(t(accNewOrders))
       } else {
-        accNewOrders <- accNewOrders[,fixColNames]
-        accAllOrders <- t(cbind(t(accAllOrders),t(accNewOrders)))
+        accAllOrders <- rbind(accAllOrders, accNewOrders)
       }
 
       recordCount <- nrow(accAllOrders)
       if(is.null(recordCountValue)){
         moreRecords <- accOrder$result$moreAvailable
       } else {
-        moreRecords <- accOrder$result$moreAvailable & (recordCount > recordCountValue)
+        moreRecords <- accOrder$result$moreAvailable & (recordCount < recordCountValue)
       }
       startRecordValue <- startRecordValue + pageSize
     }
-
-    accAllOrders <- cbind(accAllOrders[,-6],accAllOrders[,6])
-    .rowNamesDF(accAllOrders, make.names = TRUE) <- NULL
 
     if (accOrder$result$moreAvailable & flag == TRUE)
       warning("Not all bets included in output- More bets available")
