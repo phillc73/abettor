@@ -282,13 +282,13 @@ placeOrders <-
       )
     #optional fields
     if(!is.null(marketVersion)){
-      cbind(placeOrdersOps$params, marketVersion = marketVersion)
+      placeOrdersOps$params$marketVersion <- marketVersion
     }
     if(!is.null(customerStrategyRef)){
       placeOrdersOps$params$customerStrategyRef <- customerStrategyRef
     }
     if(async){
-      cbind(placeOrdersOps$params, async = async)
+      placeOrdersOps$params$async <- async
     }
 
     #Instructions
