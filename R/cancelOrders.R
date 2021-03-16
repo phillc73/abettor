@@ -117,7 +117,7 @@ cancelOrders <-
     }
     if(!is.null(customerRef)){
       if(!is.null(marketId)){
-        cbind(cancelOrdersParams, customerRef = customerRef)
+        cancelOrdersParams$customerRef <- customerRef
       } else {
         cancelOrdersParams <-
           data.frame(customerRef = customerRef)
