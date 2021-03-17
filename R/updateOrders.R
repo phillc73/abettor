@@ -88,8 +88,9 @@ updateOrders <-
     updateOrderOps$params <-
       data.frame(marketId = marketId)
 
+    #Optional parameters
     if(!is.null(customerRef)){
-      updateOrderOps$params <- cbind(updateOrderOps$params, customerRef = customerRef)
+      updateOrderOps$params$customerRef <- customerRef
     }
 
     updateOrderOps$params$instructions <-

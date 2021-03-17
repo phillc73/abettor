@@ -103,14 +103,15 @@ replaceOrders <- function(marketId ,betId , newPrice, customerRef = NULL,
   replaceOrderOps$params <-
     data.frame(marketId = marketId)
 
+  #Optional parameters
   if(!is.null(customerRef)){
-    replaceOrderOps$params <- cbind(replaceOrderOps$params, customerRef = customerRef)
+    replaceOrderOps$params$customerRef <- customerRef
   }
   if(!is.null(marketVersion)){
-    replaceOrderOps$params <- cbind(replaceOrderOps$params, marketVersion = marketVersion)
+    replaceOrderOps$params$marketVersion <- marketVersion
   }
   if(async){
-    replaceOrderOps$params <- cbind(replaceOrderOps$params, async = async)
+    replaceOrderOps$params$async <- async
   }
 
   replaceOrderOps$params$instructions <-
