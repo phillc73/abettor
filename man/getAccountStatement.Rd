@@ -6,7 +6,7 @@
 \usage{
 getAccountStatement(
   localeString = NULL,
-  fromRecordValue = NULL,
+  fromRecordValue = 0,
   recordCountValue = NULL,
   fromDate = NULL,
   toDate = NULL,
