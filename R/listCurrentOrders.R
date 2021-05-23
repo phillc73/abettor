@@ -49,6 +49,12 @@
 #'  EXECUTION_COMPLETE orders). Default value is NULL, which Betfair interprets
 #'  as "ALL". Optional.
 #'
+#'@param customerOrderRefs List<String>. Optionally restricts the results to the
+#'specified customerOrderRefs.
+#'
+#'@param customerStrategyRefs List<String>. Optionally restricts the results to the
+#'specified customerStrategyRefs.
+#'
 #'@param fromRecordValue int. Specifies the first record that will be returned.
 #'  Records start at index zero. Default parameter value is NULL, which Betfair
 #'  interprets as 0. Optional. Default is set to NULL.
@@ -98,6 +104,7 @@
 listCurrentOrders <-
   function(betIds = NULL, marketIds = NULL,orderByValue = NULL, SortDirValue = NULL,
            fromDate = NULL, toDate = NULL, flag = FALSE, orderProjectionValue = NULL,
+           customerOrderRefs = NULL, customerStrategyRefs = NULL,
            fromRecordValue = NULL, recordCountValue = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
@@ -111,6 +118,8 @@ listCurrentOrders <-
       listOrderOps$params$marketIds <- list(c(marketIds))
 
     listOrderOps$params$orderProjection <- orderProjectionValue
+    listOrderOps$params$customerOrderRefs <- customerOrderRefs
+    listOrderOps$params$customerStrategyRefs <- customerStrategyRefs
     listOrderOps$params$orderBy <- orderByValue
     listOrderOps$params$SortDir <- SortDirValue
     listOrderOps$params$fromRecord <- fromRecordValue
