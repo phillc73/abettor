@@ -63,6 +63,14 @@
 #'  returned. To retrieve more than 1000 records (the maxiumum by default), you
 #'  need to utilise this parameter. Optional. Default is set to NULL.
 #'
+#'@param includeItemDescription boolean. If true then the CurrentOrderSummary has a
+#'  return field currentItemDescription of type CurrentItemDescription.
+#'  This contains a single field called marketVersion of type MarketVersion.
+#'  The marketVersion object will contain a single parameter called version, of
+#'  type long. This parameter will allow users to correlate the market version
+#'  in the listCurrentOrders with the same market version field returned in the
+#'  listMarketBook/listRunnerBook response & Stream API marketDefinition.
+#'
 #'@param flag Boolean. \code{RCurl::postForm} returns a warning if there's more
 #'  records than the limit of 1000 (or limit specified by the record parameters)
 #'  that can be returned in one call. By default, this parameter is set to
@@ -105,7 +113,8 @@ listCurrentOrders <-
   function(betIds = NULL, marketIds = NULL,orderByValue = NULL, SortDirValue = NULL,
            fromDate = NULL, toDate = NULL, flag = FALSE, orderProjectionValue = NULL,
            customerOrderRefs = NULL, customerStrategyRefs = NULL,
-           fromRecordValue = NULL, recordCountValue = NULL, suppress = FALSE, sslVerify = TRUE) {
+           fromRecordValue = NULL, recordCountValue = NULL, includeItemDescription = FALSE,
+           suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
 
     listOrderOps <-
@@ -127,6 +136,7 @@ listCurrentOrders <-
     if (!is.null(fromDate) & !is.null(toDate))
       listOrderOps$params$daterange <-
       data.frame(from = fromDate, to = toDate)
+    listOrderOps$params$includeItemDescription <- includeItemDescription
 
     listOrderOps <-
       listOrderOps[c("jsonrpc", "method", "params", "id")]
