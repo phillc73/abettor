@@ -103,7 +103,13 @@
 #'   data returned about the market. By default all data, except "MARKET
 #'   DESCRIPTION", is included. See
 #'   \url{https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/Betting+Enums#BettingEnums-MarketProjection}
-#'    for a full list (and description) of all parameter values.
+#'    for a full list (and description) of all parameter values. Note that there
+#'    are Market Data Request limits \url{https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Market+Data+Request+Limits#MarketDataRequestLimits-WhatareMarketDataRequestLimits?}
+#'    which can lead to a too much data error. If you wish to reduce the impact
+#'    of this limit then you can change marketProejction to:
+#'    \code{marketProjection = c("COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION",
+#'    "MARKET_START_TIME")} as it is only the "MARKET_DESCRIPTION" and "RUNNER_METADATA"
+#'    items which impact the limit for this function.
 #'
 #' @param textQuery String. Restrict markets by any text associated with the
 #'   market such as the Name, Event, Competition, etc. The string can include a
@@ -169,7 +175,7 @@ listMarketCatalogue <-
           marketBettingTypes = NULL, withOrders = NULL,
           marketSort = NULL, marketProjection =
              c(
-               "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME"
+               "COMPETITION", "EVENT", "EVENT_TYPE", "RUNNER_DESCRIPTION", "RUNNER_METADATA", "MARKET_START_TIME", "MARKET_DESCRIPTION"
              ),
           textQuery = NULL, suppress = FALSE, sslVerify = TRUE) {
     options(stringsAsFactors = FALSE)
