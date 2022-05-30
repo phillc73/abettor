@@ -102,9 +102,9 @@ cancelOrders <-
 
     options(stringsAsFactors = FALSE)
 
-    if (length(betIds) != length(sizeReductions))
-
+    if (!is.null(betIds) && !is.null(sizeReductions) && length(betIds) != length(sizeReductions)) {
       return("Bet ID and Size Reduction vectors need to have the same length")
+    }
 
     cancelOrdersOps <-
       data.frame(jsonrpc = "2.0", method = "SportsAPING/v1.0/cancelOrders", id = 1)
