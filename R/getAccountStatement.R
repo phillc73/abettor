@@ -137,13 +137,15 @@ getAccountStatement <-
         map(jsonlite::fromJSON)
       accNewOrders <- lapply(accNewOrders, function(x) {	Map(function(z){ifelse(is.null(z), NA, z)},  x) })
       accNewOrders <- do.call(rbind, lapply(accNewOrders, data.frame))
-      accNewOrders <- cbind(select(accOrder$result$accountStatement,-itemClassData), accNewOrders)
+      accLegacy <- select(accOrder$result$accountStatement,-itemClassData)$legacyData
+      colnames(accLegacy) <- paste0("legacyData.",colnames(accLegacy))
+      accNewOrders <- cbind(select(accOrder$result$accountStatement,-itemClassData, -legacyData), accNewOrders, accLegacy)
       row.names(accNewOrders) <- seq_len(nrow(accNewOrders))+startRecordValue
 
       if(nrow(accAllOrders)==0){
         accAllOrders <- accNewOrders
       } else {
-        accAllOrders <- rbind(accAllOrders, accNewOrders)
+        accAllOrders <- bind_rows(accAllOrders, accNewOrders)
       }
 
       recordCount <- nrow(accAllOrders)
