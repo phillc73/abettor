@@ -133,10 +133,12 @@ getAccountStatement <-
           warning("Error- See output for details")
         return(as.data.frame(accOrder$error))}
 
-
       accNewOrders <- accOrder$result$accountStatement$itemClassData[,1] %>%
         map(jsonlite::fromJSON)
-      accNewOrders <- do.call(rbind, accNewOrders)
+      accNewOrders <- lapply(accNewOrders, function(x) {	Map(function(z){ifelse(is.null(z), NA, z)},  x) })
+      accNewOrders <- do.call(rbind, lapply(accNewOrders, data.frame))
+      accNewOrders <- cbind(select(accOrder$result$accountStatement,-itemClassData), accNewOrders)
+      row.names(accNewOrders) <- seq_len(nrow(accNewOrders))+startRecordValue
 
       if(nrow(accAllOrders)==0){
         accAllOrders <- accNewOrders
