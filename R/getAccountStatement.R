@@ -137,6 +137,7 @@ getAccountStatement <-
         map(jsonlite::fromJSON)
       accNewOrders <- lapply(accNewOrders, function(x) {	Map(function(z){ifelse(is.null(z), NA, z)},  x) })
       accNewOrders <- do.call(rbind, lapply(accNewOrders, data.frame))
+
       accLegacy <- select(accOrder$result$accountStatement,-itemClassData)$legacyData
       colnames(accLegacy) <- paste0("legacyData.",colnames(accLegacy))
       accNewOrders <- cbind(select(accOrder$result$accountStatement,-itemClassData, -legacyData), accNewOrders, accLegacy)
