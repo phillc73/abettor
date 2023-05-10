@@ -96,6 +96,8 @@ getAccountStatement <-
         data.frame(jsonrpc = "2.0", method = "AccountAPING/v1.0/getAccountStatement", id = "1")
 
       getAccStatOps$params <- data.frame(fromRecord = startRecordValue)
+
+
       getAccStatOps$params$locale <- localeString
       if(!is.null(recordCountValue)){
         getAccStatOps$params$recordCount <- min((recordCountValue - recordCount), pageSize)
@@ -104,9 +106,9 @@ getAccountStatement <-
       }
       getAccStatOps$params$includeItem <- includeItemValue
       getAccStatOps$params$Wallet <- walletValue
-      getAccStatOps$params$daterange <- data.frame(from = "")
-      getAccStatOps$params$daterange$from <- fromDate
-      getAccStatOps$params$daterange$to <- toDate
+      getAccStatOps$params$itemDateRange <- data.frame(from = "")
+      getAccStatOps$params$itemDateRange$from <- fromDate
+      getAccStatOps$params$itemDateRange$to <- toDate
 
       getAccStatOps <-
         getAccStatOps[c("jsonrpc", "method", "params", "id")]
@@ -133,14 +135,13 @@ getAccountStatement <-
           warning("Error- See output for details")
         return(as.data.frame(accOrder$error))}
 
-      accNewOrders <- accOrder$result$accountStatement$itemClassData[,1] %>%
-        map(jsonlite::fromJSON)
+      accNewOrders <- lapply(accOrder$result$accountStatement$itemClassData[, 1], jsonlite::fromJSON)
       accNewOrders <- lapply(accNewOrders, function(x) {	Map(function(z){ifelse(is.null(z), NA, z)},  x) })
       accNewOrders <- do.call(rbind, lapply(accNewOrders, data.frame))
 
-      accLegacy <- select(accOrder$result$accountStatement,-itemClassData)$legacyData
+      accLegacy <- accOrder$result$accountStatement$legacyData
       colnames(accLegacy) <- paste0("legacyData.",colnames(accLegacy))
-      accNewOrders <- cbind(select(accOrder$result$accountStatement,-itemClassData, -legacyData), accNewOrders, accLegacy)
+      accNewOrders <- cbind(accOrder$result$accountStatement[, !(names(accOrder$result$accountStatement) %in% c("itemClassData", "legacyData"))], accNewOrders, accLegacy)
       row.names(accNewOrders) <- seq_len(nrow(accNewOrders))+startRecordValue
 
       if(nrow(accAllOrders)==0){
