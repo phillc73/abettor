@@ -10,15 +10,7 @@ The breadth of API calls covered is growing, although not yet complete. If your 
 
 ### Install
 
-Install from GitLab
-
-```r
-# install.packages("remotes")
-library("remotes")
-remotes::install_gitlab("phillc73/abettor")
-library("abettor")
-```
-Or install from GitHub if you prefer (identical mirror of GitLab)
+Install from GitHub
 
 ```r
 # install.packages("remotes")
