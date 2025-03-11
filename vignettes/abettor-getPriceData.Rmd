@@ -1,0 +1,141 @@
+---
+title: "How to extract runner data to a dataframe with abettor"
+author: "Soccerama"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extracting runner data to a dataframe}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# How to extract runner data to a dataframe with abettor
+
+## Purpose
+
+The purpose of this document is to provide an example of how to extract runner data from the Betfair betting exchange to a dataframe using their API-NG product, the `abettor` R package and a simple R script. This runner data can then be used to place bets using the API.
+
+This assumes that you have read the vignette on placing a simple bet. To avoid duplication, this vignette does not cover:
+* logging in
+* getting an Application Key
+
+## Scope
+
+This tutorial will outline a workflow for extracting runner data for a horse racing market.
+
+It is assumed that the bettor wants the runner data for the race given:
+
+* Race Course Name
+* Race Start Time
+
+We use this information to obtained the market ID from the Betfair API. Runner data is then obtained for each horse in the race.
+
+## Tutorial
+
+### Prior reading
+
+This tutorial does not assumes you have read the [initial tutorial](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd) which contains information on obtaining and Application Key and logging in.
+
+### Load Required Packages
+
+Only two packages or libraries are required. All packages obviously must be installed first.
+
+```{r, eval = FALSE}
+# Requires a minimum of version 1.7.2
+# Older versions will most likely work but are unsupported
+library("jsonlite")
+# Requires a minimum of version 1.4.2
+# Older versions will most likely work but are unsupported
+library("httr")
+require("abettor")
+```
+
+### Login to Betfair
+
+```{r, eval = FALSE}
+loggedin <- loginBF(username = "YourBFUsername", password = "YourBFPassword", applicationKey = "YourAppKey")
+```
+
+You will need an Application Key and the guide to obtaining one is in the [initial tutorial](https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd)
+
+Betfair provides further [details here](https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Application+Keys).
+
+You can check that the log in was successful by looking at the value of `loggedin` which should be `"SUCCESS:"`
+
+### Choose event
+
+Following on from the initial tutorial, we look at a win market for a horse race in Great Britain. We can easily get a list of events by using the function.
+
+```{r, eval = FALSE}
+marketCat <- listMarketCatalogue(eventTypeIds = "7", marketCountries = "GB", marketTypeCodes = "WIN")
+```
+
+This returns a list of all horse racing win markets in Great Britain starting in the next 24 hours which is stored in a dataframe called marketCat. There is a lot of data in this dataframe and we don't need all of that for now. We're looking for a specific race and we can review the relevant information for each race using:
+
+```{r, eval = FALSE}
+cbind(marketCat$event$venue,marketCat$marketName,marketCat$marketStartTime,marketCat$marketId)
+```
+
+The starting time shown here is in UTC so you may want to check you have the correct event. The initial tutorial goes through how you can subset a race using R. You can either use that code or identify the marketId visually and store it in `myMarketId`.
+
+To simplify things, we want just our market which we can get using:
+```{r, eval=FALSE}
+mc <- marketCat[marketCat$marketId == myMarketId,]
+```
+
+### Get exchange information for your chosen market
+
+To get information on the current exchange position there is another function called `listMarketBook`. 
+```{r, eval=FALSE}
+winOdds <- listMarketBook(marketId = myMarketId, priceData = "EX_BEST_OFFERS")
+```
+
+The information about the current market position is in the `runners` dataframe but there are some other useful items here worth noting. The `status` field gives the current event status and you may want to use this as a check in your code. There is also an `inplay` field which may be helpful. Fields `numberOfRunners` and `numberOfActiveRunners` show you if there have been anyscratchings and how many horses are currently expected to run.
+
+There is more information that can be retrieved using `listMarketBook` using the `priceProjection`, `orderProjetion` and `matchProjection` flags and you can adapt this code to get exactly the data you want.
+
+The market information for each horse is in the `runners` dataframe which you can access with
+
+```{r, eval=FALSE}
+winOdds$runners
+```
+
+If there have been any scratchings in the race since the field was posted by Betfair, they will still appear in the dataframe with the `status` field equal to `REMOVED`. If a horse was scratched before the field was posted by Betfair it won't appear.
+
+The code below extracts the back and lay offers and puts the best price and size for each of these into a dataframe. Any missing entries will be left as `NA`.
+
+```{r, eval=FALSE}
+numRunners <- winOdds$numberOfRunners
+if(winOdds$status == "OPEN"){
+  runnerData <- data.frame(runnerName = mc$runners[[1]][,"runnerName"])
+  allRunnerData <- winOdds$runners[[1]]
+  runnerData[,"selectionId"] <- allRunnerData$selectionId
+  for(j in 1:numRunners){
+    if(allRunnerData$status[[j]]=="ACTIVE"){
+      #Check that there are orders in the stack for this runner or it causes an error
+      if(nrow(allRunnerData$ex[[1]][[j]])>0){
+        runnerData[j,"bestLayPrice"] <- allRunnerData$ex[[1]][[j]][[1,"price"]]
+        runnerData[j,"layAmount"] <- allRunnerData$ex[[1]][[j]][[1,"size"]]
+      } 
+      if(nrow(winOdds$runners[[1]]$ex[[2]][[j]])>0){
+        runnerData[j,"bestBackPrice"] <- allRunnerData$ex[[2]][[j]][[1,"price"]]
+        runnerData[j,"backAmount"] <- allRunnerData$ex[[2]][[j]][[1,"size"]]
+      } 
+    } 
+  }
+}
+```
+
+### What next?
+
+This tutorial shows how you can extract the current best market price for each runner to feed into your bot. There are more variations of what you can get from `listMarketBook` including information on BSP. You may want to read the documentation for the [listMarketBook function](https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/listMarketBook) and explore other data that is available.
+
+Your bot can now use this information to place a bet. If you need help with this step then you should read the initial tutorial on [placing your first bet]( https://github.com/phillc73/abettor/blob/master/vignettes/abettor-placeBet.Rmd)
+
+## Final Words
+
+If you ever need to know more about `abettor` functions from within R, simply type `?functionName`.
+
+The [Betfair API-NG developer documentation](https://api.developer.betfair.com/services/webapps/docs/display/1smk3cen4v3lu3yomq5qye0ni/API+Overview) also contains a wealth of information and answers to your questions.
+
+---
